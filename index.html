@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
 <title>Nova AI</title>
 
 <style>
@@ -24,10 +25,6 @@ body {
 body {
   overflow-x: hidden;
 }
-
-/* =========================
-   BACKGROUND
-========================= */
 
 body::before {
   content: "";
@@ -203,6 +200,7 @@ body::after {
   font-size: 20px;
   cursor: pointer;
   margin-right: 12px;
+  touch-action: manipulation;
 }
 
 .topbar-title {
@@ -221,6 +219,7 @@ body::after {
   border-radius: 10px;
   padding: 9px 14px;
   cursor: pointer;
+  touch-action: manipulation;
 }
 
 .account-button:hover {
@@ -375,8 +374,9 @@ body::after {
   background: transparent;
   color: white;
   font-family: inherit;
-  font-size: 14px;
+  font-size: 16px;
   padding: 12px;
+  line-height: 1.4;
 }
 
 #messageInput::placeholder {
@@ -392,6 +392,7 @@ body::after {
   color: white;
   cursor: pointer;
   font-size: 18px;
+  touch-action: manipulation;
 }
 
 .send-button:hover {
@@ -581,7 +582,7 @@ body::after {
 }
 
 /* =========================
-   IMAGE
+   GENERATED IMAGE
 ========================= */
 
 .generated-image {
@@ -592,7 +593,7 @@ body::after {
 }
 
 /* =========================
-   LOADING
+   TYPING
 ========================= */
 
 .typing {
@@ -651,7 +652,8 @@ body::after {
   }
 
   .topbar {
-    padding: 0 14px;
+    height: 64px;
+    padding: 0 12px;
   }
 
   .mobile-menu-button {
@@ -695,9 +697,13 @@ body::after {
     padding: 7px;
   }
 
+  /*
+    16px prevents iPhone Safari from
+    automatically zooming when typing.
+  */
   #messageInput {
+    font-size: 16px !important;
     min-height: 42px;
-    font-size: 14px;
   }
 
   .screen {
@@ -725,19 +731,7 @@ body::after {
   .message-text {
     font-size: 14px;
   }
-
-  /*
-    IMPORTANT:
-    There is intentionally NO mobile overlay.
-    The sidebar simply slides over the page.
-    This prevents the entire phone screen from
-    becoming blurred/dimmed.
-  */
 }
-
-/* =========================
-   VERY SMALL PHONES
-========================= */
 
 @media (max-width: 420px) {
 
@@ -810,7 +804,11 @@ body::after {
 
     <header class="topbar">
 
-      <button class="mobile-menu-button" id="mobileMenuButton">
+      <button
+        class="mobile-menu-button"
+        id="mobileMenuButton"
+        type="button"
+      >
         ☰
       </button>
 
@@ -820,14 +818,18 @@ body::after {
 
       <div class="topbar-spacer"></div>
 
-      <button class="account-button" id="topAccountButton">
+      <button
+        class="account-button"
+        id="topAccountButton"
+        type="button"
+      >
         Account
       </button>
 
     </header>
 
 
-    <!-- CHAT SCREEN -->
+    <!-- CHAT -->
     <section class="chat-area" id="chatScreen">
 
       <div class="messages" id="messages">
@@ -853,7 +855,7 @@ body::after {
     </section>
 
 
-    <!-- PREMIUM SCREEN -->
+    <!-- PREMIUM -->
     <section class="screen" id="premiumScreen">
 
       <div class="screen-container">
@@ -891,7 +893,6 @@ body::after {
 
           </div>
 
-
           <div class="plan featured">
 
             <h3>Plus</h3>
@@ -909,12 +910,14 @@ body::after {
               <li>✓ Premium themes</li>
             </ul>
 
-            <button class="plan-button" onclick="showComingSoon()">
+            <button
+              class="plan-button"
+              onclick="showComingSoon()"
+            >
               Coming Soon
             </button>
 
           </div>
-
 
           <div class="plan">
 
@@ -933,7 +936,10 @@ body::after {
               <li>✓ Longer context</li>
             </ul>
 
-            <button class="plan-button" onclick="showComingSoon()">
+            <button
+              class="plan-button"
+              onclick="showComingSoon()"
+            >
               Coming Soon
             </button>
 
@@ -946,7 +952,7 @@ body::after {
     </section>
 
 
-    <!-- ACCOUNT SCREEN -->
+    <!-- ACCOUNT -->
     <section class="screen" id="accountScreen">
 
       <div class="screen-container">
@@ -967,15 +973,24 @@ body::after {
 
           <div class="auth-buttons" id="authButtons">
 
-            <button class="auth-button" onclick="demoSignIn('Google')">
+            <button
+              class="auth-button"
+              onclick="demoSignIn('Google')"
+            >
               Continue with Google
             </button>
 
-            <button class="auth-button" onclick="demoSignIn('Apple')">
+            <button
+              class="auth-button"
+              onclick="demoSignIn('Apple')"
+            >
               Continue with Apple
             </button>
 
-            <button class="auth-button" onclick="demoSignIn('Email')">
+            <button
+              class="auth-button"
+              onclick="demoSignIn('Email')"
+            >
               Continue with Email
             </button>
 
@@ -1008,9 +1023,17 @@ body::after {
             id="messageInput"
             placeholder="Message Nova AI..."
             rows="1"
+            autocomplete="off"
+            autocorrect="on"
+            autocapitalize="sentences"
+            spellcheck="true"
           ></textarea>
 
-          <button class="send-button" id="sendButton">
+          <button
+            class="send-button"
+            id="sendButton"
+            type="button"
+          >
             ↑
           </button>
 
@@ -1042,7 +1065,10 @@ body::after {
       Coming soon.
     </p>
 
-    <button class="modal-close" onclick="closeModal()">
+    <button
+      class="modal-close"
+      onclick="closeModal()"
+    >
       Close
     </button>
 
@@ -1052,6 +1078,7 @@ body::after {
 
 
 <script>
+
 /* ==========================================
    STATE
 ========================================== */
@@ -1060,76 +1087,147 @@ let currentChat = [];
 let currentChatId = null;
 let isGenerating = false;
 
-const STORAGE_CHATS = "nova_chats_v3";
-const STORAGE_ACCOUNT = "nova_account_v3";
-const STORAGE_USAGE = "nova_usage_v3";
+const STORAGE_CHATS = "nova_chats_v4";
+const STORAGE_ACCOUNT = "nova_account_v4";
+const STORAGE_USAGE = "nova_usage_v4";
 
 
 /* ==========================================
    ELEMENTS
 ========================================== */
 
-const sidebar = document.getElementById("sidebar");
-const mobileMenuButton = document.getElementById("mobileMenuButton");
+const sidebar =
+  document.getElementById("sidebar");
 
-const messages = document.getElementById("messages");
-const welcome = document.getElementById("welcome");
+const main =
+  document.getElementById("main");
 
-const messageInput = document.getElementById("messageInput");
-const sendButton = document.getElementById("sendButton");
+const mobileMenuButton =
+  document.getElementById("mobileMenuButton");
 
-const chatScreen = document.getElementById("chatScreen");
-const premiumScreen = document.getElementById("premiumScreen");
-const accountScreen = document.getElementById("accountScreen");
+const messages =
+  document.getElementById("messages");
 
-const inputArea = document.getElementById("inputArea");
+const welcome =
+  document.getElementById("welcome");
 
-const recentChats = document.getElementById("recentChats");
+const messageInput =
+  document.getElementById("messageInput");
 
-const accountStatus = document.getElementById("accountStatus");
-const authButtons = document.getElementById("authButtons");
-const signOutButton = document.getElementById("signOutButton");
+const sendButton =
+  document.getElementById("sendButton");
 
-const modal = document.getElementById("modal");
-const modalTitle = document.getElementById("modalTitle");
-const modalText = document.getElementById("modalText");
+const chatScreen =
+  document.getElementById("chatScreen");
+
+const premiumScreen =
+  document.getElementById("premiumScreen");
+
+const accountScreen =
+  document.getElementById("accountScreen");
+
+const inputArea =
+  document.getElementById("inputArea");
+
+const recentChats =
+  document.getElementById("recentChats");
+
+const accountStatus =
+  document.getElementById("accountStatus");
+
+const authButtons =
+  document.getElementById("authButtons");
+
+const signOutButton =
+  document.getElementById("signOutButton");
+
+const modal =
+  document.getElementById("modal");
+
+const modalTitle =
+  document.getElementById("modalTitle");
+
+const modalText =
+  document.getElementById("modalText");
 
 
 /* ==========================================
-   MOBILE MENU
+   MOBILE MENU FIX
 ========================================== */
 
-mobileMenuButton.addEventListener("click", function() {
-  sidebar.classList.toggle("open");
+/*
+  IMPORTANT:
+  Stop the click from reaching #main.
+  Previously the button opened the menu,
+  then #main immediately closed it.
+*/
 
-  if (sidebar.classList.contains("open")) {
-    mobileMenuButton.textContent = "✕";
-  } else {
-    mobileMenuButton.textContent = "☰";
+mobileMenuButton.addEventListener(
+  "click",
+  function(event) {
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    sidebar.classList.toggle("open");
+
+    if (sidebar.classList.contains("open")) {
+
+      mobileMenuButton.textContent = "✕";
+
+    } else {
+
+      mobileMenuButton.textContent = "☰";
+
+    }
+
   }
-});
-
-
-function closeMobileMenu() {
-  sidebar.classList.remove("open");
-  mobileMenuButton.textContent = "☰";
-}
+);
 
 
 /*
-  Close the mobile menu if the user taps
-  the main page.
-
-  There is deliberately NO full-screen overlay.
+  Clicking inside the sidebar should NOT
+  close the sidebar.
 */
 
-document.getElementById("main").addEventListener("click", function() {
+sidebar.addEventListener(
+  "click",
+  function(event) {
 
-  if (window.innerWidth <= 800 && sidebar.classList.contains("open")) {
-    closeMobileMenu();
+    event.stopPropagation();
+
   }
+);
 
-});
+
+/*
+  Clicking the main area closes the mobile menu.
+*/
+
+main.addEventListener(
+  "click",
+  function() {
+
+    if (
+      window.innerWidth <= 800 &&
+      sidebar.classList.contains("open")
+    ) {
+
+      closeMobileMenu();
+
+    }
+
+  }
+);
+
+
+function closeMobileMenu() {
+
+  sidebar.classList.remove("open");
+
+  mobileMenuButton.textContent = "☰";
+
+}
 
 
 /* ==========================================
@@ -1139,73 +1237,127 @@ document.getElementById("main").addEventListener("click", function() {
 function showScreen(screen) {
 
   chatScreen.style.display = "none";
+
   premiumScreen.classList.remove("active");
+
   accountScreen.classList.remove("active");
 
   inputArea.style.display = "none";
 
+
   if (screen === "chat") {
 
     chatScreen.style.display = "flex";
+
     inputArea.style.display = "block";
 
-    document.getElementById("topbarTitle").textContent = "Nova AI";
+    document.getElementById(
+      "topbarTitle"
+    ).textContent = "Nova AI";
 
   }
+
 
   if (screen === "premium") {
 
     premiumScreen.classList.add("active");
 
-    document.getElementById("topbarTitle").textContent = "Premium";
+    document.getElementById(
+      "topbarTitle"
+    ).textContent = "Premium";
 
   }
+
 
   if (screen === "account") {
 
     accountScreen.classList.add("active");
 
-    document.getElementById("topbarTitle").textContent = "Account";
+    document.getElementById(
+      "topbarTitle"
+    ).textContent = "Account";
 
     updateAccountUI();
 
   }
 
+
   closeMobileMenu();
+
 }
 
 
-document.getElementById("premiumButton").addEventListener("click", function() {
-  showScreen("premium");
-});
+/* ==========================================
+   NAVIGATION BUTTONS
+========================================== */
+
+document.getElementById(
+  "premiumButton"
+).addEventListener(
+  "click",
+  function(event) {
+
+    event.stopPropagation();
+
+    showScreen("premium");
+
+  }
+);
 
 
-document.getElementById("accountButton").addEventListener("click", function() {
-  showScreen("account");
-});
+document.getElementById(
+  "accountButton"
+).addEventListener(
+  "click",
+  function(event) {
+
+    event.stopPropagation();
+
+    showScreen("account");
+
+  }
+);
 
 
-document.getElementById("topAccountButton").addEventListener("click", function() {
-  showScreen("account");
-});
+document.getElementById(
+  "topAccountButton"
+).addEventListener(
+  "click",
+  function(event) {
+
+    event.stopPropagation();
+
+    showScreen("account");
+
+  }
+);
 
 
 /* ==========================================
    NEW CHAT
 ========================================== */
 
-document.getElementById("newChat").addEventListener("click", function() {
+document.getElementById(
+  "newChat"
+).addEventListener(
+  "click",
+  function(event) {
 
-  saveCurrentChat();
+    event.stopPropagation();
 
-  currentChat = [];
-  currentChatId = Date.now().toString();
+    saveCurrentChat();
 
-  renderMessages();
+    currentChat = [];
 
-  showScreen("chat");
+    currentChatId =
+      Date.now().toString();
 
-});
+    renderMessages();
+
+    showScreen("chat");
+
+  }
+);
 
 
 /* ==========================================
@@ -1217,7 +1369,9 @@ function getChats() {
   try {
 
     return JSON.parse(
-      localStorage.getItem(STORAGE_CHATS) || "[]"
+      localStorage.getItem(
+        STORAGE_CHATS
+      ) || "[]"
     );
 
   } catch {
@@ -1243,24 +1397,44 @@ function saveCurrentChat() {
 
   if (!currentChat.length) return;
 
-  const chats = getChats();
+  const chats =
+    getChats();
 
   const firstUserMessage =
-    currentChat.find(m => m.role === "user");
+    currentChat.find(
+      message =>
+        message.role === "user"
+    );
 
   const title =
-    firstUserMessage?.content?.slice(0, 40) ||
+    firstUserMessage?.content?.slice(
+      0,
+      40
+    ) ||
     "New Chat";
 
   const existingIndex =
-    chats.findIndex(c => c.id === currentChatId);
+    chats.findIndex(
+      chat =>
+        chat.id === currentChatId
+    );
 
   const chat = {
-    id: currentChatId || Date.now().toString(),
+
+    id:
+      currentChatId ||
+      Date.now().toString(),
+
     title,
-    messages: currentChat,
-    updated: Date.now()
+
+    messages:
+      currentChat,
+
+    updated:
+      Date.now()
+
   };
+
 
   if (existingIndex >= 0) {
 
@@ -1271,6 +1445,7 @@ function saveCurrentChat() {
     chats.unshift(chat);
 
   }
+
 
   saveChats(chats);
 
@@ -1283,33 +1458,73 @@ function renderRecentChats() {
 
   recentChats.innerHTML = "";
 
-  const chats = getChats();
+  const chats =
+    getChats();
 
   chats
-    .sort((a, b) => b.updated - a.updated)
+    .sort(
+      (a, b) =>
+        b.updated - a.updated
+    )
     .slice(0, 30)
     .forEach(chat => {
 
       const item =
         document.createElement("div");
 
-      item.className = "chat-history-item";
+      item.className =
+        "chat-history-item";
 
-      item.textContent = chat.title;
+      item.textContent =
+        chat.title;
 
-      item.addEventListener("click", function() {
+      item.addEventListener(
+        "click",
+        function() {
 
-        currentChatId = chat.id;
-        currentChat = chat.messages || [];
+          currentChatId =
+            chat.id;
 
-        renderMessages();
-        showScreen("chat");
+          currentChat =
+            chat.messages || [];
 
-      });
+          renderMessages();
+
+          showScreen("chat");
+
+        }
+      );
 
       recentChats.appendChild(item);
 
     });
+
+}
+
+
+/* ==========================================
+   CLEAN NOVA RESPONSE
+========================================== */
+
+/*
+  Removes Markdown bold markers.
+
+  Example:
+
+  **Hello**
+
+  becomes:
+
+  Hello
+*/
+
+function cleanResponse(text) {
+
+  if (!text) return "";
+
+  return String(text)
+    .replace(/\*\*/g, "")
+    .trim();
 
 }
 
@@ -1330,15 +1545,18 @@ function renderMessages() {
 
   }
 
-  currentChat.forEach(message => {
 
-    addMessageToDOM(
-      message.role,
-      message.content,
-      false
-    );
+  currentChat.forEach(
+    message => {
 
-  });
+      addMessageToDOM(
+        message.role,
+        message.content,
+        false
+      );
+
+    }
+  );
 
 }
 
@@ -1349,24 +1567,42 @@ function addMessageToDOM(
   scroll = true
 ) {
 
+  /*
+    Clean AI responses before displaying.
+  */
+
+  if (role === "assistant") {
+
+    content =
+      cleanResponse(content);
+
+  }
+
+
   const wrapper =
     document.createElement("div");
 
-  wrapper.className = "message";
+  wrapper.className =
+    "message";
+
 
   const avatar =
     document.createElement("div");
 
   avatar.className =
     "avatar " +
-    (role === "assistant"
-      ? "ai-avatar"
-      : "user-avatar");
+    (
+      role === "assistant"
+        ? "ai-avatar"
+        : "user-avatar"
+    );
+
 
   avatar.textContent =
     role === "assistant"
       ? "✦"
       : "You";
+
 
   const contentBox =
     document.createElement("div");
@@ -1374,16 +1610,19 @@ function addMessageToDOM(
   contentBox.className =
     "message-content";
 
+
   const name =
     document.createElement("div");
 
   name.className =
     "message-name";
 
+
   name.textContent =
     role === "assistant"
       ? "Nova AI"
       : "You";
+
 
   const text =
     document.createElement("div");
@@ -1391,59 +1630,87 @@ function addMessageToDOM(
   text.className =
     "message-text";
 
-  text.textContent = content;
+
+  text.textContent =
+    content;
+
 
   contentBox.appendChild(name);
+
   contentBox.appendChild(text);
+
 
   if (role === "assistant") {
 
     const copy =
       document.createElement("button");
 
-    copy.className = "copy-button";
+    copy.className =
+      "copy-button";
 
-    copy.textContent = "Copy";
+    copy.textContent =
+      "Copy";
 
-    copy.addEventListener("click", async function() {
 
-      try {
+    copy.addEventListener(
+      "click",
+      async function() {
 
-        await navigator.clipboard.writeText(content);
+        try {
 
-        copy.textContent = "Copied!";
+          await navigator.clipboard
+            .writeText(content);
 
-        setTimeout(() => {
-          copy.textContent = "Copy";
-        }, 1200);
+          copy.textContent =
+            "Copied!";
 
-      } catch {
+          setTimeout(
+            function() {
 
-        copy.textContent = "Copy failed";
+              copy.textContent =
+                "Copy";
+
+            },
+            1200
+          );
+
+        } catch {
+
+          copy.textContent =
+            "Copy failed";
+
+        }
 
       }
+    );
 
-    });
 
     contentBox.appendChild(copy);
 
   }
 
+
   wrapper.appendChild(avatar);
+
   wrapper.appendChild(contentBox);
 
   messages.appendChild(wrapper);
 
+
   if (scroll) {
 
-    requestAnimationFrame(() => {
+    requestAnimationFrame(
+      function() {
 
-      window.scrollTo({
-        top: document.body.scrollHeight,
-        behavior: "smooth"
-      });
+        window.scrollTo({
+          top:
+            document.body.scrollHeight,
+          behavior:
+            "smooth"
+        });
 
-    });
+      }
+    );
 
   }
 
@@ -1459,45 +1726,67 @@ function addTyping() {
   const wrapper =
     document.createElement("div");
 
-  wrapper.className = "message";
-  wrapper.id = "typingMessage";
+  wrapper.className =
+    "message";
+
+  wrapper.id =
+    "typingMessage";
+
 
   const avatar =
     document.createElement("div");
 
-  avatar.className = "avatar ai-avatar";
-  avatar.textContent = "✦";
+  avatar.className =
+    "avatar ai-avatar";
+
+  avatar.textContent =
+    "✦";
+
 
   const content =
     document.createElement("div");
 
-  content.className = "message-content";
+  content.className =
+    "message-content";
+
 
   const name =
     document.createElement("div");
 
-  name.className = "message-name";
-  name.textContent = "Nova AI";
+  name.className =
+    "message-name";
+
+  name.textContent =
+    "Nova AI";
+
 
   const typing =
     document.createElement("div");
 
-  typing.className = "typing";
+  typing.className =
+    "typing";
+
 
   typing.innerHTML =
     "<span></span><span></span><span></span>";
 
+
   content.appendChild(name);
+
   content.appendChild(typing);
 
   wrapper.appendChild(avatar);
+
   wrapper.appendChild(content);
 
   messages.appendChild(wrapper);
 
+
   window.scrollTo({
-    top: document.body.scrollHeight,
-    behavior: "smooth"
+    top:
+      document.body.scrollHeight,
+    behavior:
+      "smooth"
   });
 
 }
@@ -1506,29 +1795,38 @@ function addTyping() {
 function removeTyping() {
 
   const typing =
-    document.getElementById("typingMessage");
+    document.getElementById(
+      "typingMessage"
+    );
 
   if (typing) {
+
     typing.remove();
+
   }
 
 }
 
 
 /* ==========================================
-   USAGE
+   DATE / USAGE
 ========================================== */
 
 function getToday() {
 
-  const now = new Date();
+  const now =
+    new Date();
 
   return (
     now.getFullYear() +
     "-" +
-    String(now.getMonth() + 1).padStart(2, "0") +
+    String(
+      now.getMonth() + 1
+    ).padStart(2, "0") +
     "-" +
-    String(now.getDate()).padStart(2, "0")
+    String(
+      now.getDate()
+    ).padStart(2, "0")
   );
 
 }
@@ -1540,10 +1838,16 @@ function getUsage() {
 
     const data =
       JSON.parse(
-        localStorage.getItem(STORAGE_USAGE) || "{}"
+        localStorage.getItem(
+          STORAGE_USAGE
+        ) || "{}"
       );
 
-    if (data.date !== getToday()) {
+
+    if (
+      data.date !==
+      getToday()
+    ) {
 
       return {
         date: getToday(),
@@ -1552,6 +1856,7 @@ function getUsage() {
       };
 
     }
+
 
     return data;
 
@@ -1578,9 +1883,164 @@ function saveUsage(data) {
 }
 
 
+/* ==========================================
+   ACCOUNT
+========================================== */
+
 function isSignedIn() {
 
-  return !!localStorage.getItem(STORAGE_ACCOUNT);
+  return !!localStorage.getItem(
+    STORAGE_ACCOUNT
+  );
+
+}
+
+
+function demoSignIn(provider) {
+
+  const account = {
+
+    provider,
+
+    name:
+      provider === "Google"
+        ? "Google User"
+        : provider === "Apple"
+          ? "Apple User"
+          : "Nova User",
+
+    email:
+      provider.toLowerCase() +
+      "@example.com",
+
+    signedInAt:
+      Date.now()
+
+  };
+
+
+  localStorage.setItem(
+    STORAGE_ACCOUNT,
+    JSON.stringify(account)
+  );
+
+
+  updateAccountUI();
+
+
+  showModal(
+    "Signed in",
+    "You're signed in using " +
+    provider +
+    "."
+  );
+
+}
+
+
+function signOut() {
+
+  localStorage.removeItem(
+    STORAGE_ACCOUNT
+  );
+
+  updateAccountUI();
+
+}
+
+
+function updateAccountUI() {
+
+  const raw =
+    localStorage.getItem(
+      STORAGE_ACCOUNT
+    );
+
+
+  if (!raw) {
+
+    accountStatus.textContent =
+      "You are currently signed out.";
+
+    authButtons.style.display =
+      "grid";
+
+    signOutButton.style.display =
+      "none";
+
+    return;
+
+  }
+
+
+  let account;
+
+
+  try {
+
+    account =
+      JSON.parse(raw);
+
+  } catch {
+
+    localStorage.removeItem(
+      STORAGE_ACCOUNT
+    );
+
+    updateAccountUI();
+
+    return;
+
+  }
+
+
+  accountStatus.innerHTML =
+    "<strong>" +
+    escapeHTML(account.name) +
+    "</strong><br>" +
+    escapeHTML(account.email) +
+    "<br><br>Signed in with " +
+    escapeHTML(account.provider) +
+    ".";
+
+
+  authButtons.style.display =
+    "none";
+
+  signOutButton.style.display =
+    "block";
+
+}
+
+
+function escapeHTML(value) {
+
+  return String(value)
+
+    .replaceAll(
+      "&",
+      "&amp;"
+    )
+
+    .replaceAll(
+      "<",
+      "&lt;"
+    )
+
+    .replaceAll(
+      ">",
+      "&gt;"
+    )
+
+    .replaceAll(
+      '"',
+      "&quot;"
+    )
+
+    .replaceAll(
+      "'",
+      "&#039;"
+    );
 
 }
 
@@ -1595,6 +2055,7 @@ function wantsImage(text) {
     text.toLowerCase();
 
   const phrases = [
+
     "create an image",
     "create a picture",
     "generate an image",
@@ -1608,10 +2069,13 @@ function wantsImage(text) {
     "make artwork",
     "create art",
     "generate art"
+
   ];
 
+
   return phrases.some(
-    phrase => value.includes(phrase)
+    phrase =>
+      value.includes(phrase)
   );
 
 }
@@ -1625,10 +2089,13 @@ async function sendMessage() {
 
   if (isGenerating) return;
 
+
   const message =
     messageInput.value.trim();
 
+
   if (!message) return;
+
 
   if (wantsImage(message)) {
 
@@ -1645,83 +2112,111 @@ async function sendMessage() {
 
     }
 
+
     await generateImage(message);
 
     return;
 
   }
 
+
   const usage =
     getUsage();
+
 
   if (usage.messages >= 20) {
 
     showModal(
       "Daily limit reached",
-      "You've reached the Free plan limit of 20 AI messages today. Premium plans will offer higher limits."
+      "You've reached the Free plan limit of 20 AI messages today."
     );
 
     return;
 
   }
 
+
   isGenerating = true;
 
   sendButton.disabled = true;
 
+
   const userMessage =
     message;
+
 
   messageInput.value = "";
 
   autoResize();
 
+
   if (welcome.parentNode) {
+
     welcome.remove();
+
   }
 
+
   currentChat.push({
+
     role: "user",
-    content: userMessage
+
+    content:
+      userMessage
+
   });
+
 
   addMessageToDOM(
     "user",
     userMessage
   );
 
+
   usage.messages++;
 
   saveUsage(usage);
 
+
   addTyping();
+
 
   try {
 
     const response =
-      await fetch("/api/chat", {
+      await fetch(
+        "/api/chat",
+        {
 
-        method: "POST",
+          method:
+            "POST",
 
-        headers: {
-          "Content-Type": "application/json"
-        },
+          headers: {
+            "Content-Type":
+              "application/json"
+          },
 
-        body: JSON.stringify({
+          body:
+            JSON.stringify({
 
-          message: userMessage,
+              message:
+                userMessage,
 
-          history:
-            currentChat.slice(-20)
+              history:
+                currentChat.slice(-20)
 
-        })
+            })
 
-      });
+        }
+      );
+
 
     const data =
       await response.json();
 
+
     removeTyping();
+
 
     if (!response.ok) {
 
@@ -1732,39 +2227,65 @@ async function sendMessage() {
 
     }
 
+
+    /*
+      Clean ** from the AI response
+      before storing and displaying it.
+    */
+
     const reply =
-      data.reply ||
-      "I couldn't generate a response.";
+      cleanResponse(
+        data.reply ||
+        "I couldn't generate a response."
+      );
+
 
     currentChat.push({
-      role: "assistant",
-      content: reply
+
+      role:
+        "assistant",
+
+      content:
+        reply
+
     });
+
 
     addMessageToDOM(
       "assistant",
       reply
     );
 
+
     saveCurrentChat();
+
 
   } catch (error) {
 
     removeTyping();
 
+
     const errorText =
       "Sorry, something went wrong. " +
       error.message;
 
+
     currentChat.push({
-      role: "assistant",
-      content: errorText
+
+      role:
+        "assistant",
+
+      content:
+        errorText
+
     });
+
 
     addMessageToDOM(
       "assistant",
       errorText
     );
+
 
   } finally {
 
@@ -1788,6 +2309,7 @@ async function generateImage(prompt) {
   const usage =
     getUsage();
 
+
   if (usage.images >= 3) {
 
     showModal(
@@ -1799,51 +2321,74 @@ async function generateImage(prompt) {
 
   }
 
+
   isGenerating = true;
 
   sendButton.disabled = true;
 
+
   if (welcome.parentNode) {
+
     welcome.remove();
+
   }
 
+
   currentChat.push({
-    role: "user",
-    content: prompt
+
+    role:
+      "user",
+
+    content:
+      prompt
+
   });
+
 
   addMessageToDOM(
     "user",
     prompt
   );
 
+
   usage.images++;
 
   saveUsage(usage);
 
+
   addTyping();
+
 
   try {
 
     const response =
-      await fetch("/api/image", {
+      await fetch(
+        "/api/image",
+        {
 
-        method: "POST",
+          method:
+            "POST",
 
-        headers: {
-          "Content-Type": "application/json"
-        },
+          headers: {
+            "Content-Type":
+              "application/json"
+          },
 
-        body: JSON.stringify({
-          prompt
-        })
+          body:
+            JSON.stringify({
+              prompt
+            })
 
-      });
+        }
+      );
+
 
     const data =
       await response.json();
 
+
     removeTyping();
+
 
     if (!response.ok) {
 
@@ -1854,6 +2399,7 @@ async function generateImage(prompt) {
 
     }
 
+
     if (!data.image) {
 
       throw new Error(
@@ -1862,10 +2408,13 @@ async function generateImage(prompt) {
 
     }
 
+
     const wrapper =
       document.createElement("div");
 
-    wrapper.className = "message";
+    wrapper.className =
+      "message";
+
 
     const avatar =
       document.createElement("div");
@@ -1873,13 +2422,16 @@ async function generateImage(prompt) {
     avatar.className =
       "avatar ai-avatar";
 
-    avatar.textContent = "✦";
+    avatar.textContent =
+      "✦";
+
 
     const content =
       document.createElement("div");
 
     content.className =
       "message-content";
+
 
     const name =
       document.createElement("div");
@@ -1889,6 +2441,7 @@ async function generateImage(prompt) {
 
     name.textContent =
       "Nova AI";
+
 
     const image =
       document.createElement("img");
@@ -1902,48 +2455,70 @@ async function generateImage(prompt) {
     image.alt =
       "AI generated image";
 
+
     content.appendChild(name);
+
     content.appendChild(image);
 
+
     wrapper.appendChild(avatar);
+
     wrapper.appendChild(content);
 
     messages.appendChild(wrapper);
 
-    /*
-      Do not store the huge base64 image
-      in localStorage.
-    */
 
     currentChat.push({
-      role: "assistant",
-      content: "[AI image generated]"
+
+      role:
+        "assistant",
+
+      content:
+        "[AI image generated]"
+
     });
+
 
     saveCurrentChat();
 
+
     window.scrollTo({
-      top: document.body.scrollHeight,
-      behavior: "smooth"
+
+      top:
+        document.body.scrollHeight,
+
+      behavior:
+        "smooth"
+
     });
+
 
   } catch (error) {
 
     removeTyping();
 
+
     const errorText =
       "Image generation failed: " +
       error.message;
 
+
     currentChat.push({
-      role: "assistant",
-      content: errorText
+
+      role:
+        "assistant",
+
+      content:
+        errorText
+
     });
+
 
     addMessageToDOM(
       "assistant",
       errorText
     );
+
 
   } finally {
 
@@ -1964,7 +2539,13 @@ async function generateImage(prompt) {
 
 sendButton.addEventListener(
   "click",
-  sendMessage
+  function(event) {
+
+    event.stopPropagation();
+
+    sendMessage();
+
+  }
 );
 
 
@@ -1995,7 +2576,8 @@ messageInput.addEventListener(
 
 function autoResize() {
 
-  messageInput.style.height = "auto";
+  messageInput.style.height =
+    "auto";
 
   messageInput.style.height =
     Math.min(
@@ -2007,142 +2589,13 @@ function autoResize() {
 
 
 /* ==========================================
-   ACCOUNT
-========================================== */
-
-function demoSignIn(provider) {
-
-  /*
-    TEMPORARY DEMO ACCOUNT SYSTEM.
-
-    Real Google / Apple / Email authentication
-    will require a proper authentication backend.
-  */
-
-  const account = {
-
-    provider,
-
-    name:
-      provider === "Google"
-        ? "Google User"
-        : provider === "Apple"
-          ? "Apple User"
-          : "Nova User",
-
-    email:
-      provider.toLowerCase() +
-      "@example.com",
-
-    signedInAt:
-      Date.now()
-
-  };
-
-  localStorage.setItem(
-    STORAGE_ACCOUNT,
-    JSON.stringify(account)
-  );
-
-  updateAccountUI();
-
-  showModal(
-    "Signed in",
-    "You're signed in using " +
-    provider +
-    "."
-  );
-
-}
-
-
-function signOut() {
-
-  localStorage.removeItem(
-    STORAGE_ACCOUNT
-  );
-
-  updateAccountUI();
-
-}
-
-
-function updateAccountUI() {
-
-  const raw =
-    localStorage.getItem(
-      STORAGE_ACCOUNT
-    );
-
-  if (!raw) {
-
-    accountStatus.textContent =
-      "You are currently signed out.";
-
-    authButtons.style.display =
-      "grid";
-
-    signOutButton.style.display =
-      "none";
-
-    return;
-
-  }
-
-  let account;
-
-  try {
-
-    account =
-      JSON.parse(raw);
-
-  } catch {
-
-    localStorage.removeItem(
-      STORAGE_ACCOUNT
-    );
-
-    updateAccountUI();
-
-    return;
-
-  }
-
-  accountStatus.innerHTML =
-    "<strong>" +
-    escapeHTML(account.name) +
-    "</strong><br>" +
-    escapeHTML(account.email) +
-    "<br><br>Signed in with " +
-    escapeHTML(account.provider) +
-    ".";
-
-  authButtons.style.display =
-    "none";
-
-  signOutButton.style.display =
-    "block";
-
-}
-
-
-function escapeHTML(value) {
-
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-
-}
-
-
-/* ==========================================
    MODAL
 ========================================== */
 
-function showModal(title, text) {
+function showModal(
+  title,
+  text
+) {
 
   modalTitle.textContent =
     title;
@@ -2150,14 +2603,18 @@ function showModal(title, text) {
   modalText.textContent =
     text;
 
-  modal.classList.add("active");
+  modal.classList.add(
+    "active"
+  );
 
 }
 
 
 function closeModal() {
 
-  modal.classList.remove("active");
+  modal.classList.remove(
+    "active"
+  );
 
 }
 
@@ -2176,8 +2633,12 @@ modal.addEventListener(
   "click",
   function(event) {
 
-    if (event.target === modal) {
+    if (
+      event.target === modal
+    ) {
+
       closeModal();
+
     }
 
   }
