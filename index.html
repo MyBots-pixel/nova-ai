@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Nova AI</title>
 
     <style>
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -13,192 +15,287 @@
         }
 
         body {
-            font-family: Arial, sans-serif;
-            background: #0b1020;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #080d18;
             color: white;
             height: 100vh;
             overflow: hidden;
         }
 
+        button,
+        input {
+            font-family: inherit;
+        }
+
+        /* APP */
+
         .app {
             display: flex;
             height: 100vh;
+            width: 100%;
         }
+
+        /* SIDEBAR */
 
         .sidebar {
             width: 260px;
-            background: #080d19;
-            border-right: 1px solid #20283a;
+            min-width: 260px;
+            height: 100vh;
+            background: #070b14;
+            border-right: 1px solid #1d2638;
             padding: 18px;
+            display: flex;
+            flex-direction: column;
         }
 
         .logo {
             font-size: 22px;
-            font-weight: bold;
-            margin-bottom: 25px;
+            font-weight: 700;
+            margin-bottom: 20px;
         }
 
         .new-chat {
             width: 100%;
+            border: none;
+            border-radius: 11px;
             padding: 13px;
-            border: 0;
-            border-radius: 10px;
             background: #5865f2;
             color: white;
             font-size: 15px;
             cursor: pointer;
+            transition: 0.2s;
         }
 
-        .new-chat:hover,
-        .send:hover {
-            opacity: 0.85;
+        .new-chat:hover {
+            transform: translateY(-1px);
+            opacity: 0.9;
         }
-.history-title {
-    margin-top: 25px;
-    margin-bottom: 10px;
-    color: #7f8aa3;
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
 
-.chat-history {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
+        .history-title {
+            margin-top: 25px;
+            margin-bottom: 9px;
+            color: #737f98;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
 
-.history-item {
-    padding: 10px 12px;
-    border-radius: 9px;
-    color: #c7cede;
-    font-size: 14px;
-    cursor: pointer;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.history-item:hover {
-    background: #151c2d;
-    color: white;
-}
-        .main {
-            flex: 1;
+        .chat-history {
             display: flex;
             flex-direction: column;
-            min-width: 0;
+            gap: 5px;
+            overflow-y: auto;
         }
 
+        .history-item {
+            width: 100%;
+            padding: 10px 11px;
+            border-radius: 9px;
+            color: #b9c2d5;
+            font-size: 14px;
+            cursor: pointer;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: 0.15s;
+        }
+
+        .history-item:hover {
+            background: #131a2a;
+            color: white;
+        }
+
+        /* MAIN */
+
+        .main {
+            flex: 1;
+            min-width: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* TOP BAR */
+
         .topbar {
-            height: 65px;
-            border-bottom: 1px solid #20283a;
+            height: 64px;
+            min-height: 64px;
+            border-bottom: 1px solid #1d2638;
             display: flex;
             align-items: center;
             padding: 0 25px;
-            font-weight: bold;
+            font-size: 16px;
+            font-weight: 600;
         }
+
+        /* MESSAGES */
 
         .messages {
             flex: 1;
             overflow-y: auto;
-            padding: 30px;
+            padding: 35px 25px;
+            scroll-behavior: smooth;
         }
 
         .welcome {
-            height: 100%;
+            min-height: 100%;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
+            flex-direction: column;
             text-align: center;
+            padding-bottom: 80px;
         }
 
         .welcome h1 {
             font-size: 42px;
             margin-bottom: 10px;
+            letter-spacing: -1px;
         }
 
         .welcome p {
-            color: #9ca6bb;
+            color: #8c97ad;
             font-size: 17px;
         }
 
+        /* CHAT MESSAGES */
+
         .message {
-            max-width: 800px;
+            width: 100%;
+            max-width: 850px;
             margin: 0 auto 22px;
-            line-height: 1.6;
+            display: flex;
         }
 
         .message.user {
-            text-align: right;
+            justify-content: flex-end;
+        }
+
+        .message.assistant {
+            justify-content: flex-start;
         }
 
         .message-content {
-            display: inline-block;
+            max-width: 75%;
             padding: 12px 16px;
-            border-radius: 14px;
-            background: #151c2d;
+            border-radius: 15px;
+            background: #151d2e;
+            color: #e9edf5;
+            line-height: 1.6;
+            font-size: 15px;
             white-space: pre-wrap;
-            text-align: left;
+            overflow-wrap: anywhere;
         }
 
         .user .message-content {
             background: #5865f2;
+            color: white;
         }
 
+        .loading {
+            color: #8994aa;
+            font-style: italic;
+        }
+
+        /* INPUT */
+
         .input-area {
-            width: min(800px, 90%);
-            margin: 0 auto 25px;
+            width: min(850px, calc(100% - 40px));
+            margin: 0 auto 24px;
         }
 
         .input-box {
+            width: 100%;
             display: flex;
-            background: #151c2d;
-            border: 1px solid #303a52;
+            align-items: center;
+            background: #121a2a;
+            border: 1px solid #2a354b;
             border-radius: 16px;
-            padding: 8px;
+            padding: 7px;
+            transition: border 0.2s, box-shadow 0.2s;
         }
 
-        input {
+        .input-box:focus-within {
+            border-color: #5865f2;
+            box-shadow: 0 0 0 3px rgba(88, 101, 242, 0.12);
+        }
+
+        #messageInput {
             flex: 1;
+            min-width: 0;
+            height: 45px;
+            padding: 0 13px;
             background: transparent;
-            border: 0;
+            border: none;
             outline: none;
             color: white;
-            font-size: 16px;
-            padding: 12px;
+            font-size: 15px;
+        }
+
+        #messageInput::placeholder {
+            color: #6f7b91;
         }
 
         .send {
             width: 45px;
             height: 45px;
-            border: 0;
+            flex-shrink: 0;
+            border: none;
             border-radius: 12px;
             background: #5865f2;
             color: white;
-            font-size: 20px;
+            font-size: 21px;
             cursor: pointer;
+            transition: 0.2s;
         }
 
-        .loading {
-            color: #9ca6bb;
-            font-style: italic;
+        .send:hover {
+            transform: translateY(-1px);
+            opacity: 0.9;
         }
+
+        .send:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* MOBILE */
 
         @media (max-width: 700px) {
+
             .sidebar {
                 display: none;
             }
 
-            .welcome h1 {
-                font-size: 32px;
+            .topbar {
+                padding: 0 18px;
             }
 
             .messages {
-                padding: 20px 12px;
+                padding: 25px 12px;
             }
+
+            .welcome h1 {
+                font-size: 31px;
+            }
+
+            .welcome p {
+                font-size: 15px;
+            }
+
+            .message-content {
+                max-width: 88%;
+            }
+
+            .input-area {
+                width: calc(100% - 20px);
+                margin-bottom: 12px;
+            }
+
         }
+
     </style>
 </head>
 
@@ -206,17 +303,34 @@
 
 <div class="app">
 
- <aside class="sidebar">
-    <div class="logo">✦ Nova AI</div>
+    <!-- SIDEBAR -->
 
-    <button class="new-chat" onclick="newChat()">
-        + New chat
-    </button>
+    <aside class="sidebar">
 
-    <div class="history-title">Recent chats</div>
+        <div class="logo">
+            ✦ Nova AI
+        </div>
 
-    <div id="chatHistory" class="chat-history"></div>
-</aside>
+        <button
+            class="new-chat"
+            id="newChatButton"
+        >
+            + New chat
+        </button>
+
+        <div class="history-title">
+            Recent chats
+        </div>
+
+        <div
+            class="chat-history"
+            id="chatHistory"
+        ></div>
+
+    </aside>
+
+
+    <!-- MAIN -->
 
     <main class="main">
 
@@ -224,16 +338,36 @@
             Nova AI
         </header>
 
-        <section class="messages" id="messages">
 
-            <div class="welcome" id="welcome">
-                <h1>How can I help?</h1>
-                <p>Ask Nova AI anything.</p>
+        <!-- MESSAGES -->
+
+        <section
+            class="messages"
+            id="messages"
+        >
+
+            <div
+                class="welcome"
+                id="welcome"
+            >
+
+                <h1>
+                    How can I help?
+                </h1>
+
+                <p>
+                    Ask Nova AI anything.
+                </p>
+
             </div>
 
         </section>
 
+
+        <!-- INPUT -->
+
         <div class="input-area">
+
             <div class="input-box">
 
                 <input
@@ -243,214 +377,477 @@
                     autocomplete="off"
                 >
 
-                <button class="send" onclick="sendMessage()">
+                <button
+                    class="send"
+                    id="sendButton"
+                    aria-label="Send message"
+                >
                     ↑
                 </button>
 
             </div>
+
         </div>
 
     </main>
 
 </div>
 
-const input = document.getElementById("messageInput");
-const messages = document.getElementById("messages");
-const history = document.getElementById("chatHistory");
 
-let currentChat = [];
-let chats = JSON.parse(localStorage.getItem("novaChats") || "[]");
+<script>
 
-input.addEventListener("keydown", function(event) {
-    if (event.key === "Enter") {
-        sendMessage();
-    }
-});
+    const input = document.getElementById("messageInput");
+    const sendButton = document.getElementById("sendButton");
+    const newChatButton = document.getElementById("newChatButton");
+    const messages = document.getElementById("messages");
+    const chatHistory = document.getElementById("chatHistory");
 
-function saveChats() {
-    localStorage.setItem("novaChats", JSON.stringify(chats));
-}
 
-function renderHistory() {
-    history.innerHTML = "";
+    let chats = [];
 
-    chats.slice().reverse().forEach((chat, reversedIndex) => {
+    let currentChat = null;
 
-        const realIndex = chats.length - 1 - reversedIndex;
 
-        const item = document.createElement("div");
-
-        item.className = "history-item";
-
-        item.textContent =
-            chat.title || "New conversation";
-
-        item.onclick = function() {
-            loadChat(realIndex);
-        };
-
-        history.appendChild(item);
-    });
-}
-
-function addMessage(text, type) {
-
-    const welcome = document.getElementById("welcome");
-
-    if (welcome) {
-        welcome.remove();
-    }
-
-    const message = document.createElement("div");
-
-    message.className = "message " + type;
-
-    const content = document.createElement("div");
-
-    content.className = "message-content";
-
-    content.textContent = text;
-
-    message.appendChild(content);
-
-    messages.appendChild(message);
-
-    messages.scrollTop = messages.scrollHeight;
-
-    return message;
-}
-
-async function sendMessage() {
-
-    const message = input.value.trim();
-
-    if (!message) {
-        return;
-    }
-
-    input.value = "";
-
-    addMessage(message, "user");
-
-    currentChat.push({
-        role: "user",
-        content: message
-    });
-
-    if (currentChat.length === 1) {
-
-        chats.push({
-            title: message.substring(0, 35),
-            messages: currentChat
-        });
-
-        saveChats();
-
-        renderHistory();
-    }
-
-    const loadingMessage = addMessage(
-        "Nova AI is thinking...",
-        "assistant"
-    );
-
-    loadingMessage
-        .querySelector(".message-content")
-        .classList.add("loading");
+    /* LOAD SAVED CHATS */
 
     try {
 
-        const response = await fetch("/api/chat", {
+        chats = JSON.parse(
+            localStorage.getItem("novaChats") || "[]"
+        );
 
-            method: "POST",
+        if (!Array.isArray(chats)) {
+            chats = [];
+        }
 
-            headers: {
-                "Content-Type": "application/json"
-            },
+    } catch {
 
-            body: JSON.stringify({
-                message: message
-            })
+        chats = [];
+
+    }
+
+
+    /* SAVE */
+
+    function saveChats() {
+
+        localStorage.setItem(
+            "novaChats",
+            JSON.stringify(chats)
+        );
+
+    }
+
+
+    /* HISTORY */
+
+    function renderHistory() {
+
+        chatHistory.innerHTML = "";
+
+        chats.forEach((chat, index) => {
+
+            const item = document.createElement("div");
+
+            item.className = "history-item";
+
+            item.textContent =
+                chat.title || "New conversation";
+
+            item.addEventListener(
+                "click",
+                function() {
+
+                    loadChat(index);
+
+                }
+            );
+
+            chatHistory.appendChild(item);
 
         });
 
-        const data = await response.json();
+    }
 
-        loadingMessage.remove();
 
-        if (!response.ok) {
+    /* SHOW MESSAGE */
 
-            addMessage(
-                data.error || "Something went wrong.",
-                "assistant"
-            );
+    function addMessage(text, type) {
 
+        const welcome =
+            document.getElementById("welcome");
+
+        if (welcome) {
+            welcome.remove();
+        }
+
+
+        const message =
+            document.createElement("div");
+
+        message.className =
+            "message " + type;
+
+
+        const content =
+            document.createElement("div");
+
+        content.className =
+            "message-content";
+
+        content.textContent = text;
+
+
+        message.appendChild(content);
+
+        messages.appendChild(message);
+
+
+        messages.scrollTop =
+            messages.scrollHeight;
+
+
+        return message;
+
+    }
+
+
+    /* NEW CHAT */
+
+    function startNewChat() {
+
+        currentChat = {
+            title: "New conversation",
+            messages: []
+        };
+
+
+        messages.innerHTML = `
+
+            <div
+                class="welcome"
+                id="welcome"
+            >
+
+                <h1>
+                    How can I help?
+                </h1>
+
+                <p>
+                    Ask Nova AI anything.
+                </p>
+
+            </div>
+
+        `;
+
+
+        input.value = "";
+
+        input.focus();
+
+    }
+
+
+    /* LOAD CHAT */
+
+    function loadChat(index) {
+
+        const chat = chats[index];
+
+        if (!chat) {
             return;
         }
 
-        addMessage(
-            data.reply || "I didn't receive a response.",
-            "assistant"
+
+        currentChat = chat;
+
+
+        messages.innerHTML = "";
+
+
+        chat.messages.forEach(
+            function(message) {
+
+                addMessage(
+                    message.content,
+                    message.role === "user"
+                        ? "user"
+                        : "assistant"
+                );
+
+            }
         );
 
-        currentChat.push({
-            role: "assistant",
-            content: data.reply
+
+        input.focus();
+
+    }
+
+
+    /* SEND MESSAGE */
+
+    async function sendMessage() {
+
+        const text =
+            input.value.trim();
+
+
+        if (!text) {
+            return;
+        }
+
+
+        /*
+            Create a chat if there isn't one.
+        */
+
+        if (!currentChat) {
+
+            currentChat = {
+
+                title:
+                    text.substring(0, 35),
+
+                messages: []
+
+            };
+
+            chats.push(currentChat);
+
+            saveChats();
+
+            renderHistory();
+
+        }
+
+
+        /*
+            If this is the first message,
+            use it as the chat title.
+        */
+
+        if (
+            currentChat.messages.length === 0
+        ) {
+
+            currentChat.title =
+                text.substring(0, 35);
+
+            saveChats();
+
+            renderHistory();
+
+        }
+
+
+        /*
+            Add user's message.
+        */
+
+        currentChat.messages.push({
+
+            role: "user",
+
+            content: text
+
         });
 
-        chats[chats.length - 1].messages = currentChat;
-
-        saveChats();
-
-    } catch (error) {
-
-        loadingMessage.remove();
 
         addMessage(
-            "I couldn't connect to the AI server.",
-            "assistant"
+            text,
+            "user"
         );
 
-        console.error(error);
+
+        input.value = "";
+
+
+        /*
+            Disable input while waiting.
+        */
+
+        input.disabled = true;
+
+        sendButton.disabled = true;
+
+
+        /*
+            Loading message.
+        */
+
+        const loading =
+            addMessage(
+                "Nova AI is thinking...",
+                "assistant"
+            );
+
+
+        loading
+            .querySelector(".message-content")
+            .classList.add("loading");
+
+
+        try {
+
+            const response =
+                await fetch(
+                    "/api/chat",
+                    {
+
+                        method: "POST",
+
+                        headers: {
+
+                            "Content-Type":
+                                "application/json"
+
+                        },
+
+                        body:
+                            JSON.stringify({
+
+                                message: text
+
+                            })
+
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            loading.remove();
+
+
+            /*
+                API error.
+            */
+
+            if (!response.ok) {
+
+                addMessage(
+
+                    data.error ||
+                    "AI request failed.",
+
+                    "assistant"
+
+                );
+
+                return;
+
+            }
+
+
+            /*
+                AI response.
+            */
+
+            const reply =
+                data.reply ||
+                "I couldn't generate a response.";
+
+
+            addMessage(
+                reply,
+                "assistant"
+            );
+
+
+            /*
+                Save AI response.
+            */
+
+            currentChat.messages.push({
+
+                role: "assistant",
+
+                content: reply
+
+            });
+
+
+            saveChats();
+
+            renderHistory();
+
+
+        } catch (error) {
+
+            console.error(error);
+
+
+            loading.remove();
+
+
+            addMessage(
+
+                "I couldn't connect to Nova AI.",
+
+                "assistant"
+
+            );
+
+        }
+
+
+        /*
+            Re-enable input.
+        */
+
+        input.disabled = false;
+
+        sendButton.disabled = false;
+
+        input.focus();
+
     }
-}
 
-function loadChat(index) {
 
-    const chat = chats[index];
+    /* BUTTON */
 
-    if (!chat) {
-        return;
-    }
+    sendButton.addEventListener(
+        "click",
+        sendMessage
+    );
 
-    currentChat = chat.messages || [];
 
-    messages.innerHTML = "";
+    /* ENTER */
 
-    currentChat.forEach(message => {
+    input.addEventListener(
+        "keydown",
+        function(event) {
 
-        addMessage(
-            message.content,
-            message.role === "user"
-                ? "user"
-                : "assistant"
-        );
+            if (event.key === "Enter") {
 
-    });
-}
+                event.preventDefault();
 
-function newChat() {
+                sendMessage();
 
-    currentChat = [];
+            }
 
-    messages.innerHTML = `
-        <div class="welcome" id="welcome">
-            <h1>How can I help?</h1>
-            <p>Ask Nova AI anything.</p>
-        </div>
-    `;
-}
+        }
+    );
 
-renderHistory();
+
+    /* NEW CHAT BUTTON */
+
+    newChatButton.addEventListener(
+        "click",
+        startNewChat
+    );
+
+
+    /* START */
+
+    renderHistory();
+
+    input.focus();
+
+</script>
+
 </body>
 </html>
