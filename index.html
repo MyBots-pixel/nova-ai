@@ -1,1741 +1,888 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-  />
-
-  <title>Nova AI</title>
-
-  <meta
-    name="description"
-    content="Nova AI — your intelligent AI assistant."
-  />
-
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    :root {
-      --bg: #050816;
-      --bg2: #080d21;
-      --panel: #0b1128;
-      --panel2: #101936;
-      --border: rgba(255,255,255,.09);
-      --text: #f5f7ff;
-      --muted: #8f99b8;
-      --blue: #667cff;
-      --blue2: #4f63ff;
-      --danger: #ff5f6d;
-      --success: #4ade80;
-      --shadow: 0 20px 60px rgba(0,0,0,.35);
-    }
-
-    html,
-    body {
-      width: 100%;
-      min-height: 100%;
-      background: var(--bg);
-      color: var(--text);
-      font-family:
-        Inter,
-        ui-sans-serif,
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
-    }
-
-    body {
-      overflow-x: hidden;
-    }
-
-    button,
-    input,
-    textarea {
-      font: inherit;
-    }
-
-    button {
-      border: 0;
-      cursor: pointer;
-    }
-
-    /* =========================
-       STAR BACKGROUND
-    ========================= */
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      z-index: -3;
-      pointer-events: none;
-      background:
-        radial-gradient(circle at 15% 20%, rgba(74,92,255,.12), transparent 25%),
-        radial-gradient(circle at 85% 10%, rgba(110,80,255,.09), transparent 25%),
-        radial-gradient(circle at 50% 90%, rgba(35,80,255,.08), transparent 30%),
-        linear-gradient(145deg, #030510, #07102a 50%, #050817);
-    }
-
-    body::after {
-      content: "";
-      position: fixed;
-      inset: 0;
-      z-index: -2;
-      pointer-events: none;
-      opacity: .55;
-      background-image:
-        radial-gradient(circle, rgba(255,255,255,.65) 1px, transparent 1px),
-        radial-gradient(circle, rgba(255,255,255,.3) 1px, transparent 1px);
-      background-size: 95px 95px, 145px 145px;
-      background-position: 10px 20px, 70px 90px;
-    }
-
-    /* =========================
-       APP
-    ========================= */
-
-    .app {
-      min-height: 100dvh;
-      display: flex;
-    }
-
-    /* =========================
-       SIDEBAR
-    ========================= */
-
-    .sidebar {
-      width: 270px;
-      min-width: 270px;
-      height: 100dvh;
-      position: fixed;
-      left: 0;
-      top: 0;
-      z-index: 100;
-
-      display: flex;
-      flex-direction: column;
-
-      background: rgba(7,12,31,.92);
-      border-right: 1px solid var(--border);
-
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-
-      transition: transform .25s ease;
-    }
-
-    .sidebar-top {
-      padding: 22px 18px 14px;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 11px;
-      margin-bottom: 22px;
-    }
-
-    .brand-logo {
-      width: 40px;
-      height: 40px;
-      border-radius: 13px;
-
-      display: grid;
-      place-items: center;
-
-      background:
-        linear-gradient(135deg, #7384ff, #4658ef);
-
-      box-shadow:
-        0 8px 30px rgba(91,108,255,.3);
-    }
-
-    .brand-logo span {
-      font-weight: 900;
-      font-size: 20px;
-      color: white;
-    }
-
-    .brand-text {
-      font-size: 19px;
-      font-weight: 800;
-      letter-spacing: -.4px;
-    }
-
-    .brand-subtitle {
-      color: var(--muted);
-      font-size: 11px;
-      margin-top: 2px;
-    }
-
-    .new-chat {
-      width: 100%;
-      padding: 13px 14px;
-      border-radius: 12px;
-
-      color: white;
-      background: linear-gradient(135deg, #6174ff, #4b5eea);
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 9px;
-
-      font-weight: 700;
-
-      box-shadow: 0 8px 25px rgba(76,94,240,.2);
-
-      transition: .2s ease;
-    }
-
-    .new-chat:hover {
-      transform: translateY(-1px);
-      filter: brightness(1.08);
-    }
-
-    .sidebar-section {
-      padding: 12px 12px 0;
-    }
-
-    .section-title {
-      color: #687393;
-      font-size: 10px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 1.2px;
-      padding: 8px 8px;
-    }
-
-    .sidebar-button {
-      width: 100%;
-      background: transparent;
-      color: #dce1f5;
-
-      display: flex;
-      align-items: center;
-      gap: 11px;
-
-      padding: 11px 12px;
-      border-radius: 10px;
-
-      text-align: left;
-
-      transition: .18s ease;
-    }
-
-    .sidebar-button:hover {
-      background: rgba(255,255,255,.055);
-    }
-
-    .sidebar-button.active {
-      background: rgba(91,108,255,.13);
-      color: white;
-    }
-
-    .sidebar-icon {
-      width: 25px;
-      height: 25px;
-
-      display: grid;
-      place-items: center;
-
-      border-radius: 8px;
-
-      background: rgba(255,255,255,.05);
-
-      font-size: 13px;
-    }
-
-    .chat-list {
-      max-height: 40vh;
-      overflow-y: auto;
-      padding-right: 4px;
-    }
-
-    .chat-item {
-      width: 100%;
-      display: block;
-
-      border: 0;
-      background: transparent;
-
-      color: #b9c1dc;
-
-      padding: 9px 12px;
-      border-radius: 9px;
-
-      text-align: left;
-
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-
-      font-size: 13px;
-
-      transition: .15s ease;
-    }
-
-    .chat-item:hover {
-      background: rgba(255,255,255,.045);
-      color: white;
-    }
-
-    .sidebar-bottom {
-      margin-top: auto;
-      padding: 12px;
-      border-top: 1px solid var(--border);
-    }
-
-    .account-button {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-
-      padding: 9px;
-
-      color: white;
-      background: transparent;
-      border-radius: 12px;
-
-      text-align: left;
-    }
-
-    .account-button:hover {
-      background: rgba(255,255,255,.05);
-    }
-
-    .avatar {
-      width: 35px;
-      height: 35px;
-      border-radius: 50%;
-
-      display: grid;
-      place-items: center;
-
-      background: linear-gradient(135deg,#6276ff,#8b5cf6);
-
-      font-weight: 800;
-      font-size: 13px;
-    }
-
-    .account-info {
-      min-width: 0;
-      flex: 1;
-    }
-
-    .account-name {
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .account-status {
-      font-size: 10px;
-      color: var(--muted);
-      margin-top: 2px;
-    }
-
-    /* =========================
-       MAIN
-    ========================= */
-
-    .main {
-      margin-left: 270px;
-      width: calc(100% - 270px);
-      min-height: 100dvh;
-
-      position: relative;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .topbar {
-      height: 66px;
-      min-height: 66px;
-
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      padding: 0 24px;
-
-      border-bottom: 1px solid var(--border);
-      background: rgba(5,8,22,.72);
-
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-
-      position: sticky;
-      top: 0;
-      z-index: 30;
-    }
-
-    .topbar-title {
-      font-weight: 750;
-      font-size: 15px;
-    }
-
-    .topbar-subtitle {
-      color: var(--muted);
-      font-size: 11px;
-      margin-top: 2px;
-    }
-
-    .menu-button {
-      display: none;
-
-      width: 40px;
-      height: 40px;
-
-      border-radius: 11px;
-
-      color: white;
-      background: rgba(255,255,255,.06);
-
-      font-size: 20px;
-    }
-
-    .topbar-account {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .status-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--success);
-      box-shadow: 0 0 12px rgba(74,222,128,.7);
-    }
-
-    .online-text {
-      color: #a9b3d2;
-      font-size: 11px;
-    }
-
-    /* =========================
-       CHAT
-    ========================= */
-
-    .chat-area {
-      flex: 1;
-      width: 100%;
-      max-width: 950px;
-      margin: 0 auto;
-
-      padding: 40px 24px 150px;
-
-      overflow-y: auto;
-    }
-
-    .welcome {
-      min-height: calc(100dvh - 260px);
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .welcome-inner {
-      width: 100%;
-      max-width: 680px;
-      text-align: center;
-    }
-
-    .welcome-logo {
-      width: 70px;
-      height: 70px;
-
-      margin: 0 auto 20px;
-
-      border-radius: 22px;
-
-      display: grid;
-      place-items: center;
-
-      background: linear-gradient(135deg,#6679ff,#4c5eea);
-
-      box-shadow:
-        0 20px 60px rgba(76,94,240,.3);
-    }
-
-    .welcome-logo span {
-      font-size: 32px;
-      font-weight: 900;
-    }
-
-    .welcome h1 {
-      font-size: clamp(30px,5vw,48px);
-      letter-spacing: -1.8px;
-      margin-bottom: 12px;
-    }
-
-    .gradient-text {
-      background: linear-gradient(90deg,#8090ff,#aab4ff,#7285ff);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-
-    .welcome p {
-      color: var(--muted);
-      max-width: 540px;
-      margin: 0 auto;
-      line-height: 1.6;
-      font-size: 14px;
-    }
-
-    .suggestions {
-      display: grid;
-      grid-template-columns: repeat(2,1fr);
-      gap: 10px;
-
-      margin-top: 30px;
-    }
-
-    .suggestion {
-      padding: 15px;
-
-      border: 1px solid var(--border);
-      border-radius: 14px;
-
-      background: rgba(255,255,255,.035);
-
-      color: #dce2f7;
-
-      text-align: left;
-
-      transition: .2s ease;
-    }
-
-    .suggestion:hover {
-      background: rgba(255,255,255,.065);
-      border-color: rgba(105,124,255,.3);
-      transform: translateY(-1px);
-    }
-
-    .suggestion-title {
-      font-size: 13px;
-      font-weight: 750;
-      margin-bottom: 4px;
-    }
-
-    .suggestion-description {
-      color: #7f89a9;
-      font-size: 11px;
-    }
-
-    /* =========================
-       MESSAGES
-    ========================= */
-
-    .messages {
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-    }
-
-    .message {
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
-    }
-
-    .message.user {
-      flex-direction: row-reverse;
-    }
-
-    .message-avatar {
-      width: 34px;
-      min-width: 34px;
-      height: 34px;
-
-      border-radius: 11px;
-
-      display: grid;
-      place-items: center;
-
-      background: rgba(255,255,255,.07);
-
-      font-size: 12px;
-      font-weight: 800;
-    }
-
-    .message.assistant .message-avatar {
-      background: linear-gradient(135deg,#6175ff,#4e61ed);
-    }
-
-    .message-content {
-      max-width: min(760px,80%);
-    }
-
-    .message.user .message-content {
-      background: rgba(91,108,255,.12);
-      border: 1px solid rgba(100,118,255,.13);
-      border-radius: 15px 15px 4px 15px;
-      padding: 11px 14px;
-    }
-
-    .message-text {
-      white-space: pre-wrap;
-      line-height: 1.65;
-      font-size: 14px;
-      color: #e6e9f7;
-      word-break: break-word;
-    }
-
-    .message.assistant .message-text {
-      padding-top: 5px;
-    }
-
-    .message-actions {
-      display: flex;
-      gap: 6px;
-      margin-top: 9px;
-    }
-
-    .message-action {
-      padding: 5px 8px;
-      border-radius: 7px;
-
-      color: #8993b1;
-      background: rgba(255,255,255,.035);
-
-      font-size: 10px;
-    }
-
-    .message-action:hover {
-      color: white;
-      background: rgba(255,255,255,.08);
-    }
-
-    .generated-image {
-      display: block;
-      width: auto;
-      max-width: min(650px,100%);
-
-      margin-top: 12px;
-
-      border-radius: 15px;
-      border: 1px solid var(--border);
-
-      box-shadow: var(--shadow);
-    }
-
-    /* =========================
-       INPUT
-    ========================= */
-
-    .input-wrapper {
-      position: fixed;
-
-      left: 270px;
-      right: 0;
-      bottom: 0;
-
-      z-index: 40;
-
-      display: flex;
-      justify-content: center;
-
-      padding: 16px 24px calc(16px + env(safe-area-inset-bottom));
-
-      background:
-        linear-gradient(
-          to top,
-          rgba(5,8,22,1) 45%,
-          rgba(5,8,22,.86) 75%,
-          transparent
-        );
-    }
-
-    .input-box {
-      width: 100%;
-      max-width: 850px;
-
-      display: flex;
-      align-items: flex-end;
-      gap: 8px;
-
-      padding: 8px;
-
-      border: 1px solid rgba(255,255,255,.11);
-      border-radius: 17px;
-
-      background: rgba(10,16,39,.92);
-
-      box-shadow:
-        0 15px 50px rgba(0,0,0,.4);
-
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-    }
-
-    #messageInput {
-      flex: 1;
-
-      resize: none;
-
-      min-height: 42px;
-      max-height: 150px;
-
-      padding: 11px 10px;
-
-      border: 0;
-      outline: 0;
-
-      color: white;
-      background: transparent;
-
-      font-size: 14px;
-      line-height: 1.4;
-    }
-
-    #messageInput::placeholder {
-      color: #66708e;
-    }
-
-    .send-button {
-      width: 42px;
-      height: 42px;
-
-      flex-shrink: 0;
-
-      border-radius: 12px;
-
-      background: linear-gradient(135deg,#687bff,#4d60ed);
-      color: white;
-
-      font-size: 17px;
-
-      transition: .2s ease;
-    }
-
-    .send-button:hover {
-      transform: translateY(-1px);
-    }
-
-    .send-button:disabled {
-      opacity: .45;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .input-note {
-      position: absolute;
-      bottom: 4px;
-
-      color: #4f5874;
-      font-size: 9px;
-    }
-
-    /* =========================
-       PREMIUM
-    ========================= */
-
-    .premium-screen,
-    .account-screen {
-      display: none;
-
-      padding: 40px 25px 120px;
-
-      max-width: 1050px;
-      width: 100%;
-      margin: 0 auto;
-    }
-
-    .screen-visible {
-      display: block;
-    }
-
-    .screen-header {
-      text-align: center;
-      margin-bottom: 35px;
-    }
-
-    .screen-header h2 {
-      font-size: 34px;
-      margin-bottom: 8px;
-    }
-
-    .screen-header p {
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .plans {
-      display: grid;
-      grid-template-columns: repeat(3,1fr);
-      gap: 16px;
-    }
-
-    .plan {
-      position: relative;
-
-      padding: 25px;
-
-      border: 1px solid var(--border);
-      border-radius: 20px;
-
-      background: rgba(255,255,255,.035);
-
-      box-shadow: 0 15px 50px rgba(0,0,0,.2);
-    }
-
-    .plan.featured {
-      border-color: rgba(105,124,255,.45);
-      box-shadow: 0 15px 60px rgba(71,88,220,.15);
-    }
-
-    .popular {
-      position: absolute;
-      top: 14px;
-      right: 14px;
-
-      padding: 5px 8px;
-
-      border-radius: 7px;
-
-      background: rgba(101,119,255,.14);
-      color: #9eacff;
-
-      font-size: 9px;
-      font-weight: 800;
-      text-transform: uppercase;
-    }
-
-    .plan h3 {
-      font-size: 20px;
-      margin-bottom: 6px;
-    }
-
-    .plan-description {
-      color: var(--muted);
-      font-size: 12px;
-      min-height: 35px;
-    }
-
-    .price {
-      margin: 20px 0;
-      font-size: 30px;
-      font-weight: 850;
-    }
-
-    .price span {
-      color: var(--muted);
-      font-size: 11px;
-      font-weight: 500;
-    }
-
-    .features {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-bottom: 22px;
-    }
-
-    .features li {
-      color: #bbc3dc;
-      font-size: 12px;
-    }
-
-    .features li::before {
-      content: "✓";
-      color: #7385ff;
-      margin-right: 8px;
-      font-weight: 800;
-    }
-
-    .plan-button {
-      width: 100%;
-      padding: 11px;
-
-      border-radius: 10px;
-
-      background: rgba(255,255,255,.06);
-      color: white;
-
-      font-weight: 700;
-    }
-
-    .plan.featured .plan-button {
-      background: linear-gradient(135deg,#6679ff,#4f61ed);
-    }
-
-    /* =========================
-       ACCOUNT
-    ========================= */
-
-    .account-card {
-      max-width: 600px;
-      margin: 0 auto;
-
-      padding: 30px;
-
-      border: 1px solid var(--border);
-      border-radius: 20px;
-
-      background: rgba(255,255,255,.035);
-    }
-
-    .account-big-avatar {
-      width: 75px;
-      height: 75px;
-
-      border-radius: 22px;
-
-      display: grid;
-      place-items: center;
-
-      margin: 0 auto 15px;
-
-      background: linear-gradient(135deg,#6477ff,#825cf6);
-
-      font-size: 25px;
-      font-weight: 900;
-    }
-
-    .account-card h3 {
-      text-align: center;
-      font-size: 21px;
-    }
-
-    .account-card-subtitle {
-      text-align: center;
-      color: var(--muted);
-      font-size: 12px;
-      margin-top: 5px;
-      margin-bottom: 25px;
-    }
-
-    .auth-buttons {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .auth-button {
-      width: 100%;
-      padding: 13px;
-
-      border-radius: 11px;
-
-      background: rgba(255,255,255,.06);
-      border: 1px solid var(--border);
-
-      color: white;
-
-      font-weight: 650;
-    }
-
-    .auth-button:hover {
-      background: rgba(255,255,255,.09);
-    }
-
-    .auth-divider {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-
-      margin: 18px 0;
-
-      color: #69738f;
-      font-size: 10px;
-    }
-
-    .auth-divider::before,
-    .auth-divider::after {
-      content: "";
-      flex: 1;
-      height: 1px;
-      background: var(--border);
-    }
-
-    .email-form {
-      display: flex;
-      flex-direction: column;
-      gap: 9px;
-    }
-
-    .email-input {
-      width: 100%;
-
-      padding: 12px;
-
-      border-radius: 10px;
-      border: 1px solid var(--border);
-
-      background: rgba(0,0,0,.2);
-      color: white;
-
-      outline: none;
-    }
-
-    .email-input:focus {
-      border-color: rgba(102,124,255,.6);
-    }
-
-    .signed-in-panel {
-      display: none;
-    }
-
-    .signed-in-panel.active {
-      display: block;
-    }
-
-    .sign-in-panel.hidden {
-      display: none;
-    }
-
-    .sign-out-button {
-      width: 100%;
-      padding: 12px;
-
-      margin-top: 15px;
-
-      border-radius: 10px;
-
-      background: rgba(255,95,109,.08);
-      color: #ff8d97;
-    }
-
-    /* =========================
-       MODAL
-    ========================= */
-
-    .modal {
-      position: fixed;
-      inset: 0;
-
-      display: none;
-      align-items: center;
-      justify-content: center;
-
-      z-index: 300;
-
-      padding: 20px;
-
-      background: rgba(0,0,0,.65);
-    }
-
-    .modal.active {
-      display: flex;
-    }
-
-    .modal-card {
-      width: 100%;
-      max-width: 430px;
-
-      padding: 25px;
-
-      border-radius: 20px;
-      border: 1px solid var(--border);
-
-      background: #0b1128;
-
-      box-shadow: var(--shadow);
-    }
-
-    .modal-card h3 {
-      font-size: 20px;
-      margin-bottom: 8px;
-    }
-
-    .modal-card p {
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.6;
-      margin-bottom: 18px;
-    }
-
-    .modal-close {
-      width: 100%;
-      padding: 11px;
-
-      border-radius: 10px;
-
-      color: white;
-      background: rgba(255,255,255,.07);
-    }
-
-    /* =========================
-       MOBILE OVERLAY
-       IMPORTANT: NO BLUR
-    ========================= */
-
-    .mobile-overlay {
-      display: none;
-
-      position: fixed;
-      inset: 0;
-
-      z-index: 90;
-
-      background: rgba(0,0,0,.55);
-
-      /* NEVER use backdrop-filter here */
-      backdrop-filter: none;
-      -webkit-backdrop-filter: none;
-    }
-
-    .mobile-overlay.active {
-      display: block;
-
-      background: rgba(0,0,0,.55);
-
-      /* NEVER use backdrop-filter here */
-      backdrop-filter: none;
-      -webkit-backdrop-filter: none;
-    }
-
-    /* =========================
-       TABLET
-    ========================= */
-
-    @media (max-width: 900px) {
-      .sidebar {
-        width: 235px;
-        min-width: 235px;
-      }
-
-      .main {
-        margin-left: 235px;
-        width: calc(100% - 235px);
-      }
-
-      .input-wrapper {
-        left: 235px;
-      }
-
-      .plans {
-        grid-template-columns: 1fr;
-        max-width: 550px;
-        margin: auto;
-      }
-    }
-
-    /* =========================
-       PHONE
-    ========================= */
-
-    @media (max-width: 700px) {
-
-      html,
-      body {
-        width: 100%;
-        max-width: 100%;
-        overflow-x: hidden;
-      }
-
-      .app {
-        width: 100%;
-      }
-
-      /* MOBILE SIDEBAR */
-
-      .sidebar {
-        width: min(310px, 86vw);
-        min-width: 0;
-
-        transform: translateX(-105%);
-
-        background: #080e25;
-
-        border-right: 1px solid rgba(255,255,255,.1);
-
-        /* COMPLETELY DISABLE BLUR ON MOBILE */
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
-
-        box-shadow: 20px 0 50px rgba(0,0,0,.45);
-
-        z-index: 100;
-      }
-
-      .sidebar.open {
-        transform: translateX(0);
-      }
-
-      /* MOBILE MAIN */
-
-      .main {
-        margin-left: 0;
-        width: 100%;
-        min-width: 0;
-      }
-
-      /* TOP BAR */
-
-      .topbar {
-        height: 60px;
-        min-height: 60px;
-
-        padding:
-          0 13px
-          0 10px;
-
-        background: #070c20;
-
-        /* NO BLUR */
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
-      }
-
-      .menu-button {
-        display: grid;
-        place-items: center;
-      }
-
-      .topbar-left {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-
-      .topbar-title {
-        font-size: 14px;
-      }
-
-      .online-text {
-        display: none;
-      }
-
-      /* CHAT */
-
-      .chat-area {
-        width: 100%;
-        max-width: 100%;
-
-        padding:
-          25px 14px
-          130px;
-
-        overflow-x: hidden;
-      }
-
-      .welcome {
-        min-height: calc(100dvh - 220px);
-      }
-
-      .welcome-logo {
-        width: 60px;
-        height: 60px;
-        border-radius: 18px;
-      }
-
-      .welcome-logo span {
-        font-size: 27px;
-      }
-
-      .welcome h1 {
-        font-size: 31px;
-        letter-spacing: -1px;
-      }
-
-      .welcome p {
-        font-size: 13px;
-        padding: 0 10px;
-      }
-
-      .suggestions {
-        grid-template-columns: 1fr;
-        margin-top: 24px;
-      }
-
-      .suggestion {
-        padding: 13px;
-      }
-
-      /* MESSAGES */
-
-      .message {
-        gap: 8px;
-      }
-
-      .message-avatar {
-        width: 30px;
-        min-width: 30px;
-        height: 30px;
-
-        border-radius: 9px;
-      }
-
-      .message-content {
-        max-width: calc(100% - 38px);
-      }
-
-      .message-text {
-        font-size: 14px;
-      }
-
-      .message.user .message-content {
-        padding: 10px 12px;
-      }
-
-      .generated-image {
-        max-width: 100%;
-      }
-
-      /* INPUT */
-
-      .input-wrapper {
-        left: 0;
-        right: 0;
-
-        padding:
-          9px 10px
-          calc(11px + env(safe-area-inset-bottom));
-
-        background:
-          linear-gradient(
-            to top,
-            #050816 55%,
-            rgba(5,8,22,.95) 80%,
-            transparent
-          );
-      }
-
-      .input-box {
-        max-width: none;
-
-        border-radius: 15px;
-
-        padding: 6px;
-
-        background: #0c132c;
-
-        /* NO BLUR */
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
-      }
-
-      #messageInput {
-        min-height: 42px;
-        font-size: 16px;
-      }
-
-      .send-button {
-        width: 42px;
-        height: 42px;
-      }
-
-      .input-note {
-        display: none;
-      }
-
-      /* PREMIUM */
-
-      .premium-screen,
-      .account-screen {
-        padding:
-          25px 14px
-          calc(110px + env(safe-area-inset-bottom));
-
-        /* NO BLUR */
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
-      }
-
-      .screen-header {
-        margin-bottom: 25px;
-      }
-
-      .screen-header h2 {
-        font-size: 28px;
-      }
-
-      .plans {
-        grid-template-columns: 1fr;
-        gap: 12px;
-      }
-
-      .plan {
-        padding: 21px;
-      }
-
-      /* ACCOUNT */
-
-      .account-card {
-        padding: 22px 17px;
-      }
-
-      /* MOBILE OVERLAY */
-
-      .mobile-overlay,
-      .mobile-overlay.active {
-        background: rgba(0,0,0,.55);
-
-        /* ABSOLUTELY NO MOBILE BLUR */
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
-      }
-
-      /* Disable every possible backdrop blur on mobile */
-
-      .sidebar,
-      .topbar,
-      .input-box,
-      .premium-screen,
-      .account-screen,
-      .modal-card {
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
-      }
-    }
-
-    /* =========================
-       VERY SMALL PHONES
-    ========================= */
-
-    @media (max-width: 380px) {
-      .welcome h1 {
-        font-size: 27px;
-      }
-
-      .chat-area {
-        padding-left: 10px;
-        padding-right: 10px;
-      }
-
-      .message-text {
-        font-size: 13px;
-      }
-
-      .brand-text {
-        font-size: 17px;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nova AI</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #05091b;
+  color: #f4f7ff;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+/* =========================
+   BACKGROUND
+========================= */
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(49, 90, 255, 0.18), transparent 30%),
+    radial-gradient(circle at 80% 70%, rgba(98, 55, 255, 0.14), transparent 30%),
+    #05091b;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: .35;
+  background-image:
+    radial-gradient(circle, white 1px, transparent 1px),
+    radial-gradient(circle, white 1px, transparent 1px);
+  background-size: 90px 90px, 140px 140px;
+  background-position: 10px 20px, 50px 80px;
+}
+
+/* =========================
+   APP
+========================= */
+
+.app {
+  min-height: 100vh;
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 270px;
+  background: #080e25;
+  border-right: 1px solid #1a2548;
+  padding: 20px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 28px;
+}
+
+.logo-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #4169ff, #7555ff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 25px rgba(65, 105, 255, .3);
+}
+
+.new-chat {
+  width: 100%;
+  border: 0;
+  border-radius: 13px;
+  padding: 13px;
+  background: #17234d;
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-bottom: 22px;
+}
+
+.new-chat:hover {
+  background: #213064;
+}
+
+.sidebar-title {
+  color: #7481a8;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+
+.recent {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.chat-history-item {
+  padding: 11px 12px;
+  border-radius: 10px;
+  color: #b8c1df;
+  cursor: pointer;
+  font-size: 13px;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chat-history-item:hover {
+  background: #111b3b;
+  color: white;
+}
+
+.sidebar-bottom {
+  border-top: 1px solid #1a2548;
+  padding-top: 15px;
+}
+
+.sidebar-button {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: #bdc6e5;
+  text-align: left;
+  padding: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.sidebar-button:hover {
+  background: #111b3b;
+  color: white;
+}
+
+/* =========================
+   MAIN
+========================= */
+
+.main {
+  margin-left: 270px;
+  min-height: 100vh;
+  position: relative;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  height: 72px;
+  background: #070c20;
+  border-bottom: 1px solid #172142;
+  display: flex;
+  align-items: center;
+  padding: 0 28px;
+  z-index: 100;
+}
+
+.mobile-menu-button {
+  display: none;
+  width: 42px;
+  height: 42px;
+  border: 1px solid #202d52;
+  background: #101936;
+  color: white;
+  border-radius: 11px;
+  font-size: 20px;
+  cursor: pointer;
+  margin-right: 12px;
+}
+
+.topbar-title {
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.topbar-spacer {
+  flex: 1;
+}
+
+.account-button {
+  border: 1px solid #243154;
+  background: #101936;
+  color: white;
+  border-radius: 10px;
+  padding: 9px 14px;
+  cursor: pointer;
+}
+
+.account-button:hover {
+  background: #17234a;
+}
+
+/* =========================
+   CHAT
+========================= */
+
+.chat-area {
+  min-height: calc(100vh - 72px);
+  display: flex;
+  flex-direction: column;
+}
+
+.messages {
+  width: min(900px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 35px 0 170px;
+}
+
+.welcome {
+  text-align: center;
+  padding: 90px 20px 50px;
+}
+
+.welcome-icon {
+  width: 70px;
+  height: 70px;
+  margin: 0 auto 22px;
+  border-radius: 22px;
+  background: linear-gradient(135deg, #4169ff, #7555ff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  box-shadow: 0 15px 40px rgba(65, 105, 255, .25);
+}
+
+.welcome h1 {
+  font-size: 40px;
+  margin-bottom: 12px;
+}
+
+.welcome p {
+  color: #8995ba;
+  font-size: 15px;
+}
+
+.message {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 26px;
+}
+
+.avatar {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.user-avatar {
+  background: #263867;
+}
+
+.ai-avatar {
+  background: linear-gradient(135deg, #4169ff, #7555ff);
+}
+
+.message-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.message-name {
+  font-size: 12px;
+  color: #7885aa;
+  margin-bottom: 7px;
+}
+
+.message-text {
+  color: #e7ebfa;
+  line-height: 1.65;
+  font-size: 15px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.copy-button {
+  margin-top: 10px;
+  border: 1px solid #243154;
+  background: #101936;
+  color: #9ca8cb;
+  padding: 6px 10px;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 11px;
+}
+
+.copy-button:hover {
+  color: white;
+}
+
+/* =========================
+   INPUT
+========================= */
+
+.input-area {
+  position: fixed;
+  left: 270px;
+  right: 0;
+  bottom: 0;
+  padding: 18px 25px 22px;
+  background: #05091b;
+  border-top: 1px solid #111b38;
+  z-index: 90;
+}
+
+.input-wrapper {
+  width: min(900px, 100%);
+  margin: auto;
+}
+
+.input-box {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  background: #0d1530;
+  border: 1px solid #26345b;
+  border-radius: 17px;
+  padding: 10px;
+}
+
+.input-box:focus-within {
+  border-color: #4569ff;
+}
+
+#messageInput {
+  flex: 1;
+  resize: none;
+  min-height: 44px;
+  max-height: 150px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: white;
+  font-family: inherit;
+  font-size: 14px;
+  padding: 12px;
+}
+
+#messageInput::placeholder {
+  color: #68769f;
+}
+
+.send-button {
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #4169ff, #7555ff);
+  color: white;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.send-button:hover {
+  transform: translateY(-1px);
+}
+
+.input-info {
+  text-align: center;
+  color: #596584;
+  font-size: 10px;
+  margin-top: 8px;
+}
+
+/* =========================
+   SCREENS
+========================= */
+
+.screen {
+  display: none;
+  min-height: calc(100vh - 72px);
+  padding: 45px;
+}
+
+.screen.active {
+  display: block;
+}
+
+.screen-container {
+  width: min(1000px, 100%);
+  margin: auto;
+}
+
+.screen-title {
+  font-size: 30px;
+  margin-bottom: 8px;
+}
+
+.screen-subtitle {
+  color: #7f8bae;
+  margin-bottom: 30px;
+}
+
+/* =========================
+   PREMIUM
+========================= */
+
+.plans {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.plan {
+  background: #0b1330;
+  border: 1px solid #1d2a4d;
+  border-radius: 18px;
+  padding: 24px;
+}
+
+.plan.featured {
+  border-color: #536eff;
+}
+
+.plan h3 {
+  margin-bottom: 10px;
+}
+
+.price {
+  font-size: 29px;
+  font-weight: 800;
+  margin-bottom: 18px;
+}
+
+.price span {
+  color: #7581a5;
+  font-size: 12px;
+  font-weight: normal;
+}
+
+.plan ul {
+  list-style: none;
+  color: #aeb8d8;
+  font-size: 13px;
+  line-height: 2;
+}
+
+.plan-button {
+  width: 100%;
+  margin-top: 20px;
+  padding: 11px;
+  border: 1px solid #27365e;
+  border-radius: 10px;
+  background: #121d3e;
+  color: white;
+  cursor: pointer;
+}
+
+/* =========================
+   ACCOUNT
+========================= */
+
+.account-card {
+  max-width: 600px;
+  background: #0b1330;
+  border: 1px solid #1d2a4d;
+  border-radius: 18px;
+  padding: 25px;
+}
+
+.account-status {
+  padding: 16px;
+  border-radius: 12px;
+  background: #101a39;
+  margin-bottom: 20px;
+  color: #c5cee8;
+}
+
+.auth-buttons {
+  display: grid;
+  gap: 10px;
+}
+
+.auth-button {
+  border: 1px solid #27365e;
+  background: #111b3a;
+  color: white;
+  padding: 13px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.auth-button:hover {
+  background: #19264c;
+}
+
+.signout {
+  background: #281a28;
+  border-color: #533047;
+}
+
+/* =========================
+   MODAL
+========================= */
+
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  background: rgba(0, 0, 0, .75);
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal.active {
+  display: flex;
+}
+
+.modal-card {
+  width: min(460px, 100%);
+  background: #0a112a;
+  border: 1px solid #26345a;
+  border-radius: 20px;
+  padding: 25px;
+}
+
+.modal-card h2 {
+  margin-bottom: 10px;
+}
+
+.modal-card p {
+  color: #8490b3;
+  line-height: 1.5;
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+
+.modal-close {
+  width: 100%;
+  padding: 12px;
+  border: 0;
+  border-radius: 10px;
+  background: #4169ff;
+  color: white;
+  cursor: pointer;
+}
+
+/* =========================
+   IMAGE
+========================= */
+
+.generated-image {
+  max-width: 100%;
+  border-radius: 14px;
+  margin-top: 12px;
+  border: 1px solid #25345d;
+}
+
+/* =========================
+   LOADING
+========================= */
+
+.typing {
+  display: flex;
+  gap: 5px;
+  padding-top: 7px;
+}
+
+.typing span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #7787c0;
+  animation: typing 1.2s infinite;
+}
+
+.typing span:nth-child(2) {
+  animation-delay: .15s;
+}
+
+.typing span:nth-child(3) {
+  animation-delay: .3s;
+}
+
+@keyframes typing {
+  0%, 60%, 100% {
+    opacity: .3;
+    transform: translateY(0);
+  }
+
+  30% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 800px) {
+
+  .sidebar {
+    width: 280px;
+    transform: translateX(-100%);
+    transition: transform .25s ease;
+    box-shadow: 15px 0 40px rgba(0,0,0,.4);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .main {
+    margin-left: 0;
+  }
+
+  .topbar {
+    padding: 0 14px;
+  }
+
+  .mobile-menu-button {
+    display: block;
+  }
+
+  .topbar-title {
+    font-size: 14px;
+  }
+
+  .account-button {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  .messages {
+    width: calc(100% - 24px);
+    padding-top: 20px;
+    padding-bottom: 145px;
+  }
+
+  .welcome {
+    padding: 60px 10px 35px;
+  }
+
+  .welcome h1 {
+    font-size: 29px;
+  }
+
+  .welcome p {
+    font-size: 13px;
+  }
+
+  .input-area {
+    left: 0;
+    padding: 10px 10px 13px;
+  }
+
+  .input-box {
+    border-radius: 14px;
+    padding: 7px;
+  }
+
+  #messageInput {
+    min-height: 42px;
+    font-size: 14px;
+  }
+
+  .screen {
+    padding: 25px 15px;
+  }
+
+  .screen-title {
+    font-size: 25px;
+  }
+
+  .plans {
+    grid-template-columns: 1fr;
+  }
+
+  .message {
+    gap: 9px;
+  }
+
+  .avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+  }
+
+  .message-text {
+    font-size: 14px;
+  }
+
+  /*
+    IMPORTANT:
+    There is intentionally NO mobile overlay.
+    The sidebar simply slides over the page.
+    This prevents the entire phone screen from
+    becoming blurred/dimmed.
+  */
+}
+
+/* =========================
+   VERY SMALL PHONES
+========================= */
+
+@media (max-width: 420px) {
+
+  .sidebar {
+    width: 85vw;
+  }
+
+  .topbar-title {
+    max-width: 120px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .account-button {
+    font-size: 11px;
+  }
+
+  .welcome-icon {
+    width: 60px;
+    height: 60px;
+  }
+
+  .welcome h1 {
+    font-size: 25px;
+  }
+}
+</style>
 </head>
 
 <body>
 
-  <div class="app">
+<div class="app">
 
-    <!-- =========================
-         MOBILE OVERLAY
-    ========================== -->
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
 
-    <div
-      id="mobileOverlay"
-      class="mobile-overlay"
-      onclick="closeMobileMenu()"
-    ></div>
+    <div class="logo">
+      <div class="logo-icon">✦</div>
+      <span>Nova AI</span>
+    </div>
 
-    <!-- =========================
-         SIDEBAR
-    ========================== -->
+    <button class="new-chat" id="newChat">
+      ＋ New Chat
+    </button>
 
-    <aside id="sidebar" class="sidebar">
+    <div class="sidebar-title">
+      Recent Chats
+    </div>
 
-      <div class="sidebar-top">
+    <div class="recent" id="recentChats"></div>
 
-        <div class="brand">
-          <div class="brand-logo">
-            <span>N</span>
-          </div>
+    <div class="sidebar-bottom">
 
-          <div>
-            <div class="brand-text">Nova AI</div>
-            <div class="brand-subtitle">Your intelligent assistant</div>
-          </div>
-        </div>
+      <button class="sidebar-button" id="premiumButton">
+        ✦ Premium
+      </button>
 
-        <button
-          class="new-chat"
-          onclick="newChat()"
-        >
-          <span>＋</span>
-          <span>New Chat</span>
-        </button>
+      <button class="sidebar-button" id="accountButton">
+        ◉ Account
+      </button>
 
+    </div>
+
+  </aside>
+
+
+  <!-- MAIN -->
+  <main class="main" id="main">
+
+    <header class="topbar">
+
+      <button class="mobile-menu-button" id="mobileMenuButton">
+        ☰
+      </button>
+
+      <div class="topbar-title" id="topbarTitle">
+        Nova AI
       </div>
 
-      <div class="sidebar-section">
+      <div class="topbar-spacer"></div>
 
-        <div class="section-title">
-          Workspace
-        </div>
+      <button class="account-button" id="topAccountButton">
+        Account
+      </button>
 
-        <button
-          id="chatNav"
-          class="sidebar-button active"
-          onclick="showChat()"
-        >
-          <span class="sidebar-icon">💬</span>
-          <span>Chat</span>
-        </button>
+    </header>
 
-        <button
-          class="sidebar-button"
-          onclick="showPremium()"
-        >
-          <span class="sidebar-icon">✦</span>
-          <span>Premium</span>
-        </button>
 
-        <button
-          class="sidebar-button"
-          onclick="showAccount()"
-        >
-          <span class="sidebar-icon">👤</span>
-          <span>Account</span>
-        </button>
+    <!-- CHAT SCREEN -->
+    <section class="chat-area" id="chatScreen">
 
-      </div>
+      <div class="messages" id="messages">
 
-      <div class="sidebar-section">
+        <div class="welcome" id="welcome">
 
-        <div class="section-title">
-          Recent Chats
-        </div>
-
-        <div id="chatList" class="chat-list"></div>
-
-      </div>
-
-      <div class="sidebar-bottom">
-
-        <button
-          class="account-button"
-          onclick="showAccount()"
-        >
-
-          <div
-            id="sidebarAvatar"
-            class="avatar"
-          >
-            ?
+          <div class="welcome-icon">
+            ✦
           </div>
 
-          <div class="account-info">
-
-            <div
-              id="sidebarAccountName"
-              class="account-name"
-            >
-              Guest
-            </div>
-
-            <div
-              id="sidebarAccountStatus"
-              class="account-status"
-            >
-              Not signed in
-            </div>
-
-          </div>
-
-          <span>›</span>
-
-        </button>
-
-      </div>
-
-    </aside>
-
-    <!-- =========================
-         MAIN
-    ========================== -->
-
-    <main class="main">
-
-      <header class="topbar">
-
-        <div class="topbar-left">
-
-          <button
-            id="menuButton"
-            class="menu-button"
-            onclick="toggleMobileMenu()"
-            aria-label="Open menu"
-          >
-            ☰
-          </button>
-
-          <div>
-            <div class="topbar-title">
-              Nova AI
-            </div>
-
-            <div class="topbar-subtitle">
-              Intelligent conversations
-            </div>
-          </div>
-
-        </div>
-
-        <div class="topbar-account">
-
-          <div class="status-dot"></div>
-
-          <div class="online-text">
-            AI Online
-          </div>
-
-        </div>
-
-      </header>
-
-      <!-- =========================
-           CHAT SCREEN
-      ========================== -->
-
-      <section
-        id="chatScreen"
-        class="chat-area"
-      >
-
-        <div
-          id="welcome"
-          class="welcome"
-        >
-
-          <div class="welcome-inner">
-
-            <div class="welcome-logo">
-              <span>N</span>
-            </div>
-
-            <h1>
-              Meet
-              <span class="gradient-text">
-                Nova AI
-              </span>
-            </h1>
-
-            <p>
-              Your intelligent AI assistant for questions,
-              ideas, writing, learning, coding and more.
-            </p>
-
-            <div class="suggestions">
-
-              <button
-                class="suggestion"
-                onclick="useSuggestion('Explain something difficult to me in a simple way.')"
-              >
-                <div class="suggestion-title">
-                  🧠 Explain something
-                </div>
-
-                <div class="suggestion-description">
-                  Make a difficult topic easy to understand.
-                </div>
-              </button>
-
-              <button
-                class="suggestion"
-                onclick="useSuggestion('Give me some creative ideas for a new project.')"
-              >
-                <div class="suggestion-title">
-                  💡 Get ideas
-                </div>
-
-                <div class="suggestion-description">
-                  Brainstorm something creative.
-                </div>
-              </button>
-
-              <button
-                class="suggestion"
-                onclick="useSuggestion('Help me write something professional.')"
-              >
-                <div class="suggestion-title">
-                  ✍️ Write something
-                </div>
-
-                <div class="suggestion-description">
-                  Create, rewrite or improve text.
-                </div>
-              </button>
-
-              <button
-                class="suggestion"
-                onclick="useSuggestion('Teach me something interesting.')"
-              >
-                <div class="suggestion-title">
-                  🚀 Learn something
-                </div>
-
-                <div class="suggestion-description">
-                  Discover something new.
-                </div>
-              </button>
-
-            </div>
-
-          </div>
-
-        </div>
-
-        <div
-          id="messages"
-          class="messages"
-        ></div>
-
-      </section>
-
-      <!-- =========================
-           PREMIUM SCREEN
-      ========================== -->
-
-      <section
-        id="premiumScreen"
-        class="premium-screen"
-      >
-
-        <div class="screen-header">
-
-          <h2>
-            Upgrade
-            <span class="gradient-text">
-              Nova
-            </span>
-          </h2>
+          <h1>
+            How can I help?
+          </h1>
 
           <p>
-            Choose the plan that works best for you.
-            Payments are currently coming soon.
+            Ask Nova AI anything.
           </p>
 
         </div>
 
-        <div class="plans">
+      </div>
 
-          <!-- FREE -->
+    </section>
+
+
+    <!-- PREMIUM SCREEN -->
+    <section class="screen" id="premiumScreen">
+
+      <div class="screen-container">
+
+        <h1 class="screen-title">
+          Nova Premium
+        </h1>
+
+        <p class="screen-subtitle">
+          Choose the plan that works best for you.
+        </p>
+
+        <div class="plans">
 
           <div class="plan">
 
             <h3>Free</h3>
-
-            <div class="plan-description">
-              Get started with Nova AI.
-            </div>
 
             <div class="price">
               £0
               <span>forever</span>
             </div>
 
-            <ul class="features">
-
-              <li>20 AI messages per day</li>
-              <li>3 image generations per day</li>
-              <li>Chat history</li>
-              <li>Copy responses</li>
-              <li>Standard priority</li>
-
+            <ul>
+              <li>✓ 20 AI messages/day</li>
+              <li>✓ 3 image generations/day</li>
+              <li>✓ Chat history</li>
+              <li>✓ Copy responses</li>
+              <li>✓ Standard priority</li>
             </ul>
 
             <button class="plan-button">
@@ -1744,73 +891,49 @@
 
           </div>
 
-          <!-- PLUS -->
 
           <div class="plan featured">
 
-            <div class="popular">
-              Popular
-            </div>
-
             <h3>Plus</h3>
-
-            <div class="plan-description">
-              More power for everyday use.
-            </div>
 
             <div class="price">
               £4.99
               <span>/month</span>
             </div>
 
-            <ul class="features">
-
-              <li>100 AI messages per day</li>
-              <li>15 image generations per day</li>
-              <li>Faster priority</li>
-              <li>Longer conversations</li>
-              <li>Premium themes</li>
-
+            <ul>
+              <li>✓ 100 AI messages/day</li>
+              <li>✓ 15 image generations/day</li>
+              <li>✓ Faster priority</li>
+              <li>✓ Longer conversations</li>
+              <li>✓ Premium themes</li>
             </ul>
 
-            <button
-              class="plan-button"
-              onclick="showComingSoon()"
-            >
+            <button class="plan-button" onclick="showComingSoon()">
               Coming Soon
             </button>
 
           </div>
 
-          <!-- PRO -->
 
           <div class="plan">
 
             <h3>Pro</h3>
-
-            <div class="plan-description">
-              Maximum Nova AI access.
-            </div>
 
             <div class="price">
               £9.99
               <span>/month</span>
             </div>
 
-            <ul class="features">
-
-              <li>500 AI messages per day</li>
-              <li>50 image generations per day</li>
-              <li>Highest priority</li>
-              <li>Advanced features</li>
-              <li>Longer context</li>
-
+            <ul>
+              <li>✓ 500 AI messages/day</li>
+              <li>✓ 50 image generations/day</li>
+              <li>✓ Highest priority</li>
+              <li>✓ Advanced features</li>
+              <li>✓ Longer context</li>
             </ul>
 
-            <button
-              class="plan-button"
-              onclick="showComingSoon()"
-            >
+            <button class="plan-button" onclick="showComingSoon()">
               Coming Soon
             </button>
 
@@ -1818,1371 +941,1261 @@
 
         </div>
 
-      </section>
+      </div>
 
-      <!-- =========================
-           ACCOUNT SCREEN
-      ========================== -->
+    </section>
 
-      <section
-        id="accountScreen"
-        class="account-screen"
-      >
 
-        <div class="screen-header">
+    <!-- ACCOUNT SCREEN -->
+    <section class="screen" id="accountScreen">
 
-          <h2>
-            Your
-            <span class="gradient-text">
-              Account
-            </span>
-          </h2>
+      <div class="screen-container">
 
-          <p>
-            Sign in to use image generation and keep your
-            account across devices.
-          </p>
+        <h1 class="screen-title">
+          Account
+        </h1>
 
-        </div>
+        <p class="screen-subtitle">
+          Manage your Nova AI account.
+        </p>
 
         <div class="account-card">
 
-          <!-- SIGN IN -->
-
-          <div
-            id="signInPanel"
-            class="sign-in-panel"
-          >
-
-            <div class="account-big-avatar">
-              ?
-            </div>
-
-            <h3>
-              Welcome to Nova
-            </h3>
-
-            <div class="account-card-subtitle">
-              Sign in or create an account
-            </div>
-
-            <div class="auth-buttons">
-
-              <button
-                class="auth-button"
-                onclick="demoSignIn('Google')"
-              >
-                Continue with Google
-              </button>
-
-              <button
-                class="auth-button"
-                onclick="demoSignIn('Apple')"
-              >
-                Continue with Apple
-              </button>
-
-            </div>
-
-            <div class="auth-divider">
-              OR
-            </div>
-
-            <form
-              class="email-form"
-              onsubmit="demoEmailSignIn(event)"
-            >
-
-              <input
-                id="emailInput"
-                class="email-input"
-                type="email"
-                placeholder="Email address"
-                autocomplete="email"
-                required
-              />
-
-              <button
-                class="auth-button"
-                type="submit"
-              >
-                Continue with Email
-              </button>
-
-            </form>
-
+          <div class="account-status" id="accountStatus">
+            You are currently signed out.
           </div>
 
-          <!-- SIGNED IN -->
+          <div class="auth-buttons" id="authButtons">
 
-          <div
-            id="signedInPanel"
-            class="signed-in-panel"
-          >
-
-            <div
-              id="accountAvatar"
-              class="account-big-avatar"
-            >
-              N
-            </div>
-
-            <h3 id="accountName">
-              Nova User
-            </h3>
-
-            <div
-              id="accountEmail"
-              class="account-card-subtitle"
-            >
-              Signed in
-            </div>
-
-            <button
-              class="auth-button"
-              onclick="showChat()"
-            >
-              Return to Chat
+            <button class="auth-button" onclick="demoSignIn('Google')">
+              Continue with Google
             </button>
 
-            <button
-              class="sign-out-button"
-              onclick="signOut()"
-            >
-              Sign Out
+            <button class="auth-button" onclick="demoSignIn('Apple')">
+              Continue with Apple
+            </button>
+
+            <button class="auth-button" onclick="demoSignIn('Email')">
+              Continue with Email
             </button>
 
           </div>
+
+          <button
+            class="auth-button signout"
+            id="signOutButton"
+            style="display:none;margin-top:10px;"
+            onclick="signOut()"
+          >
+            Sign Out
+          </button>
 
         </div>
 
-      </section>
+      </div>
 
-      <!-- =========================
-           INPUT
-      ========================== -->
+    </section>
 
-      <div
-        id="inputWrapper"
-        class="input-wrapper"
-      >
+
+    <!-- INPUT -->
+    <div class="input-area" id="inputArea">
+
+      <div class="input-wrapper">
 
         <div class="input-box">
 
           <textarea
             id="messageInput"
-            rows="1"
             placeholder="Message Nova AI..."
-            autocomplete="off"
+            rows="1"
           ></textarea>
 
-          <button
-            id="sendButton"
-            class="send-button"
-            onclick="sendMessage()"
-            aria-label="Send message"
-          >
+          <button class="send-button" id="sendButton">
             ↑
           </button>
 
         </div>
 
-        <div class="input-note">
+        <div class="input-info">
           Nova AI can make mistakes. Check important information.
         </div>
 
       </div>
 
-    </main>
-
-  </div>
-
-  <!-- =========================
-       MODAL
-  ========================== -->
-
-  <div
-    id="modal"
-    class="modal"
-  >
-
-    <div class="modal-card">
-
-      <h3 id="modalTitle">
-        Nova AI
-      </h3>
-
-      <p id="modalText">
-        Something happened.
-      </p>
-
-      <button
-        class="modal-close"
-        onclick="closeModal()"
-      >
-        Close
-      </button>
-
     </div>
 
+  </main>
+
+</div>
+
+
+<!-- MODAL -->
+<div class="modal" id="modal">
+
+  <div class="modal-card">
+
+    <h2 id="modalTitle">
+      Nova AI
+    </h2>
+
+    <p id="modalText">
+      Coming soon.
+    </p>
+
+    <button class="modal-close" onclick="closeModal()">
+      Close
+    </button>
+
   </div>
 
-  <script>
-    /* =========================================================
-       NOVA AI
-       ========================================================= */
+</div>
 
-    const STORAGE_CHATS = "nova_chats";
-    const STORAGE_ACCOUNT = "nova_account";
 
-    let chats = [];
-    let currentChat = null;
-    let conversationHistory = [];
+<script>
+/* ==========================================
+   STATE
+========================================== */
 
-    /* =========================================================
-       LOAD
-       ========================================================= */
+let currentChat = [];
+let currentChatId = null;
+let isGenerating = false;
 
-    document.addEventListener("DOMContentLoaded", () => {
+const STORAGE_CHATS = "nova_chats_v3";
+const STORAGE_ACCOUNT = "nova_account_v3";
+const STORAGE_USAGE = "nova_usage_v3";
 
-      loadChats();
-      loadAccount();
 
-      setupTextarea();
+/* ==========================================
+   ELEMENTS
+========================================== */
 
-      renderChatList();
+const sidebar = document.getElementById("sidebar");
+const mobileMenuButton = document.getElementById("mobileMenuButton");
 
-      createNewChatIfNeeded();
+const messages = document.getElementById("messages");
+const welcome = document.getElementById("welcome");
+
+const messageInput = document.getElementById("messageInput");
+const sendButton = document.getElementById("sendButton");
+
+const chatScreen = document.getElementById("chatScreen");
+const premiumScreen = document.getElementById("premiumScreen");
+const accountScreen = document.getElementById("accountScreen");
+
+const inputArea = document.getElementById("inputArea");
+
+const recentChats = document.getElementById("recentChats");
+
+const accountStatus = document.getElementById("accountStatus");
+const authButtons = document.getElementById("authButtons");
+const signOutButton = document.getElementById("signOutButton");
+
+const modal = document.getElementById("modal");
+const modalTitle = document.getElementById("modalTitle");
+const modalText = document.getElementById("modalText");
+
+
+/* ==========================================
+   MOBILE MENU
+========================================== */
+
+mobileMenuButton.addEventListener("click", function() {
+  sidebar.classList.toggle("open");
+
+  if (sidebar.classList.contains("open")) {
+    mobileMenuButton.textContent = "✕";
+  } else {
+    mobileMenuButton.textContent = "☰";
+  }
+});
+
+
+function closeMobileMenu() {
+  sidebar.classList.remove("open");
+  mobileMenuButton.textContent = "☰";
+}
+
+
+/*
+  Close the mobile menu if the user taps
+  the main page.
+
+  There is deliberately NO full-screen overlay.
+*/
+
+document.getElementById("main").addEventListener("click", function() {
+
+  if (window.innerWidth <= 800 && sidebar.classList.contains("open")) {
+    closeMobileMenu();
+  }
+
+});
+
+
+/* ==========================================
+   NAVIGATION
+========================================== */
+
+function showScreen(screen) {
+
+  chatScreen.style.display = "none";
+  premiumScreen.classList.remove("active");
+  accountScreen.classList.remove("active");
+
+  inputArea.style.display = "none";
+
+  if (screen === "chat") {
+
+    chatScreen.style.display = "flex";
+    inputArea.style.display = "block";
+
+    document.getElementById("topbarTitle").textContent = "Nova AI";
+
+  }
+
+  if (screen === "premium") {
+
+    premiumScreen.classList.add("active");
+
+    document.getElementById("topbarTitle").textContent = "Premium";
+
+  }
+
+  if (screen === "account") {
+
+    accountScreen.classList.add("active");
+
+    document.getElementById("topbarTitle").textContent = "Account";
+
+    updateAccountUI();
+
+  }
+
+  closeMobileMenu();
+}
+
+
+document.getElementById("premiumButton").addEventListener("click", function() {
+  showScreen("premium");
+});
+
+
+document.getElementById("accountButton").addEventListener("click", function() {
+  showScreen("account");
+});
+
+
+document.getElementById("topAccountButton").addEventListener("click", function() {
+  showScreen("account");
+});
+
+
+/* ==========================================
+   NEW CHAT
+========================================== */
+
+document.getElementById("newChat").addEventListener("click", function() {
+
+  saveCurrentChat();
+
+  currentChat = [];
+  currentChatId = Date.now().toString();
+
+  renderMessages();
+
+  showScreen("chat");
+
+});
+
+
+/* ==========================================
+   STORAGE
+========================================== */
+
+function getChats() {
+
+  try {
+
+    return JSON.parse(
+      localStorage.getItem(STORAGE_CHATS) || "[]"
+    );
+
+  } catch {
+
+    return [];
+
+  }
+
+}
+
+
+function saveChats(chats) {
+
+  localStorage.setItem(
+    STORAGE_CHATS,
+    JSON.stringify(chats)
+  );
+
+}
+
+
+function saveCurrentChat() {
+
+  if (!currentChat.length) return;
+
+  const chats = getChats();
+
+  const firstUserMessage =
+    currentChat.find(m => m.role === "user");
+
+  const title =
+    firstUserMessage?.content?.slice(0, 40) ||
+    "New Chat";
+
+  const existingIndex =
+    chats.findIndex(c => c.id === currentChatId);
+
+  const chat = {
+    id: currentChatId || Date.now().toString(),
+    title,
+    messages: currentChat,
+    updated: Date.now()
+  };
+
+  if (existingIndex >= 0) {
+
+    chats[existingIndex] = chat;
+
+  } else {
+
+    chats.unshift(chat);
+
+  }
+
+  saveChats(chats);
+
+  renderRecentChats();
+
+}
+
+
+function renderRecentChats() {
+
+  recentChats.innerHTML = "";
+
+  const chats = getChats();
+
+  chats
+    .sort((a, b) => b.updated - a.updated)
+    .slice(0, 30)
+    .forEach(chat => {
+
+      const item =
+        document.createElement("div");
+
+      item.className = "chat-history-item";
+
+      item.textContent = chat.title;
+
+      item.addEventListener("click", function() {
+
+        currentChatId = chat.id;
+        currentChat = chat.messages || [];
+
+        renderMessages();
+        showScreen("chat");
+
+      });
+
+      recentChats.appendChild(item);
 
     });
 
-    /* =========================================================
-       MOBILE MENU
-       ========================================================= */
+}
 
-    function toggleMobileMenu() {
 
-      const sidebar = document.getElementById("sidebar");
-      const overlay = document.getElementById("mobileOverlay");
+/* ==========================================
+   RENDER MESSAGES
+========================================== */
 
-      const isOpen = sidebar.classList.contains("open");
+function renderMessages() {
 
-      if (isOpen) {
-        closeMobileMenu();
-      } else {
-        sidebar.classList.add("open");
-        overlay.classList.add("active");
+  messages.innerHTML = "";
+
+  if (!currentChat.length) {
+
+    messages.appendChild(welcome);
+
+    return;
+
+  }
+
+  currentChat.forEach(message => {
+
+    addMessageToDOM(
+      message.role,
+      message.content,
+      false
+    );
+
+  });
+
+}
+
+
+function addMessageToDOM(
+  role,
+  content,
+  scroll = true
+) {
+
+  const wrapper =
+    document.createElement("div");
+
+  wrapper.className = "message";
+
+  const avatar =
+    document.createElement("div");
+
+  avatar.className =
+    "avatar " +
+    (role === "assistant"
+      ? "ai-avatar"
+      : "user-avatar");
+
+  avatar.textContent =
+    role === "assistant"
+      ? "✦"
+      : "You";
+
+  const contentBox =
+    document.createElement("div");
+
+  contentBox.className =
+    "message-content";
+
+  const name =
+    document.createElement("div");
+
+  name.className =
+    "message-name";
+
+  name.textContent =
+    role === "assistant"
+      ? "Nova AI"
+      : "You";
+
+  const text =
+    document.createElement("div");
+
+  text.className =
+    "message-text";
+
+  text.textContent = content;
+
+  contentBox.appendChild(name);
+  contentBox.appendChild(text);
+
+  if (role === "assistant") {
+
+    const copy =
+      document.createElement("button");
+
+    copy.className = "copy-button";
+
+    copy.textContent = "Copy";
+
+    copy.addEventListener("click", async function() {
+
+      try {
+
+        await navigator.clipboard.writeText(content);
+
+        copy.textContent = "Copied!";
+
+        setTimeout(() => {
+          copy.textContent = "Copy";
+        }, 1200);
+
+      } catch {
+
+        copy.textContent = "Copy failed";
+
       }
-    }
 
-    function closeMobileMenu() {
+    });
 
-      document
-        .getElementById("sidebar")
-        .classList.remove("open");
+    contentBox.appendChild(copy);
 
-      document
-        .getElementById("mobileOverlay")
-        .classList.remove("active");
+  }
 
-    }
+  wrapper.appendChild(avatar);
+  wrapper.appendChild(contentBox);
 
-    /* =========================================================
-       NAVIGATION
-       ========================================================= */
+  messages.appendChild(wrapper);
 
-    function hideAllScreens() {
+  if (scroll) {
 
-      document
-        .getElementById("chatScreen")
-        .style.display = "none";
+    requestAnimationFrame(() => {
 
-      document
-        .getElementById("premiumScreen")
-        .classList.remove("screen-visible");
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: "smooth"
+      });
 
-      document
-        .getElementById("accountScreen")
-        .classList.remove("screen-visible");
+    });
 
-      document
-        .getElementById("inputWrapper")
-        .style.display = "none";
+  }
 
-      document
-        .getElementById("chatNav")
-        .classList.remove("active");
+}
 
-    }
 
-    function showChat() {
+/* ==========================================
+   TYPING
+========================================== */
 
-      hideAllScreens();
+function addTyping() {
 
-      document
-        .getElementById("chatScreen")
-        .style.display = "block";
+  const wrapper =
+    document.createElement("div");
 
-      document
-        .getElementById("inputWrapper")
-        .style.display = "flex";
+  wrapper.className = "message";
+  wrapper.id = "typingMessage";
 
-      document
-        .getElementById("chatNav")
-        .classList.add("active");
+  const avatar =
+    document.createElement("div");
 
-      closeMobileMenu();
+  avatar.className = "avatar ai-avatar";
+  avatar.textContent = "✦";
 
-    }
+  const content =
+    document.createElement("div");
 
-    function showPremium() {
+  content.className = "message-content";
 
-      hideAllScreens();
+  const name =
+    document.createElement("div");
 
-      document
-        .getElementById("premiumScreen")
-        .classList.add("screen-visible");
+  name.className = "message-name";
+  name.textContent = "Nova AI";
 
-      closeMobileMenu();
+  const typing =
+    document.createElement("div");
 
-    }
+  typing.className = "typing";
 
-    function showAccount() {
+  typing.innerHTML =
+    "<span></span><span></span><span></span>";
 
-      hideAllScreens();
+  content.appendChild(name);
+  content.appendChild(typing);
 
-      document
-        .getElementById("accountScreen")
-        .classList.add("screen-visible");
+  wrapper.appendChild(avatar);
+  wrapper.appendChild(content);
 
-      closeMobileMenu();
+  messages.appendChild(wrapper);
 
-    }
+  window.scrollTo({
+    top: document.body.scrollHeight,
+    behavior: "smooth"
+  });
 
-    /* =========================================================
-       NEW CHAT
-       ========================================================= */
+}
 
-    function newChat() {
 
-      const chat = {
-        id: Date.now().toString(),
-        title: "New Chat",
-        messages: [],
-        created: Date.now()
+function removeTyping() {
+
+  const typing =
+    document.getElementById("typingMessage");
+
+  if (typing) {
+    typing.remove();
+  }
+
+}
+
+
+/* ==========================================
+   USAGE
+========================================== */
+
+function getToday() {
+
+  const now = new Date();
+
+  return (
+    now.getFullYear() +
+    "-" +
+    String(now.getMonth() + 1).padStart(2, "0") +
+    "-" +
+    String(now.getDate()).padStart(2, "0")
+  );
+
+}
+
+
+function getUsage() {
+
+  try {
+
+    const data =
+      JSON.parse(
+        localStorage.getItem(STORAGE_USAGE) || "{}"
+      );
+
+    if (data.date !== getToday()) {
+
+      return {
+        date: getToday(),
+        messages: 0,
+        images: 0
       };
 
-      chats.unshift(chat);
-
-      currentChat = chat;
-      conversationHistory = [];
-
-      saveChats();
-
-      renderChatList();
-      renderMessages();
-
-      showChat();
-
     }
 
-    function createNewChatIfNeeded() {
+    return data;
 
-      if (!chats.length) {
-        newChat();
-        return;
-      }
+  } catch {
 
-      currentChat = chats[0];
+    return {
+      date: getToday(),
+      messages: 0,
+      images: 0
+    };
 
-      conversationHistory =
-        currentChat.messages
-          .filter(m =>
-            m.role === "user" ||
-            m.role === "assistant"
-          )
-          .map(m => ({
-            role: m.role,
-            content: m.content
-          }));
+  }
 
-      renderMessages();
+}
 
-    }
 
-    /* =========================================================
-       CHAT STORAGE
-       ========================================================= */
+function saveUsage(data) {
 
-    function loadChats() {
+  localStorage.setItem(
+    STORAGE_USAGE,
+    JSON.stringify(data)
+  );
 
-      try {
+}
 
-        const saved =
-          localStorage.getItem(STORAGE_CHATS);
 
-        chats = saved
-          ? JSON.parse(saved)
-          : [];
+function isSignedIn() {
 
-      } catch (error) {
+  return !!localStorage.getItem(STORAGE_ACCOUNT);
 
-        chats = [];
+}
 
-      }
 
-    }
+/* ==========================================
+   IMAGE DETECTION
+========================================== */
 
-    function saveChats() {
+function wantsImage(text) {
 
-      try {
+  const value =
+    text.toLowerCase();
 
-        localStorage.setItem(
-          STORAGE_CHATS,
-          JSON.stringify(chats)
-        );
+  const phrases = [
+    "create an image",
+    "create a picture",
+    "generate an image",
+    "generate a picture",
+    "make an image",
+    "make a picture",
+    "draw an image",
+    "draw a picture",
+    "generate artwork",
+    "create artwork",
+    "make artwork",
+    "create art",
+    "generate art"
+  ];
 
-      } catch (error) {
+  return phrases.some(
+    phrase => value.includes(phrase)
+  );
 
-        console.warn(
-          "Could not save chat history.",
-          error
-        );
+}
 
-      }
 
-    }
+/* ==========================================
+   SEND MESSAGE
+========================================== */
 
-    /* =========================================================
-       CHAT LIST
-       ========================================================= */
+async function sendMessage() {
 
-    function renderChatList() {
+  if (isGenerating) return;
 
-      const list =
-        document.getElementById("chatList");
+  const message =
+    messageInput.value.trim();
 
-      list.innerHTML = "";
+  if (!message) return;
 
-      chats.slice(0, 15).forEach(chat => {
+  if (wantsImage(message)) {
 
-        const button =
-          document.createElement("button");
-
-        button.className = "chat-item";
-
-        button.textContent =
-          chat.title || "New Chat";
-
-        button.onclick = () => {
-
-          currentChat = chat;
-
-          conversationHistory =
-            chat.messages
-              .filter(m =>
-                m.role === "user" ||
-                m.role === "assistant"
-              )
-              .map(m => ({
-                role: m.role,
-                content: m.content
-              }));
-
-          renderMessages();
-
-          showChat();
-
-        };
-
-        list.appendChild(button);
-
-      });
-
-    }
-
-    /* =========================================================
-       RENDER MESSAGES
-       ========================================================= */
-
-    function renderMessages() {
-
-      const welcome =
-        document.getElementById("welcome");
-
-      const messages =
-        document.getElementById("messages");
-
-      messages.innerHTML = "";
-
-      if (
-        !currentChat ||
-        !currentChat.messages ||
-        currentChat.messages.length === 0
-      ) {
-
-        welcome.style.display = "flex";
-
-        return;
-
-      }
-
-      welcome.style.display = "none";
-
-      currentChat.messages.forEach(message => {
-
-        addMessageToDOM(
-          message.role,
-          message.content,
-          message.image || null
-        );
-
-      });
-
-    }
-
-    function addMessageToDOM(
-      role,
-      content,
-      image = null
-    ) {
-
-      const messages =
-        document.getElementById("messages");
-
-      const wrapper =
-        document.createElement("div");
-
-      wrapper.className =
-        "message " + role;
-
-      const avatar =
-        document.createElement("div");
-
-      avatar.className =
-        "message-avatar";
-
-      avatar.textContent =
-        role === "assistant"
-          ? "N"
-          : getAccountInitial();
-
-      const contentBox =
-        document.createElement("div");
-
-      contentBox.className =
-        "message-content";
-
-      const text =
-        document.createElement("div");
-
-      text.className =
-        "message-text";
-
-      text.textContent = content;
-
-      contentBox.appendChild(text);
-
-      if (image) {
-
-        const img =
-          document.createElement("img");
-
-        img.className =
-          "generated-image";
-
-        img.src = image;
-
-        img.alt =
-          "Image generated by Nova AI";
-
-        contentBox.appendChild(img);
-
-      }
-
-      if (role === "assistant") {
-
-        const actions =
-          document.createElement("div");
-
-        actions.className =
-          "message-actions";
-
-        const copyButton =
-          document.createElement("button");
-
-        copyButton.className =
-          "message-action";
-
-        copyButton.textContent =
-          "Copy";
-
-        copyButton.onclick = () =>
-          copyText(content);
-
-        actions.appendChild(copyButton);
-
-        contentBox.appendChild(actions);
-
-      }
-
-      wrapper.appendChild(avatar);
-      wrapper.appendChild(contentBox);
-
-      messages.appendChild(wrapper);
-
-      messages.scrollIntoView({
-        behavior: "smooth",
-        block: "end"
-      });
-
-      const chatArea =
-        document.getElementById("chatScreen");
-
-      chatArea.scrollTop =
-        chatArea.scrollHeight;
-
-    }
-
-    /* =========================================================
-       SEND MESSAGE
-       ========================================================= */
-
-    async function sendMessage() {
-
-      const input =
-        document.getElementById("messageInput");
-
-      const button =
-        document.getElementById("sendButton");
-
-      const message =
-        input.value.trim();
-
-      if (!message) return;
-
-      if (!currentChat) {
-        createNewChatIfNeeded();
-      }
-
-      const isImageRequest =
-        detectImageRequest(message);
-
-      /* IMAGE REQUEST */
-
-      if (isImageRequest && !isSignedIn()) {
-
-        showAccount();
-
-        showModal(
-          "Sign in required",
-          "You need to sign in to use Nova AI image generation."
-        );
-
-        return;
-
-      }
-
-      input.value = "";
-      resizeTextarea();
-
-      button.disabled = true;
-
-      /* USER MESSAGE */
-
-      currentChat.messages.push({
-        role: "user",
-        content: message
-      });
-
-      if (
-        currentChat.title === "New Chat" ||
-        !currentChat.title
-      ) {
-
-        currentChat.title =
-          message.length > 35
-            ? message.substring(0,35) + "..."
-            : message;
-
-      }
-
-      saveChats();
-      renderChatList();
-
-      document
-        .getElementById("welcome")
-        .style.display = "none";
-
-      addMessageToDOM(
-        "user",
-        message
-      );
-
-      /* IMAGE */
-
-      if (isImageRequest) {
-
-        await generateImage(message);
-
-        button.disabled = false;
-
-        return;
-
-      }
-
-      /* CHAT */
-
-      conversationHistory.push({
-        role: "user",
-        content: message
-      });
-
-      try {
-
-        const response =
-          await fetch("/api/chat", {
-
-            method: "POST",
-
-            headers: {
-              "Content-Type": "application/json"
-            },
-
-            body: JSON.stringify({
-              message,
-              history: conversationHistory
-            })
-
-          });
-
-        const data =
-          await response.json();
-
-        if (!response.ok) {
-
-          throw new Error(
-            data.error ||
-            "Nova AI could not respond."
-          );
-
-        }
-
-        const reply =
-          data.reply ||
-          "I couldn't generate a response.";
-
-        conversationHistory.push({
-          role: "assistant",
-          content: reply
-        });
-
-        currentChat.messages.push({
-          role: "assistant",
-          content: reply
-        });
-
-        saveChats();
-
-        addMessageToDOM(
-          "assistant",
-          reply
-        );
-
-      } catch (error) {
-
-        const errorMessage =
-          "Sorry, I couldn't connect to Nova AI right now. Please try again.";
-
-        currentChat.messages.push({
-          role: "assistant",
-          content: errorMessage
-        });
-
-        saveChats();
-
-        addMessageToDOM(
-          "assistant",
-          errorMessage
-        );
-
-        console.error(error);
-
-      }
-
-      button.disabled = false;
-
-    }
-
-    /* =========================================================
-       IMAGE GENERATION
-    ========================================================= */
-
-    async function generateImage(prompt) {
-
-      addMessageToDOM(
-        "assistant",
-        "Creating your image..."
-      );
-
-      try {
-
-        const response =
-          await fetch("/api/image", {
-
-            method: "POST",
-
-            headers: {
-              "Content-Type": "application/json"
-            },
-
-            body: JSON.stringify({
-              prompt
-            })
-
-          });
-
-        const data =
-          await response.json();
-
-        if (!response.ok) {
-
-          throw new Error(
-            data.error ||
-            "Image generation failed."
-          );
-
-        }
-
-        if (!data.image) {
-
-          throw new Error(
-            "No image was returned."
-          );
-
-        }
-
-        /* Remove loading message */
-
-        const loadingMessages =
-          document.querySelectorAll(
-            ".message.assistant"
-          );
-
-        if (loadingMessages.length) {
-
-          const last =
-            loadingMessages[
-              loadingMessages.length - 1
-            ];
-
-          if (
-            last
-              .querySelector(".message-text")
-              ?.textContent ===
-            "Creating your image..."
-          ) {
-
-            last.remove();
-
-          }
-
-        }
-
-        currentChat.messages.push({
-          role: "assistant",
-          content: "Generated image",
-          image: data.image
-        });
-
-        saveChats();
-
-        addMessageToDOM(
-          "assistant",
-          "Here is your generated image:",
-          data.image
-        );
-
-      } catch (error) {
-
-        console.error(error);
-
-        addMessageToDOM(
-          "assistant",
-          "I couldn't generate the image. Your OpenRouter image credits may be unavailable, or the image service may be temporarily unavailable."
-        );
-
-      }
-
-    }
-
-    function detectImageRequest(text) {
-
-      const lower =
-        text.toLowerCase();
-
-      const phrases = [
-        "create an image",
-        "create a picture",
-        "create image",
-        "create picture",
-        "generate an image",
-        "generate a picture",
-        "generate image",
-        "generate picture",
-        "make an image",
-        "make a picture",
-        "make image",
-        "make picture",
-        "draw me",
-        "draw an image",
-        "draw a picture",
-        "create artwork",
-        "generate artwork",
-        "make artwork"
-      ];
-
-      return phrases.some(
-        phrase => lower.includes(phrase)
-      );
-
-    }
-
-    /* =========================================================
-       SUGGESTIONS
-    ========================================================= */
-
-    function useSuggestion(text) {
-
-      const input =
-        document.getElementById("messageInput");
-
-      input.value = text;
-
-      resizeTextarea();
-
-      input.focus();
-
-    }
-
-    /* =========================================================
-       TEXTAREA
-    ========================================================= */
-
-    function setupTextarea() {
-
-      const input =
-        document.getElementById("messageInput");
-
-      input.addEventListener(
-        "input",
-        resizeTextarea
-      );
-
-      input.addEventListener(
-        "keydown",
-        event => {
-
-          if (
-            event.key === "Enter" &&
-            !event.shiftKey
-          ) {
-
-            event.preventDefault();
-
-            sendMessage();
-
-          }
-
-        }
-      );
-
-    }
-
-    function resizeTextarea() {
-
-      const input =
-        document.getElementById("messageInput");
-
-      input.style.height = "auto";
-
-      input.style.height =
-        Math.min(
-          input.scrollHeight,
-          150
-        ) + "px";
-
-    }
-
-    /* =========================================================
-       ACCOUNT
-    ========================================================= */
-
-    function loadAccount() {
-
-      try {
-
-        const saved =
-          localStorage.getItem(
-            STORAGE_ACCOUNT
-          );
-
-        if (saved) {
-
-          const account =
-            JSON.parse(saved);
-
-          applyAccount(account);
-
-        } else {
-
-          showSignedOut();
-
-        }
-
-      } catch {
-
-        showSignedOut();
-
-      }
-
-    }
-
-    function saveAccount(account) {
-
-      localStorage.setItem(
-        STORAGE_ACCOUNT,
-        JSON.stringify(account)
-      );
-
-    }
-
-    function isSignedIn() {
-
-      try {
-
-        const account =
-          JSON.parse(
-            localStorage.getItem(
-              STORAGE_ACCOUNT
-            )
-          );
-
-        return !!(
-          account &&
-          account.signedIn
-        );
-
-      } catch {
-
-        return false;
-
-      }
-
-    }
-
-    function getAccount() {
-
-      try {
-
-        return JSON.parse(
-          localStorage.getItem(
-            STORAGE_ACCOUNT
-          )
-        );
-
-      } catch {
-
-        return null;
-
-      }
-
-    }
-
-    function getAccountInitial() {
-
-      const account =
-        getAccount();
-
-      if (!account) return "?";
-
-      const name =
-        account.name ||
-        account.email ||
-        "N";
-
-      return name
-        .charAt(0)
-        .toUpperCase();
-
-    }
-
-    function applyAccount(account) {
-
-      const name =
-        account.name ||
-        "Nova User";
-
-      const email =
-        account.email ||
-        "Signed in";
-
-      document
-        .getElementById("sidebarAvatar")
-        .textContent =
-        name.charAt(0).toUpperCase();
-
-      document
-        .getElementById("sidebarAccountName")
-        .textContent =
-        name;
-
-      document
-        .getElementById("sidebarAccountStatus")
-        .textContent =
-        "Signed in";
-
-      document
-        .getElementById("accountAvatar")
-        .textContent =
-        name.charAt(0).toUpperCase();
-
-      document
-        .getElementById("accountName")
-        .textContent =
-        name;
-
-      document
-        .getElementById("accountEmail")
-        .textContent =
-        email;
-
-      document
-        .getElementById("signInPanel")
-        .classList.add("hidden");
-
-      document
-        .getElementById("signedInPanel")
-        .classList.add("active");
-
-    }
-
-    function showSignedOut() {
-
-      document
-        .getElementById("sidebarAvatar")
-        .textContent = "?";
-
-      document
-        .getElementById("sidebarAccountName")
-        .textContent =
-        "Guest";
-
-      document
-        .getElementById("sidebarAccountStatus")
-        .textContent =
-        "Not signed in";
-
-      document
-        .getElementById("signInPanel")
-        .classList.remove("hidden");
-
-      document
-        .getElementById("signedInPanel")
-        .classList.remove("active");
-
-    }
-
-    /*
-      DEMO AUTH
-
-      These buttons currently simulate sign-in.
-
-      Real Google / Apple OAuth and real email authentication
-      will need a proper authentication provider/backend.
-    */
-
-    function demoSignIn(provider) {
-
-      const account = {
-
-        signedIn: true,
-
-        provider,
-
-        name:
-          provider === "Apple"
-            ? "Apple User"
-            : "Google User",
-
-        email:
-          provider.toLowerCase() +
-          "@example.com",
-
-        created:
-          Date.now()
-
-      };
-
-      saveAccount(account);
-      applyAccount(account);
+    if (!isSignedIn()) {
 
       showModal(
-        "Signed in",
-        "You're signed in with " +
-        provider +
-        " in this demo."
+        "Sign in required",
+        "You need to sign in before you can create images with Nova AI."
+      );
+
+      showScreen("account");
+
+      return;
+
+    }
+
+    await generateImage(message);
+
+    return;
+
+  }
+
+  const usage =
+    getUsage();
+
+  if (usage.messages >= 20) {
+
+    showModal(
+      "Daily limit reached",
+      "You've reached the Free plan limit of 20 AI messages today. Premium plans will offer higher limits."
+    );
+
+    return;
+
+  }
+
+  isGenerating = true;
+
+  sendButton.disabled = true;
+
+  const userMessage =
+    message;
+
+  messageInput.value = "";
+
+  autoResize();
+
+  if (welcome.parentNode) {
+    welcome.remove();
+  }
+
+  currentChat.push({
+    role: "user",
+    content: userMessage
+  });
+
+  addMessageToDOM(
+    "user",
+    userMessage
+  );
+
+  usage.messages++;
+
+  saveUsage(usage);
+
+  addTyping();
+
+  try {
+
+    const response =
+      await fetch("/api/chat", {
+
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+
+          message: userMessage,
+
+          history:
+            currentChat.slice(-20)
+
+        })
+
+      });
+
+    const data =
+      await response.json();
+
+    removeTyping();
+
+    if (!response.ok) {
+
+      throw new Error(
+        data.error ||
+        "Something went wrong."
       );
 
     }
 
-    function demoEmailSignIn(event) {
+    const reply =
+      data.reply ||
+      "I couldn't generate a response.";
+
+    currentChat.push({
+      role: "assistant",
+      content: reply
+    });
+
+    addMessageToDOM(
+      "assistant",
+      reply
+    );
+
+    saveCurrentChat();
+
+  } catch (error) {
+
+    removeTyping();
+
+    const errorText =
+      "Sorry, something went wrong. " +
+      error.message;
+
+    currentChat.push({
+      role: "assistant",
+      content: errorText
+    });
+
+    addMessageToDOM(
+      "assistant",
+      errorText
+    );
+
+  } finally {
+
+    isGenerating = false;
+
+    sendButton.disabled = false;
+
+    messageInput.focus();
+
+  }
+
+}
+
+
+/* ==========================================
+   IMAGE GENERATION
+========================================== */
+
+async function generateImage(prompt) {
+
+  const usage =
+    getUsage();
+
+  if (usage.images >= 3) {
+
+    showModal(
+      "Daily image limit reached",
+      "You've reached the Free plan limit of 3 image generations today."
+    );
+
+    return;
+
+  }
+
+  isGenerating = true;
+
+  sendButton.disabled = true;
+
+  if (welcome.parentNode) {
+    welcome.remove();
+  }
+
+  currentChat.push({
+    role: "user",
+    content: prompt
+  });
+
+  addMessageToDOM(
+    "user",
+    prompt
+  );
+
+  usage.images++;
+
+  saveUsage(usage);
+
+  addTyping();
+
+  try {
+
+    const response =
+      await fetch("/api/image", {
+
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+          prompt
+        })
+
+      });
+
+    const data =
+      await response.json();
+
+    removeTyping();
+
+    if (!response.ok) {
+
+      throw new Error(
+        data.error ||
+        "Image generation failed."
+      );
+
+    }
+
+    if (!data.image) {
+
+      throw new Error(
+        "No image was returned."
+      );
+
+    }
+
+    const wrapper =
+      document.createElement("div");
+
+    wrapper.className = "message";
+
+    const avatar =
+      document.createElement("div");
+
+    avatar.className =
+      "avatar ai-avatar";
+
+    avatar.textContent = "✦";
+
+    const content =
+      document.createElement("div");
+
+    content.className =
+      "message-content";
+
+    const name =
+      document.createElement("div");
+
+    name.className =
+      "message-name";
+
+    name.textContent =
+      "Nova AI";
+
+    const image =
+      document.createElement("img");
+
+    image.className =
+      "generated-image";
+
+    image.src =
+      data.image;
+
+    image.alt =
+      "AI generated image";
+
+    content.appendChild(name);
+    content.appendChild(image);
+
+    wrapper.appendChild(avatar);
+    wrapper.appendChild(content);
+
+    messages.appendChild(wrapper);
+
+    /*
+      Do not store the huge base64 image
+      in localStorage.
+    */
+
+    currentChat.push({
+      role: "assistant",
+      content: "[AI image generated]"
+    });
+
+    saveCurrentChat();
+
+    window.scrollTo({
+      top: document.body.scrollHeight,
+      behavior: "smooth"
+    });
+
+  } catch (error) {
+
+    removeTyping();
+
+    const errorText =
+      "Image generation failed: " +
+      error.message;
+
+    currentChat.push({
+      role: "assistant",
+      content: errorText
+    });
+
+    addMessageToDOM(
+      "assistant",
+      errorText
+    );
+
+  } finally {
+
+    isGenerating = false;
+
+    sendButton.disabled = false;
+
+    messageInput.focus();
+
+  }
+
+}
+
+
+/* ==========================================
+   INPUT
+========================================== */
+
+sendButton.addEventListener(
+  "click",
+  sendMessage
+);
+
+
+messageInput.addEventListener(
+  "keydown",
+  function(event) {
+
+    if (
+      event.key === "Enter" &&
+      !event.shiftKey
+    ) {
 
       event.preventDefault();
 
-      const email =
-        document
-          .getElementById("emailInput")
-          .value
-          .trim();
-
-      if (!email) return;
-
-      const account = {
-
-        signedIn: true,
-
-        provider: "Email",
-
-        name:
-          email
-            .split("@")[0]
-            .replace(/[._-]/g, " ")
-            .replace(/\b\w/g, c =>
-              c.toUpperCase()
-            ),
-
-        email,
-
-        created:
-          Date.now()
-
-      };
-
-      saveAccount(account);
-      applyAccount(account);
-
-      showModal(
-        "Account ready",
-        "You're signed in with your email in this demo."
-      );
+      sendMessage();
 
     }
 
-    function signOut() {
+  }
+);
 
-      localStorage.removeItem(
-        STORAGE_ACCOUNT
-      );
 
-      showSignedOut();
+messageInput.addEventListener(
+  "input",
+  autoResize
+);
 
-      showModal(
-        "Signed out",
-        "You have been signed out of Nova AI."
-      );
 
-    }
+function autoResize() {
 
-    /* =========================================================
-       COPY
-    ========================================================= */
+  messageInput.style.height = "auto";
 
-    async function copyText(text) {
+  messageInput.style.height =
+    Math.min(
+      messageInput.scrollHeight,
+      150
+    ) + "px";
 
-      try {
+}
 
-        await navigator.clipboard.writeText(
-          text
-        );
 
-        showModal(
-          "Copied",
-          "The response has been copied to your clipboard."
-        );
+/* ==========================================
+   ACCOUNT
+========================================== */
 
-      } catch {
+function demoSignIn(provider) {
 
-        showModal(
-          "Copy failed",
-          "Your browser did not allow clipboard access."
-        );
+  /*
+    TEMPORARY DEMO ACCOUNT SYSTEM.
 
-      }
+    Real Google / Apple / Email authentication
+    will require a proper authentication backend.
+  */
 
-    }
+  const account = {
 
-    /* =========================================================
-       MODAL
-    ========================================================= */
+    provider,
 
-    function showModal(
-      title,
-      text
-    ) {
+    name:
+      provider === "Google"
+        ? "Google User"
+        : provider === "Apple"
+          ? "Apple User"
+          : "Nova User",
 
-      document
-        .getElementById("modalTitle")
-        .textContent =
-        title;
+    email:
+      provider.toLowerCase() +
+      "@example.com",
 
-      document
-        .getElementById("modalText")
-        .textContent =
-        text;
+    signedInAt:
+      Date.now()
 
-      document
-        .getElementById("modal")
-        .classList.add("active");
+  };
 
-    }
+  localStorage.setItem(
+    STORAGE_ACCOUNT,
+    JSON.stringify(account)
+  );
 
-    function closeModal() {
+  updateAccountUI();
 
-      document
-        .getElementById("modal")
-        .classList.remove("active");
+  showModal(
+    "Signed in",
+    "You're signed in using " +
+    provider +
+    "."
+  );
 
-    }
+}
 
-    function showComingSoon() {
 
-      showModal(
-        "Coming Soon",
-        "Nova AI Premium payments aren't available yet."
-      );
+function signOut() {
 
-    }
+  localStorage.removeItem(
+    STORAGE_ACCOUNT
+  );
 
-    /* =========================================================
-       ESC KEY
-    ========================================================= */
+  updateAccountUI();
 
-    document.addEventListener(
-      "keydown",
-      event => {
+}
 
-        if (event.key === "Escape") {
 
-          closeMobileMenu();
-          closeModal();
+function updateAccountUI() {
 
-        }
-
-      }
+  const raw =
+    localStorage.getItem(
+      STORAGE_ACCOUNT
     );
 
-  </script>
+  if (!raw) {
+
+    accountStatus.textContent =
+      "You are currently signed out.";
+
+    authButtons.style.display =
+      "grid";
+
+    signOutButton.style.display =
+      "none";
+
+    return;
+
+  }
+
+  let account;
+
+  try {
+
+    account =
+      JSON.parse(raw);
+
+  } catch {
+
+    localStorage.removeItem(
+      STORAGE_ACCOUNT
+    );
+
+    updateAccountUI();
+
+    return;
+
+  }
+
+  accountStatus.innerHTML =
+    "<strong>" +
+    escapeHTML(account.name) +
+    "</strong><br>" +
+    escapeHTML(account.email) +
+    "<br><br>Signed in with " +
+    escapeHTML(account.provider) +
+    ".";
+
+  authButtons.style.display =
+    "none";
+
+  signOutButton.style.display =
+    "block";
+
+}
+
+
+function escapeHTML(value) {
+
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+
+}
+
+
+/* ==========================================
+   MODAL
+========================================== */
+
+function showModal(title, text) {
+
+  modalTitle.textContent =
+    title;
+
+  modalText.textContent =
+    text;
+
+  modal.classList.add("active");
+
+}
+
+
+function closeModal() {
+
+  modal.classList.remove("active");
+
+}
+
+
+function showComingSoon() {
+
+  showModal(
+    "Coming Soon",
+    "Premium subscriptions are not available yet. The plans are currently preview-only."
+  );
+
+}
+
+
+modal.addEventListener(
+  "click",
+  function(event) {
+
+    if (event.target === modal) {
+      closeModal();
+    }
+
+  }
+);
+
+
+/* ==========================================
+   STARTUP
+========================================== */
+
+renderRecentChats();
+
+updateAccountUI();
+
+currentChatId =
+  Date.now().toString();
+
+</script>
 
 </body>
 </html>
