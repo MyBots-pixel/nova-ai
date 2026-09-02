@@ -1,7 +1,7 @@
 const OPENROUTER_URL =
   "https://openrouter.ai/api/v1/chat/completions";
 
-const { searchPlaces } = require("./tools/places");
+// const { searchPlaces } = require("./tools/places");
 
 /* =========================
    GENERAL FETCH
@@ -605,15 +605,7 @@ async function getRealtimeData(message) {
     }
   }
 
-  const places =
-    await getPlacesData(message);
-
-  if (places) {
-    results.push({
-      type: "places",
-      data: places
-    });
-  }
+// Places temporarily disabled while we test the server.
 
   return results;
 }
