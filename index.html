@@ -53,7 +53,36 @@
         .send:hover {
             opacity: 0.85;
         }
+.history-title {
+    margin-top: 25px;
+    margin-bottom: 10px;
+    color: #7f8aa3;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
 
+.chat-history {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.history-item {
+    padding: 10px 12px;
+    border-radius: 9px;
+    color: #c7cede;
+    font-size: 14px;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.history-item:hover {
+    background: #151c2d;
+    color: white;
+}
         .main {
             flex: 1;
             display: flex;
@@ -177,13 +206,17 @@
 
 <div class="app">
 
-    <aside class="sidebar">
-        <div class="logo">✦ Nova AI</div>
+ <aside class="sidebar">
+    <div class="logo">✦ Nova AI</div>
 
-        <button class="new-chat" onclick="newChat()">
-            + New chat
-        </button>
-    </aside>
+    <button class="new-chat" onclick="newChat()">
+        + New chat
+    </button>
+
+    <div class="history-title">Recent chats</div>
+
+    <div id="chatHistory" class="chat-history"></div>
+</aside>
 
     <main class="main">
 
@@ -221,11 +254,12 @@
 
 </div>
 
-<script>
-
 const input = document.getElementById("messageInput");
 const messages = document.getElementById("messages");
-const welcome = document.getElementById("welcome");
+const history = document.getElementById("chatHistory");
+
+let currentChat = [];
+let chats = JSON.parse(localStorage.getItem("novaChats") || "[]");
 
 input.addEventListener("keydown", function(event) {
     if (event.key === "Enter") {
@@ -233,20 +267,52 @@ input.addEventListener("keydown", function(event) {
     }
 });
 
+function saveChats() {
+    localStorage.setItem("novaChats", JSON.stringify(chats));
+}
+
+function renderHistory() {
+    history.innerHTML = "";
+
+    chats.slice().reverse().forEach((chat, reversedIndex) => {
+
+        const realIndex = chats.length - 1 - reversedIndex;
+
+        const item = document.createElement("div");
+
+        item.className = "history-item";
+
+        item.textContent =
+            chat.title || "New conversation";
+
+        item.onclick = function() {
+            loadChat(realIndex);
+        };
+
+        history.appendChild(item);
+    });
+}
+
 function addMessage(text, type) {
+
+    const welcome = document.getElementById("welcome");
 
     if (welcome) {
         welcome.remove();
     }
 
     const message = document.createElement("div");
+
     message.className = "message " + type;
 
     const content = document.createElement("div");
+
     content.className = "message-content";
+
     content.textContent = text;
 
     message.appendChild(content);
+
     messages.appendChild(message);
 
     messages.scrollTop = messages.scrollHeight;
@@ -266,12 +332,31 @@ async function sendMessage() {
 
     addMessage(message, "user");
 
+    currentChat.push({
+        role: "user",
+        content: message
+    });
+
+    if (currentChat.length === 1) {
+
+        chats.push({
+            title: message.substring(0, 35),
+            messages: currentChat
+        });
+
+        saveChats();
+
+        renderHistory();
+    }
+
     const loadingMessage = addMessage(
         "Nova AI is thinking...",
         "assistant"
     );
 
-    loadingMessage.querySelector(".message-content").classList.add("loading");
+    loadingMessage
+        .querySelector(".message-content")
+        .classList.add("loading");
 
     try {
 
@@ -294,10 +379,12 @@ async function sendMessage() {
         loadingMessage.remove();
 
         if (!response.ok) {
+
             addMessage(
                 data.error || "Something went wrong.",
                 "assistant"
             );
+
             return;
         }
 
@@ -305,6 +392,15 @@ async function sendMessage() {
             data.reply || "I didn't receive a response.",
             "assistant"
         );
+
+        currentChat.push({
+            role: "assistant",
+            content: data.reply
+        });
+
+        chats[chats.length - 1].messages = currentChat;
+
+        saveChats();
 
     } catch (error) {
 
@@ -319,7 +415,33 @@ async function sendMessage() {
     }
 }
 
+function loadChat(index) {
+
+    const chat = chats[index];
+
+    if (!chat) {
+        return;
+    }
+
+    currentChat = chat.messages || [];
+
+    messages.innerHTML = "";
+
+    currentChat.forEach(message => {
+
+        addMessage(
+            message.content,
+            message.role === "user"
+                ? "user"
+                : "assistant"
+        );
+
+    });
+}
+
 function newChat() {
+
+    currentChat = [];
 
     messages.innerHTML = `
         <div class="welcome" id="welcome">
@@ -327,10 +449,8 @@ function newChat() {
             <p>Ask Nova AI anything.</p>
         </div>
     `;
-
 }
 
-</script>
-
+renderHistory();
 </body>
 </html>
