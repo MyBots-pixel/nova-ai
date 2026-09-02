@@ -2,11 +2,20 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+>
 
 <title>Nova AI</title>
 
 <style>
+
+/* =========================================================
+   RESET
+========================================================= */
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -26,14 +35,30 @@ body {
   overflow-x: hidden;
 }
 
+
+/* =========================================================
+   BACKGROUND
+========================================================= */
+
 body::before {
   content: "";
   position: fixed;
   inset: 0;
   z-index: -2;
+
   background:
-    radial-gradient(circle at 20% 20%, rgba(49, 90, 255, 0.18), transparent 30%),
-    radial-gradient(circle at 80% 70%, rgba(98, 55, 255, 0.14), transparent 30%),
+    radial-gradient(
+      circle at 20% 20%,
+      rgba(49, 90, 255, 0.18),
+      transparent 30%
+    ),
+
+    radial-gradient(
+      circle at 80% 70%,
+      rgba(98, 55, 255, 0.14),
+      transparent 30%
+    ),
+
     #05091b;
 }
 
@@ -41,73 +66,134 @@ body::after {
   content: "";
   position: fixed;
   inset: 0;
+
   z-index: -1;
+
   pointer-events: none;
+
   opacity: .35;
+
   background-image:
-    radial-gradient(circle, white 1px, transparent 1px),
-    radial-gradient(circle, white 1px, transparent 1px);
-  background-size: 90px 90px, 140px 140px;
-  background-position: 10px 20px, 50px 80px;
+    radial-gradient(
+      circle,
+      white 1px,
+      transparent 1px
+    ),
+
+    radial-gradient(
+      circle,
+      white 1px,
+      transparent 1px
+    );
+
+  background-size:
+    90px 90px,
+    140px 140px;
+
+  background-position:
+    10px 20px,
+    50px 80px;
 }
 
-/* =========================
+
+/* =========================================================
    APP
-========================= */
+========================================================= */
 
 .app {
   min-height: 100vh;
 }
 
-/* =========================
+
+/* =========================================================
    SIDEBAR
-========================= */
+========================================================= */
 
 .sidebar {
+
   position: fixed;
+
   left: 0;
   top: 0;
   bottom: 0;
+
   width: 270px;
+
   background: #080e25;
-  border-right: 1px solid #1a2548;
+
+  border-right:
+    1px solid #1a2548;
+
   padding: 20px;
+
   z-index: 1000;
+
   display: flex;
   flex-direction: column;
 }
 
 .logo {
+
   display: flex;
+
   align-items: center;
+
   gap: 12px;
+
   font-size: 22px;
+
   font-weight: 800;
+
   margin-bottom: 28px;
 }
 
 .logo-icon {
+
   width: 40px;
   height: 40px;
+
   border-radius: 12px;
-  background: linear-gradient(135deg, #4169ff, #7555ff);
+
+  background:
+    linear-gradient(
+      135deg,
+      #4169ff,
+      #7555ff
+    );
+
   display: flex;
+
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8px 25px rgba(65, 105, 255, .3);
+
+  box-shadow:
+    0 8px 25px
+    rgba(65,105,255,.3);
 }
 
 .new-chat {
+
   width: 100%;
+
   border: 0;
+
   border-radius: 13px;
+
   padding: 13px;
+
   background: #17234d;
+
   color: white;
+
   font-size: 14px;
+
   font-weight: 700;
+
   cursor: pointer;
+
   margin-bottom: 22px;
+
+  touch-action: manipulation;
 }
 
 .new-chat:hover {
@@ -115,96 +201,165 @@ body::after {
 }
 
 .sidebar-title {
+
   color: #7481a8;
+
   font-size: 11px;
+
   text-transform: uppercase;
+
   letter-spacing: 1px;
+
   margin-bottom: 10px;
 }
 
 .recent {
+
   flex: 1;
+
   overflow-y: auto;
 }
 
 .chat-history-item {
+
   padding: 11px 12px;
+
   border-radius: 10px;
+
   color: #b8c1df;
+
   cursor: pointer;
+
   font-size: 13px;
+
   margin-bottom: 4px;
+
   white-space: nowrap;
+
   overflow: hidden;
+
   text-overflow: ellipsis;
+
+  touch-action: manipulation;
 }
 
 .chat-history-item:hover {
+
   background: #111b3b;
+
   color: white;
 }
 
 .sidebar-bottom {
-  border-top: 1px solid #1a2548;
+
+  border-top:
+    1px solid #1a2548;
+
   padding-top: 15px;
 }
 
 .sidebar-button {
+
   width: 100%;
+
   border: 0;
+
   background: transparent;
+
   color: #bdc6e5;
+
   text-align: left;
+
   padding: 12px;
+
   border-radius: 10px;
+
   cursor: pointer;
+
   font-size: 14px;
+
   margin-bottom: 4px;
+
+  touch-action: manipulation;
 }
 
 .sidebar-button:hover {
+
   background: #111b3b;
+
   color: white;
 }
 
-/* =========================
+
+/* =========================================================
    MAIN
-========================= */
+========================================================= */
 
 .main {
+
   margin-left: 270px;
+
   min-height: 100vh;
+
   position: relative;
 }
 
+
+/* =========================================================
+   TOP BAR
+========================================================= */
+
 .topbar {
+
   position: sticky;
+
   top: 0;
+
   height: 72px;
+
   background: #070c20;
-  border-bottom: 1px solid #172142;
+
+  border-bottom:
+    1px solid #172142;
+
   display: flex;
+
   align-items: center;
+
   padding: 0 28px;
+
   z-index: 100;
 }
 
 .mobile-menu-button {
+
   display: none;
+
   width: 42px;
   height: 42px;
-  border: 1px solid #202d52;
+
+  border:
+    1px solid #202d52;
+
   background: #101936;
+
   color: white;
+
   border-radius: 11px;
+
   font-size: 20px;
+
   cursor: pointer;
+
   margin-right: 12px;
+
   touch-action: manipulation;
 }
 
 .topbar-title {
+
   font-weight: 700;
+
   font-size: 16px;
 }
 
@@ -213,12 +368,20 @@ body::after {
 }
 
 .account-button {
-  border: 1px solid #243154;
+
+  border:
+    1px solid #243154;
+
   background: #101936;
+
   color: white;
+
   border-radius: 10px;
+
   padding: 9px 14px;
+
   cursor: pointer;
+
   touch-action: manipulation;
 }
 
@@ -226,65 +389,117 @@ body::after {
   background: #17234a;
 }
 
-/* =========================
+
+/* =========================================================
    CHAT
-========================= */
+========================================================= */
 
 .chat-area {
-  min-height: calc(100vh - 72px);
+
+  min-height:
+    calc(100vh - 72px);
+
   display: flex;
+
   flex-direction: column;
 }
 
 .messages {
-  width: min(900px, calc(100% - 40px));
-  margin: 0 auto;
-  padding: 35px 0 170px;
+
+  width:
+    min(
+      900px,
+      calc(100% - 40px)
+    );
+
+  margin:
+    0 auto;
+
+  padding:
+    35px 0 170px;
 }
 
 .welcome {
+
   text-align: center;
-  padding: 90px 20px 50px;
+
+  padding:
+    90px 20px 50px;
 }
 
 .welcome-icon {
+
   width: 70px;
   height: 70px;
-  margin: 0 auto 22px;
+
+  margin:
+    0 auto 22px;
+
   border-radius: 22px;
-  background: linear-gradient(135deg, #4169ff, #7555ff);
+
+  background:
+    linear-gradient(
+      135deg,
+      #4169ff,
+      #7555ff
+    );
+
   display: flex;
+
   align-items: center;
   justify-content: center;
+
   font-size: 30px;
-  box-shadow: 0 15px 40px rgba(65, 105, 255, .25);
+
+  box-shadow:
+    0 15px 40px
+    rgba(65,105,255,.25);
 }
 
 .welcome h1 {
+
   font-size: 40px;
+
   margin-bottom: 12px;
 }
 
 .welcome p {
+
   color: #8995ba;
+
   font-size: 15px;
 }
 
+
+/* =========================================================
+   MESSAGE
+========================================================= */
+
 .message {
+
   display: flex;
+
   gap: 14px;
+
   margin-bottom: 26px;
 }
 
 .avatar {
+
   flex-shrink: 0;
+
   width: 38px;
   height: 38px;
+
   border-radius: 12px;
+
   display: flex;
+
   align-items: center;
   justify-content: center;
+
   font-weight: 800;
+
   font-size: 13px;
 }
 
@@ -293,784 +508,1287 @@ body::after {
 }
 
 .ai-avatar {
-  background: linear-gradient(135deg, #4169ff, #7555ff);
+
+  background:
+    linear-gradient(
+      135deg,
+      #4169ff,
+      #7555ff
+    );
 }
 
 .message-content {
+
   flex: 1;
+
   min-width: 0;
 }
 
 .message-name {
+
   font-size: 12px;
+
   color: #7885aa;
+
   margin-bottom: 7px;
 }
 
 .message-text {
+
   color: #e7ebfa;
+
   line-height: 1.65;
+
   font-size: 15px;
+
   white-space: pre-wrap;
+
   word-wrap: break-word;
 }
 
 .copy-button {
+
   margin-top: 10px;
-  border: 1px solid #243154;
+
+  border:
+    1px solid #243154;
+
   background: #101936;
+
   color: #9ca8cb;
+
   padding: 6px 10px;
+
   border-radius: 7px;
+
   cursor: pointer;
+
   font-size: 11px;
+
+  touch-action: manipulation;
 }
 
 .copy-button:hover {
+
   color: white;
 }
 
-/* =========================
+
+/* =========================================================
    INPUT
-========================= */
+========================================================= */
 
 .input-area {
+
   position: fixed;
+
   left: 270px;
   right: 0;
+
   bottom: 0;
-  padding: 18px 25px 22px;
+
+  padding:
+    18px 25px 22px;
+
   background: #05091b;
-  border-top: 1px solid #111b38;
+
+  border-top:
+    1px solid #111b38;
+
   z-index: 90;
 }
 
 .input-wrapper {
-  width: min(900px, 100%);
+
+  width:
+    min(
+      900px,
+      100%
+    );
+
   margin: auto;
 }
 
 .input-box {
+
   display: flex;
+
   align-items: flex-end;
+
   gap: 10px;
+
   background: #0d1530;
-  border: 1px solid #26345b;
+
+  border:
+    1px solid #26345b;
+
   border-radius: 17px;
+
   padding: 10px;
 }
 
 .input-box:focus-within {
+
   border-color: #4569ff;
 }
 
 #messageInput {
+
   flex: 1;
+
   resize: none;
+
   min-height: 44px;
+
   max-height: 150px;
+
   border: 0;
+
   outline: 0;
+
   background: transparent;
+
   color: white;
+
   font-family: inherit;
+
   font-size: 16px;
+
   padding: 12px;
+
   line-height: 1.4;
 }
 
 #messageInput::placeholder {
+
   color: #68769f;
 }
 
 .send-button {
+
   width: 44px;
   height: 44px;
+
   border: 0;
+
   border-radius: 12px;
-  background: linear-gradient(135deg, #4169ff, #7555ff);
+
+  background:
+    linear-gradient(
+      135deg,
+      #4169ff,
+      #7555ff
+    );
+
   color: white;
+
   cursor: pointer;
+
   font-size: 18px;
+
   touch-action: manipulation;
 }
 
 .send-button:hover {
-  transform: translateY(-1px);
+
+  transform:
+    translateY(-1px);
+}
+
+.send-button:disabled {
+
+  opacity: .6;
+
+  cursor: default;
+
+  transform: none;
 }
 
 .input-info {
+
   text-align: center;
+
   color: #596584;
+
   font-size: 10px;
+
   margin-top: 8px;
 }
 
-/* =========================
+
+/* =========================================================
    SCREENS
-========================= */
+========================================================= */
 
 .screen {
+
   display: none;
-  min-height: calc(100vh - 72px);
+
+  min-height:
+    calc(100vh - 72px);
+
   padding: 45px;
 }
 
 .screen.active {
+
   display: block;
 }
 
 .screen-container {
-  width: min(1000px, 100%);
+
+  width:
+    min(
+      1000px,
+      100%
+    );
+
   margin: auto;
 }
 
 .screen-title {
+
   font-size: 30px;
+
   margin-bottom: 8px;
 }
 
 .screen-subtitle {
+
   color: #7f8bae;
+
   margin-bottom: 30px;
 }
 
-/* =========================
+
+/* =========================================================
    PREMIUM
-========================= */
+========================================================= */
 
 .plans {
+
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
   gap: 18px;
 }
 
 .plan {
+
   background: #0b1330;
-  border: 1px solid #1d2a4d;
+
+  border:
+    1px solid #1d2a4d;
+
   border-radius: 18px;
+
   padding: 24px;
 }
 
 .plan.featured {
+
   border-color: #536eff;
 }
 
 .plan h3 {
+
   margin-bottom: 10px;
 }
 
 .price {
+
   font-size: 29px;
+
   font-weight: 800;
+
   margin-bottom: 18px;
 }
 
 .price span {
+
   color: #7581a5;
+
   font-size: 12px;
+
   font-weight: normal;
 }
 
 .plan ul {
+
   list-style: none;
+
   color: #aeb8d8;
+
   font-size: 13px;
+
   line-height: 2;
 }
 
 .plan-button {
+
   width: 100%;
+
   margin-top: 20px;
+
   padding: 11px;
-  border: 1px solid #27365e;
+
+  border:
+    1px solid #27365e;
+
   border-radius: 10px;
+
   background: #121d3e;
+
   color: white;
+
   cursor: pointer;
+
+  touch-action: manipulation;
 }
 
-/* =========================
+
+/* =========================================================
    ACCOUNT
-========================= */
+========================================================= */
 
 .account-card {
+
   max-width: 600px;
+
   background: #0b1330;
-  border: 1px solid #1d2a4d;
+
+  border:
+    1px solid #1d2a4d;
+
   border-radius: 18px;
+
   padding: 25px;
 }
 
 .account-status {
+
   padding: 16px;
+
   border-radius: 12px;
+
   background: #101a39;
+
   margin-bottom: 20px;
+
   color: #c5cee8;
 }
 
 .auth-buttons {
+
   display: grid;
+
   gap: 10px;
 }
 
 .auth-button {
-  border: 1px solid #27365e;
+
+  border:
+    1px solid #27365e;
+
   background: #111b3a;
+
   color: white;
+
   padding: 13px;
+
   border-radius: 10px;
+
   cursor: pointer;
+
+  touch-action: manipulation;
 }
 
 .auth-button:hover {
+
   background: #19264c;
 }
 
 .signout {
+
   background: #281a28;
+
   border-color: #533047;
 }
 
-/* =========================
+
+/* =========================================================
    MODAL
-========================= */
+========================================================= */
 
 .modal {
+
   display: none;
+
   position: fixed;
+
   inset: 0;
+
   z-index: 3000;
-  background: rgba(0, 0, 0, .75);
+
+  background:
+    rgba(0,0,0,.75);
+
   align-items: center;
+
   justify-content: center;
+
   padding: 20px;
 }
 
 .modal.active {
+
   display: flex;
 }
 
 .modal-card {
-  width: min(460px, 100%);
+
+  width:
+    min(
+      460px,
+      100%
+    );
+
   background: #0a112a;
-  border: 1px solid #26345a;
+
+  border:
+    1px solid #26345a;
+
   border-radius: 20px;
+
   padding: 25px;
 }
 
 .modal-card h2 {
+
   margin-bottom: 10px;
 }
 
 .modal-card p {
+
   color: #8490b3;
+
   line-height: 1.5;
+
   font-size: 13px;
+
   margin-bottom: 20px;
 }
 
 .modal-close {
+
   width: 100%;
+
   padding: 12px;
+
   border: 0;
+
   border-radius: 10px;
+
   background: #4169ff;
+
   color: white;
+
   cursor: pointer;
+
+  touch-action: manipulation;
 }
 
-/* =========================
-   GENERATED IMAGE
-========================= */
+
+/* =========================================================
+   IMAGE
+========================================================= */
 
 .generated-image {
+
+  display: block;
+
   max-width: 100%;
+
+  height: auto;
+
   border-radius: 14px;
+
   margin-top: 12px;
-  border: 1px solid #25345d;
+
+  border:
+    1px solid #25345d;
 }
 
-/* =========================
+
+/* =========================================================
    TYPING
-========================= */
+========================================================= */
 
 .typing {
+
   display: flex;
+
   gap: 5px;
+
   padding-top: 7px;
 }
 
 .typing span {
+
   width: 7px;
   height: 7px;
+
   border-radius: 50%;
+
   background: #7787c0;
-  animation: typing 1.2s infinite;
+
+  animation:
+    typing 1.2s infinite;
 }
 
 .typing span:nth-child(2) {
+
   animation-delay: .15s;
 }
 
 .typing span:nth-child(3) {
+
   animation-delay: .3s;
 }
 
 @keyframes typing {
-  0%, 60%, 100% {
+
+  0%,
+  60%,
+  100% {
+
     opacity: .3;
-    transform: translateY(0);
+
+    transform:
+      translateY(0);
   }
 
   30% {
+
     opacity: 1;
-    transform: translateY(-3px);
+
+    transform:
+      translateY(-3px);
   }
 }
 
-/* =========================
+
+/* =========================================================
    MOBILE
-========================= */
+========================================================= */
 
 @media (max-width: 800px) {
 
   .sidebar {
+
     width: 280px;
-    transform: translateX(-100%);
-    transition: transform .25s ease;
-    box-shadow: 15px 0 40px rgba(0,0,0,.4);
+
+    transform:
+      translateX(-100%);
+
+    transition:
+      transform .25s ease;
+
+    box-shadow:
+      15px 0 40px
+      rgba(0,0,0,.4);
   }
 
   .sidebar.open {
-    transform: translateX(0);
+
+    transform:
+      translateX(0);
   }
 
   .main {
+
     margin-left: 0;
   }
 
   .topbar {
+
     height: 64px;
-    padding: 0 12px;
+
+    padding:
+      0 12px;
   }
 
   .mobile-menu-button {
+
     display: block;
   }
 
   .topbar-title {
+
     font-size: 14px;
   }
 
   .account-button {
-    padding: 8px 10px;
+
+    padding:
+      8px 10px;
+
     font-size: 12px;
   }
 
   .messages {
-    width: calc(100% - 24px);
-    padding-top: 20px;
-    padding-bottom: 145px;
+
+    width:
+      calc(100% - 24px);
+
+    padding:
+      20px 0 145px;
   }
 
   .welcome {
-    padding: 60px 10px 35px;
+
+    padding:
+      60px 10px 35px;
   }
 
   .welcome h1 {
+
     font-size: 29px;
   }
 
   .welcome p {
+
     font-size: 13px;
   }
 
   .input-area {
+
     left: 0;
-    padding: 10px 10px 13px;
+
+    padding:
+      10px 10px 13px;
   }
 
   .input-box {
+
     border-radius: 14px;
+
     padding: 7px;
   }
 
   /*
-    16px prevents iPhone Safari from
-    automatically zooming when typing.
+    16px prevents iPhone Safari
+    from zooming when typing.
   */
+
   #messageInput {
-    font-size: 16px !important;
+
+    font-size:
+      16px !important;
+
     min-height: 42px;
   }
 
   .screen {
-    padding: 25px 15px;
+
+    padding:
+      25px 15px;
   }
 
   .screen-title {
+
     font-size: 25px;
   }
 
   .plans {
+
     grid-template-columns: 1fr;
   }
 
   .message {
+
     gap: 9px;
   }
 
   .avatar {
+
     width: 34px;
     height: 34px;
+
     border-radius: 10px;
   }
 
   .message-text {
+
     font-size: 14px;
   }
 }
 
+
+/* =========================================================
+   SMALL PHONES
+========================================================= */
+
 @media (max-width: 420px) {
 
   .sidebar {
+
     width: 85vw;
   }
 
   .topbar-title {
+
     max-width: 120px;
+
     overflow: hidden;
+
     white-space: nowrap;
+
     text-overflow: ellipsis;
   }
 
   .account-button {
+
     font-size: 11px;
   }
 
   .welcome-icon {
+
     width: 60px;
     height: 60px;
   }
 
   .welcome h1 {
+
     font-size: 25px;
   }
 }
+
 </style>
 </head>
+
 
 <body>
 
 <div class="app">
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar" id="sidebar">
 
-    <div class="logo">
-      <div class="logo-icon">✦</div>
-      <span>Nova AI</span>
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
+
+<aside
+  class="sidebar"
+  id="sidebar"
+>
+
+  <div class="logo">
+
+    <div class="logo-icon">
+      ✦
     </div>
 
-    <button class="new-chat" id="newChat">
-      ＋ New Chat
+    <span>
+      Nova AI
+    </span>
+
+  </div>
+
+
+  <button
+    class="new-chat"
+    id="newChat"
+    type="button"
+  >
+    ＋ New Chat
+  </button>
+
+
+  <div class="sidebar-title">
+    Recent Chats
+  </div>
+
+
+  <div
+    class="recent"
+    id="recentChats"
+  ></div>
+
+
+  <div class="sidebar-bottom">
+
+    <button
+      class="sidebar-button"
+      id="premiumButton"
+      type="button"
+    >
+      ✦ Premium
     </button>
 
-    <div class="sidebar-title">
-      Recent Chats
+
+    <button
+      class="sidebar-button"
+      id="accountButton"
+      type="button"
+    >
+      ◉ Account
+    </button>
+
+  </div>
+
+</aside>
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main
+  class="main"
+  id="main"
+>
+
+
+<header class="topbar">
+
+
+  <button
+    class="mobile-menu-button"
+    id="mobileMenuButton"
+    type="button"
+    aria-label="Open menu"
+  >
+    ☰
+  </button>
+
+
+  <div
+    class="topbar-title"
+    id="topbarTitle"
+  >
+    Nova AI
+  </div>
+
+
+  <div class="topbar-spacer"></div>
+
+
+  <button
+    class="account-button"
+    id="topAccountButton"
+    type="button"
+  >
+    Account
+  </button>
+
+
+</header>
+
+
+<!-- =====================================================
+     CHAT SCREEN
+===================================================== -->
+
+<section
+  class="chat-area"
+  id="chatScreen"
+>
+
+
+  <div
+    class="messages"
+    id="messages"
+  >
+
+
+    <div
+      class="welcome"
+      id="welcome"
+    >
+
+      <div class="welcome-icon">
+        ✦
+      </div>
+
+
+      <h1>
+        How can I help?
+      </h1>
+
+
+      <p>
+        Ask Nova AI anything.
+      </p>
+
     </div>
 
-    <div class="recent" id="recentChats"></div>
 
-    <div class="sidebar-bottom">
+  </div>
 
-      <button class="sidebar-button" id="premiumButton">
-        ✦ Premium
-      </button>
 
-      <button class="sidebar-button" id="accountButton">
-        ◉ Account
-      </button>
+</section>
+
+
+<!-- =====================================================
+     PREMIUM SCREEN
+===================================================== -->
+
+<section
+  class="screen"
+  id="premiumScreen"
+>
+
+
+  <div class="screen-container">
+
+
+    <h1 class="screen-title">
+      Nova Premium
+    </h1>
+
+
+    <p class="screen-subtitle">
+      Choose the plan that works best for you.
+    </p>
+
+
+    <div class="plans">
+
+
+      <div class="plan">
+
+        <h3>
+          Free
+        </h3>
+
+
+        <div class="price">
+          £0
+          <span>
+            forever
+          </span>
+        </div>
+
+
+        <ul>
+
+          <li>
+            ✓ 20 AI messages/day
+          </li>
+
+          <li>
+            ✓ 3 image generations/day
+          </li>
+
+          <li>
+            ✓ Chat history
+          </li>
+
+          <li>
+            ✓ Copy responses
+          </li>
+
+          <li>
+            ✓ Standard priority
+          </li>
+
+        </ul>
+
+
+        <button
+          class="plan-button"
+          type="button"
+        >
+          Current Plan
+        </button>
+
+      </div>
+
+
+      <div class="plan featured">
+
+        <h3>
+          Plus
+        </h3>
+
+
+        <div class="price">
+          £4.99
+          <span>
+            /month
+          </span>
+        </div>
+
+
+        <ul>
+
+          <li>
+            ✓ 100 AI messages/day
+          </li>
+
+          <li>
+            ✓ 15 image generations/day
+          </li>
+
+          <li>
+            ✓ Faster priority
+          </li>
+
+          <li>
+            ✓ Longer conversations
+          </li>
+
+          <li>
+            ✓ Premium themes
+          </li>
+
+        </ul>
+
+
+        <button
+          class="plan-button"
+          type="button"
+          onclick="showComingSoon()"
+        >
+          Coming Soon
+        </button>
+
+      </div>
+
+
+      <div class="plan">
+
+        <h3>
+          Pro
+        </h3>
+
+
+        <div class="price">
+          £9.99
+          <span>
+            /month
+          </span>
+        </div>
+
+
+        <ul>
+
+          <li>
+            ✓ 500 AI messages/day
+          </li>
+
+          <li>
+            ✓ 50 image generations/day
+          </li>
+
+          <li>
+            ✓ Highest priority
+          </li>
+
+          <li>
+            ✓ Advanced features
+          </li>
+
+          <li>
+            ✓ Longer context
+          </li>
+
+        </ul>
+
+
+        <button
+          class="plan-button"
+          type="button"
+          onclick="showComingSoon()"
+        >
+          Coming Soon
+        </button>
+
+      </div>
+
 
     </div>
 
-  </aside>
+  </div>
+
+</section>
 
 
-  <!-- MAIN -->
-  <main class="main" id="main">
+<!-- =====================================================
+     ACCOUNT SCREEN
+===================================================== -->
 
-    <header class="topbar">
+<section
+  class="screen"
+  id="accountScreen"
+>
+
+
+  <div class="screen-container">
+
+
+    <h1 class="screen-title">
+      Account
+    </h1>
+
+
+    <p class="screen-subtitle">
+      Manage your Nova AI account.
+    </p>
+
+
+    <div class="account-card">
+
+
+      <div
+        class="account-status"
+        id="accountStatus"
+      >
+        You are currently signed out.
+      </div>
+
+
+      <div
+        class="auth-buttons"
+        id="authButtons"
+      >
+
+
+        <button
+          class="auth-button"
+          type="button"
+          onclick="demoSignIn('Google')"
+        >
+          Continue with Google
+        </button>
+
+
+        <button
+          class="auth-button"
+          type="button"
+          onclick="demoSignIn('Apple')"
+        >
+          Continue with Apple
+        </button>
+
+
+        <button
+          class="auth-button"
+          type="button"
+          onclick="demoSignIn('Email')"
+        >
+          Continue with Email
+        </button>
+
+
+      </div>
+
 
       <button
-        class="mobile-menu-button"
-        id="mobileMenuButton"
+        class="auth-button signout"
+        id="signOutButton"
         type="button"
+        style="display:none;margin-top:10px;"
+        onclick="signOut()"
       >
-        ☰
+        Sign Out
       </button>
 
-      <div class="topbar-title" id="topbarTitle">
-        Nova AI
-      </div>
-
-      <div class="topbar-spacer"></div>
-
-      <button
-        class="account-button"
-        id="topAccountButton"
-        type="button"
-      >
-        Account
-      </button>
-
-    </header>
-
-
-    <!-- CHAT -->
-    <section class="chat-area" id="chatScreen">
-
-      <div class="messages" id="messages">
-
-        <div class="welcome" id="welcome">
-
-          <div class="welcome-icon">
-            ✦
-          </div>
-
-          <h1>
-            How can I help?
-          </h1>
-
-          <p>
-            Ask Nova AI anything.
-          </p>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- PREMIUM -->
-    <section class="screen" id="premiumScreen">
-
-      <div class="screen-container">
-
-        <h1 class="screen-title">
-          Nova Premium
-        </h1>
-
-        <p class="screen-subtitle">
-          Choose the plan that works best for you.
-        </p>
-
-        <div class="plans">
-
-          <div class="plan">
-
-            <h3>Free</h3>
-
-            <div class="price">
-              £0
-              <span>forever</span>
-            </div>
-
-            <ul>
-              <li>✓ 20 AI messages/day</li>
-              <li>✓ 3 image generations/day</li>
-              <li>✓ Chat history</li>
-              <li>✓ Copy responses</li>
-              <li>✓ Standard priority</li>
-            </ul>
-
-            <button class="plan-button">
-              Current Plan
-            </button>
-
-          </div>
-
-          <div class="plan featured">
-
-            <h3>Plus</h3>
-
-            <div class="price">
-              £4.99
-              <span>/month</span>
-            </div>
-
-            <ul>
-              <li>✓ 100 AI messages/day</li>
-              <li>✓ 15 image generations/day</li>
-              <li>✓ Faster priority</li>
-              <li>✓ Longer conversations</li>
-              <li>✓ Premium themes</li>
-            </ul>
-
-            <button
-              class="plan-button"
-              onclick="showComingSoon()"
-            >
-              Coming Soon
-            </button>
-
-          </div>
-
-          <div class="plan">
-
-            <h3>Pro</h3>
-
-            <div class="price">
-              £9.99
-              <span>/month</span>
-            </div>
-
-            <ul>
-              <li>✓ 500 AI messages/day</li>
-              <li>✓ 50 image generations/day</li>
-              <li>✓ Highest priority</li>
-              <li>✓ Advanced features</li>
-              <li>✓ Longer context</li>
-            </ul>
-
-            <button
-              class="plan-button"
-              onclick="showComingSoon()"
-            >
-              Coming Soon
-            </button>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- ACCOUNT -->
-    <section class="screen" id="accountScreen">
-
-      <div class="screen-container">
-
-        <h1 class="screen-title">
-          Account
-        </h1>
-
-        <p class="screen-subtitle">
-          Manage your Nova AI account.
-        </p>
-
-        <div class="account-card">
-
-          <div class="account-status" id="accountStatus">
-            You are currently signed out.
-          </div>
-
-          <div class="auth-buttons" id="authButtons">
-
-            <button
-              class="auth-button"
-              onclick="demoSignIn('Google')"
-            >
-              Continue with Google
-            </button>
-
-            <button
-              class="auth-button"
-              onclick="demoSignIn('Apple')"
-            >
-              Continue with Apple
-            </button>
-
-            <button
-              class="auth-button"
-              onclick="demoSignIn('Email')"
-            >
-              Continue with Email
-            </button>
-
-          </div>
-
-          <button
-            class="auth-button signout"
-            id="signOutButton"
-            style="display:none;margin-top:10px;"
-            onclick="signOut()"
-          >
-            Sign Out
-          </button>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- INPUT -->
-    <div class="input-area" id="inputArea">
-
-      <div class="input-wrapper">
-
-        <div class="input-box">
-
-          <textarea
-            id="messageInput"
-            placeholder="Message Nova AI..."
-            rows="1"
-            autocomplete="off"
-            autocorrect="on"
-            autocapitalize="sentences"
-            spellcheck="true"
-          ></textarea>
-
-          <button
-            class="send-button"
-            id="sendButton"
-            type="button"
-          >
-            ↑
-          </button>
-
-        </div>
-
-        <div class="input-info">
-          Nova AI can make mistakes. Check important information.
-        </div>
-
-      </div>
 
     </div>
 
-  </main>
+  </div>
+
+</section>
+
+
+<!-- =====================================================
+     INPUT
+===================================================== -->
+
+<div
+  class="input-area"
+  id="inputArea"
+>
+
+
+  <div class="input-wrapper">
+
+
+    <div class="input-box">
+
+
+      <textarea
+        id="messageInput"
+        placeholder="Message Nova AI..."
+        rows="1"
+        autocomplete="off"
+        autocorrect="on"
+        autocapitalize="sentences"
+        spellcheck="true"
+      ></textarea>
+
+
+      <button
+        class="send-button"
+        id="sendButton"
+        type="button"
+      >
+        ↑
+      </button>
+
+
+    </div>
+
+
+    <div class="input-info">
+      Nova AI can make mistakes. Check important information.
+    </div>
+
+
+  </div>
 
 </div>
 
 
-<!-- MODAL -->
-<div class="modal" id="modal">
+</main>
+
+</div>
+
+
+<!-- =====================================================
+     MODAL
+===================================================== -->
+
+<div
+  class="modal"
+  id="modal"
+>
+
 
   <div class="modal-card">
+
 
     <h2 id="modalTitle">
       Nova AI
     </h2>
 
+
     <p id="modalText">
       Coming soon.
     </p>
 
+
     <button
       class="modal-close"
+      type="button"
       onclick="closeModal()"
     >
       Close
     </button>
+
 
   </div>
 
@@ -1079,105 +1797,153 @@ body::after {
 
 <script>
 
-/* ==========================================
+/* =========================================================
    STATE
-========================================== */
+========================================================= */
 
 let currentChat = [];
+
 let currentChatId = null;
+
 let isGenerating = false;
 
-const STORAGE_CHATS = "nova_chats_v4";
-const STORAGE_ACCOUNT = "nova_account_v4";
-const STORAGE_USAGE = "nova_usage_v4";
+
+const STORAGE_CHATS =
+  "nova_chats_v5";
+
+const STORAGE_ACCOUNT =
+  "nova_account_v5";
+
+const STORAGE_USAGE =
+  "nova_usage_v5";
 
 
-/* ==========================================
+/* =========================================================
    ELEMENTS
-========================================== */
+========================================================= */
 
 const sidebar =
-  document.getElementById("sidebar");
+  document.getElementById(
+    "sidebar"
+  );
 
 const main =
-  document.getElementById("main");
+  document.getElementById(
+    "main"
+  );
 
 const mobileMenuButton =
-  document.getElementById("mobileMenuButton");
+  document.getElementById(
+    "mobileMenuButton"
+  );
 
 const messages =
-  document.getElementById("messages");
+  document.getElementById(
+    "messages"
+  );
 
 const welcome =
-  document.getElementById("welcome");
+  document.getElementById(
+    "welcome"
+  );
 
 const messageInput =
-  document.getElementById("messageInput");
+  document.getElementById(
+    "messageInput"
+  );
 
 const sendButton =
-  document.getElementById("sendButton");
+  document.getElementById(
+    "sendButton"
+  );
 
 const chatScreen =
-  document.getElementById("chatScreen");
+  document.getElementById(
+    "chatScreen"
+  );
 
 const premiumScreen =
-  document.getElementById("premiumScreen");
+  document.getElementById(
+    "premiumScreen"
+  );
 
 const accountScreen =
-  document.getElementById("accountScreen");
+  document.getElementById(
+    "accountScreen"
+  );
 
 const inputArea =
-  document.getElementById("inputArea");
+  document.getElementById(
+    "inputArea"
+  );
 
 const recentChats =
-  document.getElementById("recentChats");
+  document.getElementById(
+    "recentChats"
+  );
 
 const accountStatus =
-  document.getElementById("accountStatus");
+  document.getElementById(
+    "accountStatus"
+  );
 
 const authButtons =
-  document.getElementById("authButtons");
+  document.getElementById(
+    "authButtons"
+  );
 
 const signOutButton =
-  document.getElementById("signOutButton");
+  document.getElementById(
+    "signOutButton"
+  );
 
 const modal =
-  document.getElementById("modal");
+  document.getElementById(
+    "modal"
+  );
 
 const modalTitle =
-  document.getElementById("modalTitle");
+  document.getElementById(
+    "modalTitle"
+  );
 
 const modalText =
-  document.getElementById("modalText");
+  document.getElementById(
+    "modalText"
+  );
 
 
-/* ==========================================
-   MOBILE MENU FIX
-========================================== */
-
-/*
-  IMPORTANT:
-  Stop the click from reaching #main.
-  Previously the button opened the menu,
-  then #main immediately closed it.
-*/
+/* =========================================================
+   MOBILE MENU
+========================================================= */
 
 mobileMenuButton.addEventListener(
   "click",
   function(event) {
 
     event.preventDefault();
+
     event.stopPropagation();
 
-    sidebar.classList.toggle("open");
 
-    if (sidebar.classList.contains("open")) {
+    sidebar.classList.toggle(
+      "open"
+    );
 
-      mobileMenuButton.textContent = "✕";
+
+    if (
+      sidebar.classList.contains(
+        "open"
+      )
+    ) {
+
+      mobileMenuButton.textContent =
+        "✕";
 
     } else {
 
-      mobileMenuButton.textContent = "☰";
+      mobileMenuButton.textContent =
+        "☰";
 
     }
 
@@ -1186,8 +1952,8 @@ mobileMenuButton.addEventListener(
 
 
 /*
-  Clicking inside the sidebar should NOT
-  close the sidebar.
+  Sidebar clicks must not
+  trigger the main click.
 */
 
 sidebar.addEventListener(
@@ -1201,7 +1967,11 @@ sidebar.addEventListener(
 
 
 /*
-  Clicking the main area closes the mobile menu.
+  Clicking the main area closes
+  the mobile menu.
+
+  IMPORTANT:
+  This does NOT scroll anything.
 */
 
 main.addEventListener(
@@ -1210,7 +1980,9 @@ main.addEventListener(
 
     if (
       window.innerWidth <= 800 &&
-      sidebar.classList.contains("open")
+      sidebar.classList.contains(
+        "open"
+      )
     ) {
 
       closeMobileMenu();
@@ -1223,59 +1995,77 @@ main.addEventListener(
 
 function closeMobileMenu() {
 
-  sidebar.classList.remove("open");
+  sidebar.classList.remove(
+    "open"
+  );
 
-  mobileMenuButton.textContent = "☰";
+  mobileMenuButton.textContent =
+    "☰";
 
 }
 
 
-/* ==========================================
+/* =========================================================
    NAVIGATION
-========================================== */
+========================================================= */
 
 function showScreen(screen) {
 
-  chatScreen.style.display = "none";
+  chatScreen.style.display =
+    "none";
 
-  premiumScreen.classList.remove("active");
+  premiumScreen.classList.remove(
+    "active"
+  );
 
-  accountScreen.classList.remove("active");
+  accountScreen.classList.remove(
+    "active"
+  );
 
-  inputArea.style.display = "none";
+  inputArea.style.display =
+    "none";
 
 
   if (screen === "chat") {
 
-    chatScreen.style.display = "flex";
+    chatScreen.style.display =
+      "flex";
 
-    inputArea.style.display = "block";
+    inputArea.style.display =
+      "block";
 
     document.getElementById(
       "topbarTitle"
-    ).textContent = "Nova AI";
+    ).textContent =
+      "Nova AI";
 
   }
 
 
   if (screen === "premium") {
 
-    premiumScreen.classList.add("active");
+    premiumScreen.classList.add(
+      "active"
+    );
 
     document.getElementById(
       "topbarTitle"
-    ).textContent = "Premium";
+    ).textContent =
+      "Premium";
 
   }
 
 
   if (screen === "account") {
 
-    accountScreen.classList.add("active");
+    accountScreen.classList.add(
+      "active"
+    );
 
     document.getElementById(
       "topbarTitle"
-    ).textContent = "Account";
+    ).textContent =
+      "Account";
 
     updateAccountUI();
 
@@ -1287,9 +2077,9 @@ function showScreen(screen) {
 }
 
 
-/* ==========================================
-   NAVIGATION BUTTONS
-========================================== */
+/* =========================================================
+   NAV BUTTONS
+========================================================= */
 
 document.getElementById(
   "premiumButton"
@@ -1299,7 +2089,9 @@ document.getElementById(
 
     event.stopPropagation();
 
-    showScreen("premium");
+    showScreen(
+      "premium"
+    );
 
   }
 );
@@ -1313,7 +2105,9 @@ document.getElementById(
 
     event.stopPropagation();
 
-    showScreen("account");
+    showScreen(
+      "account"
+    );
 
   }
 );
@@ -1327,15 +2121,17 @@ document.getElementById(
 
     event.stopPropagation();
 
-    showScreen("account");
+    showScreen(
+      "account"
+    );
 
   }
 );
 
 
-/* ==========================================
+/* =========================================================
    NEW CHAT
-========================================== */
+========================================================= */
 
 document.getElementById(
   "newChat"
@@ -1347,22 +2143,28 @@ document.getElementById(
 
     saveCurrentChat();
 
+
     currentChat = [];
+
 
     currentChatId =
       Date.now().toString();
 
+
     renderMessages();
 
-    showScreen("chat");
+
+    showScreen(
+      "chat"
+    );
 
   }
 );
 
 
-/* ==========================================
-   STORAGE
-========================================== */
+/* =========================================================
+   CHAT STORAGE
+========================================================= */
 
 function getChats() {
 
@@ -1395,10 +2197,18 @@ function saveChats(chats) {
 
 function saveCurrentChat() {
 
-  if (!currentChat.length) return;
+  if (
+    !currentChat.length
+  ) {
+
+    return;
+
+  }
+
 
   const chats =
     getChats();
+
 
   const firstUserMessage =
     currentChat.find(
@@ -1406,18 +2216,19 @@ function saveCurrentChat() {
         message.role === "user"
     );
 
+
   const title =
-    firstUserMessage?.content?.slice(
-      0,
-      40
-    ) ||
+    firstUserMessage?.content
+      ?.slice(0, 40) ||
     "New Chat";
+
 
   const existingIndex =
     chats.findIndex(
       chat =>
         chat.id === currentChatId
     );
+
 
   const chat = {
 
@@ -1436,110 +2247,163 @@ function saveCurrentChat() {
   };
 
 
-  if (existingIndex >= 0) {
+  if (
+    existingIndex >= 0
+  ) {
 
-    chats[existingIndex] = chat;
+    chats[existingIndex] =
+      chat;
 
   } else {
 
-    chats.unshift(chat);
+    chats.unshift(
+      chat
+    );
 
   }
 
 
-  saveChats(chats);
+  saveChats(
+    chats
+  );
+
 
   renderRecentChats();
 
 }
 
 
+/* =========================================================
+   RECENT CHATS
+========================================================= */
+
 function renderRecentChats() {
 
-  recentChats.innerHTML = "";
+  recentChats.innerHTML =
+    "";
+
 
   const chats =
     getChats();
 
+
   chats
     .sort(
       (a, b) =>
-        b.updated - a.updated
+        b.updated -
+        a.updated
     )
     .slice(0, 30)
-    .forEach(chat => {
+    .forEach(
+      chat => {
 
-      const item =
-        document.createElement("div");
+        const item =
+          document.createElement(
+            "div"
+          );
 
-      item.className =
-        "chat-history-item";
 
-      item.textContent =
-        chat.title;
+        item.className =
+          "chat-history-item";
 
-      item.addEventListener(
-        "click",
-        function() {
 
-          currentChatId =
-            chat.id;
+        item.textContent =
+          chat.title;
 
-          currentChat =
-            chat.messages || [];
 
-          renderMessages();
+        item.addEventListener(
+          "click",
+          function(event) {
 
-          showScreen("chat");
+            event.stopPropagation();
 
-        }
-      );
 
-      recentChats.appendChild(item);
+            currentChatId =
+              chat.id;
 
-    });
+
+            currentChat =
+              chat.messages ||
+              [];
+
+
+            renderMessages();
+
+
+            showScreen(
+              "chat"
+            );
+
+          }
+        );
+
+
+        recentChats.appendChild(
+          item
+        );
+
+      }
+    );
 
 }
 
 
-/* ==========================================
-   CLEAN NOVA RESPONSE
-========================================== */
-
-/*
-  Removes Markdown bold markers.
-
-  Example:
-
-  **Hello**
-
-  becomes:
-
-  Hello
-*/
+/* =========================================================
+   CLEAN AI MARKDOWN
+========================================================= */
 
 function cleanResponse(text) {
 
-  if (!text) return "";
+  if (!text) {
+
+    return "";
+
+  }
+
 
   return String(text)
-    .replace(/\*\*/g, "")
+
+    /*
+      Remove bold markers.
+    */
+
+    .replace(
+      /\*\*/g,
+      ""
+    )
+
+    /*
+      Remove stray markdown
+      headings.
+    */
+
+    .replace(
+      /^#{1,6}\s+/gm,
+      ""
+    )
+
     .trim();
 
 }
 
 
-/* ==========================================
+/* =========================================================
    RENDER MESSAGES
-========================================== */
+========================================================= */
 
 function renderMessages() {
 
-  messages.innerHTML = "";
+  messages.innerHTML =
+    "";
 
-  if (!currentChat.length) {
 
-    messages.appendChild(welcome);
+  if (
+    !currentChat.length
+  ) {
+
+    messages.appendChild(
+      welcome
+    );
 
     return;
 
@@ -1561,33 +2425,46 @@ function renderMessages() {
 }
 
 
+/*
+  IMPORTANT:
+
+  There is NO scrollTo()
+  anywhere in this function.
+*/
+
 function addMessageToDOM(
   role,
   content,
-  scroll = true
+  scroll = false
 ) {
 
-  /*
-    Clean AI responses before displaying.
-  */
-
-  if (role === "assistant") {
+  if (
+    role === "assistant"
+  ) {
 
     content =
-      cleanResponse(content);
+      cleanResponse(
+        content
+      );
 
   }
 
 
   const wrapper =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
+
 
   wrapper.className =
     "message";
 
 
   const avatar =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
+
 
   avatar.className =
     "avatar " +
@@ -1605,14 +2482,20 @@ function addMessageToDOM(
 
 
   const contentBox =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
+
 
   contentBox.className =
     "message-content";
 
 
   const name =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
+
 
   name.className =
     "message-name";
@@ -1625,7 +2508,10 @@ function addMessageToDOM(
 
 
   const text =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
+
 
   text.className =
     "message-text";
@@ -1635,18 +2521,29 @@ function addMessageToDOM(
     content;
 
 
-  contentBox.appendChild(name);
+  contentBox.appendChild(
+    name
+  );
 
-  contentBox.appendChild(text);
+
+  contentBox.appendChild(
+    text
+  );
 
 
-  if (role === "assistant") {
+  if (
+    role === "assistant"
+  ) {
 
     const copy =
-      document.createElement("button");
+      document.createElement(
+        "button"
+      );
+
 
     copy.className =
       "copy-button";
+
 
     copy.textContent =
       "Copy";
@@ -1654,15 +2551,23 @@ function addMessageToDOM(
 
     copy.addEventListener(
       "click",
-      async function() {
+      async function(event) {
+
+        event.stopPropagation();
+
 
         try {
 
-          await navigator.clipboard
-            .writeText(content);
+          await navigator
+            .clipboard
+            .writeText(
+              content
+            );
+
 
           copy.textContent =
             "Copied!";
+
 
           setTimeout(
             function() {
@@ -1673,6 +2578,7 @@ function addMessageToDOM(
             },
             1200
           );
+
 
         } catch {
 
@@ -1685,83 +2591,93 @@ function addMessageToDOM(
     );
 
 
-    contentBox.appendChild(copy);
-
-  }
-
-
-  wrapper.appendChild(avatar);
-
-  wrapper.appendChild(contentBox);
-
-  messages.appendChild(wrapper);
-
-
-  if (scroll) {
-
-    requestAnimationFrame(
-      function() {
-
-        window.scrollTo({
-          top:
-            document.body.scrollHeight,
-          behavior:
-            "smooth"
-        });
-
-      }
+    contentBox.appendChild(
+      copy
     );
 
   }
 
+
+  wrapper.appendChild(
+    avatar
+  );
+
+
+  wrapper.appendChild(
+    contentBox
+  );
+
+
+  messages.appendChild(
+    wrapper
+  );
+
 }
 
 
-/* ==========================================
-   TYPING
-========================================== */
+/* =========================================================
+   TYPING INDICATOR
+========================================================= */
 
 function addTyping() {
 
   const wrapper =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
+
 
   wrapper.className =
     "message";
+
 
   wrapper.id =
     "typingMessage";
 
 
   const avatar =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
+
 
   avatar.className =
     "avatar ai-avatar";
+
 
   avatar.textContent =
     "✦";
 
 
   const content =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
+
 
   content.className =
     "message-content";
 
 
   const name =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
+
 
   name.className =
     "message-name";
+
 
   name.textContent =
     "Nova AI";
 
 
   const typing =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
+
 
   typing.className =
     "typing";
@@ -1771,26 +2687,38 @@ function addTyping() {
     "<span></span><span></span><span></span>";
 
 
-  content.appendChild(name);
-
-  content.appendChild(typing);
-
-  wrapper.appendChild(avatar);
-
-  wrapper.appendChild(content);
-
-  messages.appendChild(wrapper);
+  content.appendChild(
+    name
+  );
 
 
-  window.scrollTo({
-    top:
-      document.body.scrollHeight,
-    behavior:
-      "smooth"
-  });
+  content.appendChild(
+    typing
+  );
+
+
+  wrapper.appendChild(
+    avatar
+  );
+
+
+  wrapper.appendChild(
+    content
+  );
+
+
+  messages.appendChild(
+    wrapper
+  );
 
 }
 
+
+/*
+  IMPORTANT:
+
+  No scrolling here either.
+*/
 
 function removeTyping() {
 
@@ -1798,6 +2726,7 @@ function removeTyping() {
     document.getElementById(
       "typingMessage"
     );
+
 
   if (typing) {
 
@@ -1808,25 +2737,32 @@ function removeTyping() {
 }
 
 
-/* ==========================================
-   DATE / USAGE
-========================================== */
+/* =========================================================
+   USAGE
+========================================================= */
 
 function getToday() {
 
   const now =
     new Date();
 
+
   return (
     now.getFullYear() +
     "-" +
     String(
       now.getMonth() + 1
-    ).padStart(2, "0") +
+    ).padStart(
+      2,
+      "0"
+    ) +
     "-" +
     String(
       now.getDate()
-    ).padStart(2, "0")
+    ).padStart(
+      2,
+      "0"
+    )
   );
 
 }
@@ -1850,9 +2786,16 @@ function getUsage() {
     ) {
 
       return {
-        date: getToday(),
-        messages: 0,
-        images: 0
+
+        date:
+          getToday(),
+
+        messages:
+          0,
+
+        images:
+          0
+
       };
 
     }
@@ -1860,12 +2803,20 @@ function getUsage() {
 
     return data;
 
+
   } catch {
 
     return {
-      date: getToday(),
-      messages: 0,
-      images: 0
+
+      date:
+        getToday(),
+
+      messages:
+        0,
+
+      images:
+        0
+
     };
 
   }
@@ -1883,9 +2834,9 @@ function saveUsage(data) {
 }
 
 
-/* ==========================================
+/* =========================================================
    ACCOUNT
-========================================== */
+========================================================= */
 
 function isSignedIn() {
 
@@ -1896,7 +2847,9 @@ function isSignedIn() {
 }
 
 
-function demoSignIn(provider) {
+function demoSignIn(
+  provider
+) {
 
   const account = {
 
@@ -1921,7 +2874,9 @@ function demoSignIn(provider) {
 
   localStorage.setItem(
     STORAGE_ACCOUNT,
-    JSON.stringify(account)
+    JSON.stringify(
+      account
+    )
   );
 
 
@@ -1944,6 +2899,7 @@ function signOut() {
     STORAGE_ACCOUNT
   );
 
+
   updateAccountUI();
 
 }
@@ -1962,11 +2918,14 @@ function updateAccountUI() {
     accountStatus.textContent =
       "You are currently signed out.";
 
+
     authButtons.style.display =
       "grid";
 
+
     signOutButton.style.display =
       "none";
+
 
     return;
 
@@ -1979,13 +2938,16 @@ function updateAccountUI() {
   try {
 
     account =
-      JSON.parse(raw);
+      JSON.parse(
+        raw
+      );
 
   } catch {
 
     localStorage.removeItem(
       STORAGE_ACCOUNT
     );
+
 
     updateAccountUI();
 
@@ -1995,17 +2957,31 @@ function updateAccountUI() {
 
 
   accountStatus.innerHTML =
+
     "<strong>" +
-    escapeHTML(account.name) +
+
+    escapeHTML(
+      account.name
+    ) +
+
     "</strong><br>" +
-    escapeHTML(account.email) +
+
+    escapeHTML(
+      account.email
+    ) +
+
     "<br><br>Signed in with " +
-    escapeHTML(account.provider) +
+
+    escapeHTML(
+      account.provider
+    ) +
+
     ".";
 
 
   authButtons.style.display =
     "none";
+
 
   signOutButton.style.display =
     "block";
@@ -2013,9 +2989,13 @@ function updateAccountUI() {
 }
 
 
-function escapeHTML(value) {
+function escapeHTML(
+  value
+) {
 
-  return String(value)
+  return String(
+    value
+  )
 
     .replaceAll(
       "&",
@@ -2045,29 +3025,44 @@ function escapeHTML(value) {
 }
 
 
-/* ==========================================
+/* =========================================================
    IMAGE DETECTION
-========================================== */
+========================================================= */
 
-function wantsImage(text) {
+function wantsImage(
+  text
+) {
 
   const value =
     text.toLowerCase();
 
+
   const phrases = [
 
     "create an image",
+
     "create a picture",
+
     "generate an image",
+
     "generate a picture",
+
     "make an image",
+
     "make a picture",
+
     "draw an image",
+
     "draw a picture",
+
     "generate artwork",
+
     "create artwork",
+
     "make artwork",
+
     "create art",
+
     "generate art"
 
   ];
@@ -2075,45 +3070,75 @@ function wantsImage(text) {
 
   return phrases.some(
     phrase =>
-      value.includes(phrase)
+      value.includes(
+        phrase
+      )
   );
 
 }
 
 
-/* ==========================================
+/* =========================================================
    SEND MESSAGE
-========================================== */
+========================================================= */
 
 async function sendMessage() {
 
-  if (isGenerating) return;
+  if (
+    isGenerating
+  ) {
+
+    return;
+
+  }
 
 
   const message =
     messageInput.value.trim();
 
 
-  if (!message) return;
+  if (!message) {
+
+    return;
+
+  }
 
 
-  if (wantsImage(message)) {
+  /*
+    Image request.
+  */
 
-    if (!isSignedIn()) {
+  if (
+    wantsImage(
+      message
+    )
+  ) {
+
+
+    if (
+      !isSignedIn()
+    ) {
 
       showModal(
         "Sign in required",
         "You need to sign in before you can create images with Nova AI."
       );
 
-      showScreen("account");
+
+      showScreen(
+        "account"
+      );
+
 
       return;
 
     }
 
 
-    await generateImage(message);
+    await generateImage(
+      message
+    );
+
 
     return;
 
@@ -2124,33 +3149,43 @@ async function sendMessage() {
     getUsage();
 
 
-  if (usage.messages >= 20) {
+  if (
+    usage.messages >= 20
+  ) {
 
     showModal(
       "Daily limit reached",
       "You've reached the Free plan limit of 20 AI messages today."
     );
 
+
     return;
 
   }
 
 
-  isGenerating = true;
+  isGenerating =
+    true;
 
-  sendButton.disabled = true;
+
+  sendButton.disabled =
+    true;
 
 
   const userMessage =
     message;
 
 
-  messageInput.value = "";
+  messageInput.value =
+    "";
+
 
   autoResize();
 
 
-  if (welcome.parentNode) {
+  if (
+    welcome.parentNode
+  ) {
 
     welcome.remove();
 
@@ -2159,7 +3194,8 @@ async function sendMessage() {
 
   currentChat.push({
 
-    role: "user",
+    role:
+      "user",
 
     content:
       userMessage
@@ -2169,13 +3205,17 @@ async function sendMessage() {
 
   addMessageToDOM(
     "user",
-    userMessage
+    userMessage,
+    false
   );
 
 
   usage.messages++;
 
-  saveUsage(usage);
+
+  saveUsage(
+    usage
+  );
 
 
   addTyping();
@@ -2192,8 +3232,10 @@ async function sendMessage() {
             "POST",
 
           headers: {
+
             "Content-Type":
               "application/json"
+
           },
 
           body:
@@ -2203,7 +3245,9 @@ async function sendMessage() {
                 userMessage,
 
               history:
-                currentChat.slice(-20)
+                currentChat.slice(
+                  -20
+                )
 
             })
 
@@ -2218,7 +3262,9 @@ async function sendMessage() {
     removeTyping();
 
 
-    if (!response.ok) {
+    if (
+      !response.ok
+    ) {
 
       throw new Error(
         data.error ||
@@ -2227,11 +3273,6 @@ async function sendMessage() {
 
     }
 
-
-    /*
-      Clean ** from the AI response
-      before storing and displaying it.
-    */
 
     const reply =
       cleanResponse(
@@ -2253,14 +3294,17 @@ async function sendMessage() {
 
     addMessageToDOM(
       "assistant",
-      reply
+      reply,
+      false
     );
 
 
     saveCurrentChat();
 
 
-  } catch (error) {
+  } catch (
+    error
+  ) {
 
     removeTyping();
 
@@ -2283,51 +3327,63 @@ async function sendMessage() {
 
     addMessageToDOM(
       "assistant",
-      errorText
+      errorText,
+      false
     );
 
 
   } finally {
 
-    isGenerating = false;
+    isGenerating =
+      false;
 
-    sendButton.disabled = false;
 
-    messageInput.focus();
+    sendButton.disabled =
+      false;
 
   }
 
 }
 
 
-/* ==========================================
+/* =========================================================
    IMAGE GENERATION
-========================================== */
+========================================================= */
 
-async function generateImage(prompt) {
+async function generateImage(
+  prompt
+) {
 
   const usage =
     getUsage();
 
 
-  if (usage.images >= 3) {
+  if (
+    usage.images >= 3
+  ) {
 
     showModal(
       "Daily image limit reached",
       "You've reached the Free plan limit of 3 image generations today."
     );
 
+
     return;
 
   }
 
 
-  isGenerating = true;
+  isGenerating =
+    true;
 
-  sendButton.disabled = true;
+
+  sendButton.disabled =
+    true;
 
 
-  if (welcome.parentNode) {
+  if (
+    welcome.parentNode
+  ) {
 
     welcome.remove();
 
@@ -2347,13 +3403,17 @@ async function generateImage(prompt) {
 
   addMessageToDOM(
     "user",
-    prompt
+    prompt,
+    false
   );
 
 
   usage.images++;
 
-  saveUsage(usage);
+
+  saveUsage(
+    usage
+  );
 
 
   addTyping();
@@ -2370,13 +3430,17 @@ async function generateImage(prompt) {
             "POST",
 
           headers: {
+
             "Content-Type":
               "application/json"
+
           },
 
           body:
             JSON.stringify({
+
               prompt
+
             })
 
         }
@@ -2390,7 +3454,9 @@ async function generateImage(prompt) {
     removeTyping();
 
 
-    if (!response.ok) {
+    if (
+      !response.ok
+    ) {
 
       throw new Error(
         data.error ||
@@ -2400,7 +3466,9 @@ async function generateImage(prompt) {
     }
 
 
-    if (!data.image) {
+    if (
+      !data.image
+    ) {
 
       throw new Error(
         "No image was returned."
@@ -2410,62 +3478,94 @@ async function generateImage(prompt) {
 
 
     const wrapper =
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
+
 
     wrapper.className =
       "message";
 
 
     const avatar =
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
+
 
     avatar.className =
       "avatar ai-avatar";
+
 
     avatar.textContent =
       "✦";
 
 
     const content =
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
+
 
     content.className =
       "message-content";
 
 
     const name =
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
+
 
     name.className =
       "message-name";
+
 
     name.textContent =
       "Nova AI";
 
 
     const image =
-      document.createElement("img");
+      document.createElement(
+        "img"
+      );
+
 
     image.className =
       "generated-image";
 
+
     image.src =
       data.image;
+
 
     image.alt =
       "AI generated image";
 
 
-    content.appendChild(name);
+    content.appendChild(
+      name
+    );
 
-    content.appendChild(image);
+
+    content.appendChild(
+      image
+    );
 
 
-    wrapper.appendChild(avatar);
+    wrapper.appendChild(
+      avatar
+    );
 
-    wrapper.appendChild(content);
 
-    messages.appendChild(wrapper);
+    wrapper.appendChild(
+      content
+    );
+
+
+    messages.appendChild(
+      wrapper
+    );
 
 
     currentChat.push({
@@ -2482,18 +3582,16 @@ async function generateImage(prompt) {
     saveCurrentChat();
 
 
-    window.scrollTo({
-
-      top:
-        document.body.scrollHeight,
-
-      behavior:
-        "smooth"
-
-    });
+    /*
+      NO scrollTo()
+      NO scrollIntoView()
+      NO automatic scrolling.
+    */
 
 
-  } catch (error) {
+  } catch (
+    error
+  ) {
 
     removeTyping();
 
@@ -2516,30 +3614,34 @@ async function generateImage(prompt) {
 
     addMessageToDOM(
       "assistant",
-      errorText
+      errorText,
+      false
     );
 
 
   } finally {
 
-    isGenerating = false;
+    isGenerating =
+      false;
 
-    sendButton.disabled = false;
 
-    messageInput.focus();
+    sendButton.disabled =
+      false;
 
   }
 
 }
 
 
-/* ==========================================
-   INPUT
-========================================== */
+/* =========================================================
+   TEXTAREA
+========================================================= */
 
 sendButton.addEventListener(
   "click",
   function(event) {
+
+    event.preventDefault();
 
     event.stopPropagation();
 
@@ -2579,6 +3681,7 @@ function autoResize() {
   messageInput.style.height =
     "auto";
 
+
   messageInput.style.height =
     Math.min(
       messageInput.scrollHeight,
@@ -2588,9 +3691,9 @@ function autoResize() {
 }
 
 
-/* ==========================================
+/* =========================================================
    MODAL
-========================================== */
+========================================================= */
 
 function showModal(
   title,
@@ -2600,8 +3703,10 @@ function showModal(
   modalTitle.textContent =
     title;
 
+
   modalText.textContent =
     text;
+
 
   modal.classList.add(
     "active"
@@ -2645,9 +3750,9 @@ modal.addEventListener(
 );
 
 
-/* ==========================================
+/* =========================================================
    STARTUP
-========================================== */
+========================================================= */
 
 renderRecentChats();
 
@@ -2655,6 +3760,7 @@ updateAccountUI();
 
 currentChatId =
   Date.now().toString();
+
 
 </script>
 
