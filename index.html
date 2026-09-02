@@ -1,14 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Nova AI</title>
 
@@ -28,7 +22,9 @@ body {
     overflow: hidden;
 }
 
-/* STAR BACKGROUND */
+/* =========================
+   BACKGROUND
+========================= */
 
 .space {
     position: fixed;
@@ -61,7 +57,6 @@ body {
 }
 
 @keyframes starsMove {
-
     from {
         transform: translateY(0);
     }
@@ -69,11 +64,11 @@ body {
     to {
         transform: translateY(-120px);
     }
-
 }
 
 .glow {
     position: absolute;
+
     width: 700px;
     height: 700px;
 
@@ -85,15 +80,16 @@ body {
     background:
         radial-gradient(
             circle,
-            rgba(52, 80, 170, .18),
+            rgba(52,80,170,.18),
             transparent 68%
         );
 
     filter: blur(20px);
 }
 
-
-/* APP */
+/* =========================
+   APP
+========================= */
 
 .app {
     position: relative;
@@ -101,47 +97,45 @@ body {
 
     display: flex;
 
-    height: 100vh;
     width: 100%;
+    height: 100vh;
 }
 
-
-/* SIDEBAR */
+/* =========================
+   SIDEBAR
+========================= */
 
 .sidebar {
-
     width: 260px;
     min-width: 260px;
 
     height: 100vh;
 
-    background: rgba(3, 8, 20, .88);
+    background: rgba(3,8,20,.88);
 
     backdrop-filter: blur(18px);
 
-    border-right: 1px solid rgba(120,140,190,.16);
+    border-right:
+        1px solid rgba(120,140,190,.16);
 
     padding: 18px;
 
     display: flex;
     flex-direction: column;
-
 }
 
 .logo {
-
     font-size: 22px;
     font-weight: 700;
 
     margin-bottom: 20px;
-
 }
 
 .new-chat {
-
     width: 100%;
 
-    border: 1px solid rgba(255,255,255,.08);
+    border:
+        1px solid rgba(255,255,255,.08);
 
     border-radius: 12px;
 
@@ -156,49 +150,83 @@ body {
     cursor: pointer;
 
     transition: .2s;
-
 }
 
 .new-chat:hover {
-
     transform: translateY(-1px);
 
     background: #6672ff;
+}
 
+/* PREMIUM BUTTON */
+
+.premium-button {
+    width: 100%;
+
+    margin-top: 10px;
+
+    border:
+        1px solid rgba(120,150,255,.25);
+
+    border-radius: 12px;
+
+    padding: 12px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(88,101,242,.25),
+            rgba(120,80,255,.18)
+        );
+
+    color: #dce2ff;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.premium-button:hover {
+    transform: translateY(-1px);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(88,101,242,.38),
+            rgba(120,80,255,.28)
+        );
+
+    border-color:
+        rgba(130,150,255,.45);
 }
 
 .history-title {
-
     margin-top: 25px;
-
     margin-bottom: 9px;
 
     color: #71809c;
 
     font-size: 11px;
-
     font-weight: bold;
 
     text-transform: uppercase;
 
     letter-spacing: 1px;
-
 }
 
 .chat-history {
-
     display: flex;
-
     flex-direction: column;
 
     gap: 5px;
 
     overflow-y: auto;
-
 }
 
 .history-item {
-
     width: 100%;
 
     padding: 10px 11px;
@@ -218,22 +246,19 @@ body {
     text-overflow: ellipsis;
 
     transition: .15s;
-
 }
 
 .history-item:hover {
-
     background: rgba(30,40,65,.65);
 
     color: white;
-
 }
 
-
-/* MAIN */
+/* =========================
+   MAIN
+========================= */
 
 .main {
-
     flex: 1;
 
     min-width: 0;
@@ -241,43 +266,39 @@ body {
     height: 100vh;
 
     display: flex;
-
     flex-direction: column;
-
 }
 
-
-/* TOP BAR */
+/* =========================
+   TOP BAR
+========================= */
 
 .topbar {
-
     height: 64px;
-
     min-height: 64px;
 
-    border-bottom: 1px solid rgba(120,140,190,.15);
+    border-bottom:
+        1px solid rgba(120,140,190,.15);
 
-    background: rgba(3,8,20,.45);
+    background:
+        rgba(3,8,20,.45);
 
     backdrop-filter: blur(15px);
 
     display: flex;
-
     align-items: center;
 
     padding: 0 25px;
 
     font-size: 16px;
-
     font-weight: 600;
-
 }
 
-
-/* MESSAGES */
+/* =========================
+   MESSAGES
+========================= */
 
 .messages {
-
     flex: 1;
 
     overflow-y: auto;
@@ -285,20 +306,18 @@ body {
     padding: 35px 25px;
 
     scroll-behavior: auto;
-
 }
 
-
-/* WELCOME */
+/* =========================
+   WELCOME
+========================= */
 
 .welcome {
-
     min-height: 100%;
 
     display: flex;
 
     justify-content: center;
-
     align-items: center;
 
     flex-direction: column;
@@ -306,67 +325,58 @@ body {
     text-align: center;
 
     padding-bottom: 80px;
-
 }
 
 .welcome h1 {
-
     font-size: 42px;
 
     margin-bottom: 10px;
 
     letter-spacing: -1px;
-
 }
 
 .welcome p {
-
     color: #8c97ad;
 
     font-size: 17px;
-
 }
 
-
-/* MESSAGE */
+/* =========================
+   MESSAGE
+========================= */
 
 .message {
-
     width: 100%;
 
     max-width: 850px;
 
     margin: 0 auto 24px;
-
 }
 
 .message-row {
-
     display: flex;
 
     align-items: flex-start;
 
     gap: 10px;
-
 }
 
 .message.user .message-row {
-
     justify-content: flex-end;
-
 }
 
 .message-content {
-
     max-width: 75%;
 
     padding: 13px 16px;
 
     border-radius: 15px;
 
-    background: rgba(21,29,46,.88);
+    background:
+        rgba(21,29,46,.88);
 
-    border: 1px solid rgba(130,150,200,.08);
+    border:
+        1px solid rgba(130,150,200,.08);
 
     color: #e9edf5;
 
@@ -377,29 +387,24 @@ body {
     white-space: pre-wrap;
 
     overflow-wrap: anywhere;
-
 }
 
 .message.user .message-content {
-
-    background: rgba(88,101,242,.92);
+    background:
+        rgba(88,101,242,.92);
 
     color: white;
-
 }
 
 .message-tools {
-
     display: flex;
 
     align-items: center;
 
     margin-top: 5px;
-
 }
 
 .copy-button {
-
     border: none;
 
     background: transparent;
@@ -413,22 +418,20 @@ body {
     padding: 4px 7px;
 
     border-radius: 6px;
-
 }
 
 .copy-button:hover {
-
-    background: rgba(30,40,65,.8);
+    background:
+        rgba(30,40,65,.8);
 
     color: white;
-
 }
 
-
-/* IMAGE */
+/* =========================
+   IMAGE
+========================= */
 
 .generated-image {
-
     display: block;
 
     max-width: min(700px, 90%);
@@ -437,17 +440,17 @@ body {
 
     border-radius: 16px;
 
-    border: 1px solid rgba(130,150,200,.15);
+    border:
+        1px solid rgba(130,150,200,.15);
 
     margin-top: 4px;
-
 }
 
-
-/* IMAGE LOADING */
+/* =========================
+   IMAGE LOADING
+========================= */
 
 .image-loading {
-
     display: flex;
 
     align-items: center;
@@ -458,75 +461,71 @@ body {
 
     font-size: 14px;
 
+    padding: 10px;
 }
 
 .spinner {
-
     width: 18px;
-
     height: 18px;
 
     border-radius: 50%;
 
-    border: 2px solid rgba(255,255,255,.15);
+    border:
+        2px solid rgba(255,255,255,.15);
 
-    border-top-color: #7b87ff;
+    border-top-color:
+        #7b87ff;
 
-    animation: spin .8s linear infinite;
-
+    animation:
+        spin .8s linear infinite;
 }
 
 @keyframes spin {
-
     to {
         transform: rotate(360deg);
     }
-
 }
 
-
-/* INPUT */
+/* =========================
+   INPUT
+========================= */
 
 .input-area {
-
     width: min(850px, calc(100% - 40px));
 
     margin: 0 auto 24px;
-
 }
 
 .input-box {
-
     width: 100%;
 
     display: flex;
 
     align-items: center;
 
-    background: rgba(14,22,39,.9);
+    background:
+        rgba(14,22,39,.9);
 
     backdrop-filter: blur(18px);
 
-    border: 1px solid rgba(120,140,190,.22);
+    border:
+        1px solid rgba(120,140,190,.22);
 
     border-radius: 17px;
 
     padding: 7px;
-
 }
 
 .input-box:focus-within {
-
-    border-color: rgba(88,101,242,.75);
+    border-color:
+        rgba(88,101,242,.75);
 
     box-shadow:
         0 0 0 3px rgba(88,101,242,.10),
         0 10px 40px rgba(0,0,0,.18);
-
 }
 
 #messageInput {
-
     flex: 1;
 
     min-width: 0;
@@ -544,22 +543,18 @@ body {
     color: white;
 
     font-size: 15px;
-
 }
 
 #messageInput::placeholder {
-
     color: #6f7b91;
-
 }
 
-
-/* SEND */
+/* =========================
+   SEND
+========================= */
 
 .send {
-
     width: 45px;
-
     height: 45px;
 
     flex-shrink: 0;
@@ -568,7 +563,8 @@ body {
 
     border-radius: 12px;
 
-    background: #5865f2;
+    background:
+        #5865f2;
 
     color: white;
 
@@ -577,78 +573,412 @@ body {
     cursor: pointer;
 
     transition: .2s;
-
 }
 
 .send:hover {
-
     transform: translateY(-1px);
 
     opacity: .9;
-
 }
 
 .send:disabled {
-
     opacity: .45;
 
     cursor: not-allowed;
-
 }
 
+/* =========================
+   PREMIUM SCREEN
+========================= */
 
-/* MOBILE */
+.premium-screen {
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 20;
+
+    display: none;
+
+    overflow-y: auto;
+
+    background:
+        rgba(2,6,23,.96);
+
+    backdrop-filter: blur(25px);
+
+    padding: 45px 25px;
+}
+
+.premium-screen.active {
+    display: block;
+}
+
+.premium-container {
+    width: min(1050px, 100%);
+
+    margin: 0 auto;
+}
+
+.premium-top {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 45px;
+}
+
+.premium-back {
+    border: none;
+
+    background:
+        rgba(30,40,65,.75);
+
+    color: #c8d0e0;
+
+    padding: 10px 15px;
+
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.premium-back:hover {
+    background:
+        rgba(50,65,100,.8);
+
+    color: white;
+}
+
+.premium-title {
+    text-align: center;
+
+    margin-bottom: 45px;
+}
+
+.premium-title .icon {
+    font-size: 48px;
+
+    margin-bottom: 12px;
+}
+
+.premium-title h1 {
+    font-size: 40px;
+
+    margin-bottom: 10px;
+}
+
+.premium-title p {
+    color: #8995ad;
+
+    font-size: 16px;
+}
+
+/* PLAN GRID */
+
+.plans {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 18px;
+
+    align-items: stretch;
+}
+
+.plan {
+    position: relative;
+
+    padding: 25px;
+
+    border-radius: 20px;
+
+    background:
+        rgba(12,20,38,.88);
+
+    border:
+        1px solid rgba(120,140,190,.15);
+
+    box-shadow:
+        0 20px 60px rgba(0,0,0,.25);
+
+    transition: .25s;
+}
+
+.plan:hover {
+    transform: translateY(-5px);
+
+    border-color:
+        rgba(120,145,255,.35);
+}
+
+.plan.featured {
+    border-color:
+        rgba(100,120,255,.55);
+
+    background:
+        linear-gradient(
+            160deg,
+            rgba(35,43,85,.9),
+            rgba(12,20,38,.92)
+        );
+}
+
+.plan-badge {
+    position: absolute;
+
+    top: -12px;
+    right: 20px;
+
+    padding: 5px 10px;
+
+    border-radius: 20px;
+
+    background:
+        #5865f2;
+
+    color: white;
+
+    font-size: 11px;
+
+    font-weight: bold;
+
+    text-transform: uppercase;
+
+    letter-spacing: .5px;
+}
+
+.plan h2 {
+    font-size: 22px;
+
+    margin-bottom: 10px;
+}
+
+.plan-description {
+    color: #8591a9;
+
+    font-size: 14px;
+
+    min-height: 40px;
+
+    line-height: 1.5;
+
+    margin-bottom: 20px;
+}
+
+.price {
+    font-size: 31px;
+
+    font-weight: bold;
+
+    margin-bottom: 20px;
+}
+
+.price span {
+    color: #77839b;
+
+    font-size: 13px;
+
+    font-weight: normal;
+}
+
+.plan ul {
+    list-style: none;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+
+    margin-bottom: 25px;
+}
+
+.plan li {
+    color: #c4ccdc;
+
+    font-size: 14px;
+
+    line-height: 1.4;
+}
+
+.plan li::before {
+    content: "✓";
+
+    color: #8f9cff;
+
+    margin-right: 9px;
+
+    font-weight: bold;
+}
+
+.plan-button {
+    width: 100%;
+
+    padding: 12px;
+
+    border-radius: 11px;
+
+    border:
+        1px solid rgba(120,140,190,.18);
+
+    background:
+        rgba(30,40,65,.8);
+
+    color: white;
+
+    cursor: pointer;
+
+    font-weight: 600;
+}
+
+.plan.featured .plan-button {
+    background:
+        #5865f2;
+
+    border-color:
+        #5865f2;
+}
+
+.plan-button:hover {
+    opacity: .9;
+}
+
+/* FREE USAGE */
+
+.usage-box {
+    margin-top: 35px;
+
+    padding: 22px;
+
+    border-radius: 18px;
+
+    background:
+        rgba(12,20,38,.75);
+
+    border:
+        1px solid rgba(120,140,190,.12);
+}
+
+.usage-box h3 {
+    font-size: 16px;
+
+    margin-bottom: 15px;
+}
+
+.usage-row {
+    display: flex;
+
+    justify-content: space-between;
+
+    color: #9ba6ba;
+
+    font-size: 13px;
+
+    margin-top: 10px;
+}
+
+.usage-bar {
+    width: 100%;
+
+    height: 7px;
+
+    background:
+        rgba(255,255,255,.07);
+
+    border-radius: 10px;
+
+    overflow: hidden;
+
+    margin-top: 7px;
+}
+
+.usage-fill {
+    height: 100%;
+
+    width: 0%;
+
+    background:
+        #5865f2;
+
+    border-radius: inherit;
+
+    transition: width .3s;
+}
+
+.premium-note {
+    text-align: center;
+
+    margin-top: 30px;
+
+    color: #68758d;
+
+    font-size: 12px;
+
+    line-height: 1.6;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 800px) {
+
+    .plans {
+        grid-template-columns: 1fr;
+    }
+
+    .premium-screen {
+        padding: 25px 15px;
+    }
+
+    .premium-title h1 {
+        font-size: 32px;
+    }
+
+}
 
 @media (max-width: 700px) {
 
     .sidebar {
-
         display: none;
-
     }
 
     .topbar {
-
         padding: 0 18px;
-
     }
 
     .messages {
-
         padding: 25px 12px;
-
     }
 
     .welcome h1 {
-
         font-size: 31px;
-
     }
 
     .message-content {
-
         max-width: 88%;
-
     }
 
     .input-area {
-
         width: calc(100% - 20px);
 
         margin-bottom: 12px;
-
     }
 
 }
 
 </style>
-
 </head>
 
 <body>
 
-
-<!-- MIDNIGHT BACKGROUND -->
+<!-- BACKGROUND -->
 
 <div class="space">
 
@@ -658,11 +988,11 @@ body {
 
 </div>
 
-
 <div class="app">
 
-
-<!-- SIDEBAR -->
+<!-- =========================
+     SIDEBAR
+========================= -->
 
 <aside class="sidebar">
 
@@ -677,6 +1007,13 @@ body {
         + New chat
     </button>
 
+    <button
+        class="premium-button"
+        id="premiumButton"
+    >
+        💎 Nova Premium
+    </button>
+
     <div class="history-title">
         Recent chats
     </div>
@@ -688,18 +1025,15 @@ body {
 
 </aside>
 
-
-<!-- MAIN -->
+<!-- =========================
+     MAIN
+========================= -->
 
 <main class="main">
 
-
 <header class="topbar">
-
     Nova AI
-
 </header>
-
 
 <section
     class="messages"
@@ -723,7 +1057,6 @@ body {
 
 </section>
 
-
 <div class="input-area">
 
     <div class="input-box">
@@ -746,14 +1079,284 @@ body {
 
 </div>
 
-
 </main>
+
+<!-- =========================
+     PREMIUM SCREEN
+========================= -->
+
+<section
+    class="premium-screen"
+    id="premiumScreen"
+>
+
+    <div class="premium-container">
+
+        <div class="premium-top">
+
+            <strong>
+                ✦ Nova AI
+            </strong>
+
+            <button
+                class="premium-back"
+                id="premiumBack"
+            >
+                ← Back to Nova
+            </button>
+
+        </div>
+
+        <div class="premium-title">
+
+            <div class="icon">
+                💎
+            </div>
+
+            <h1>
+                Upgrade Nova
+            </h1>
+
+            <p>
+                More power, more usage, more possibilities.
+            </p>
+
+        </div>
+
+        <div class="plans">
+
+            <!-- FREE -->
+
+            <div class="plan">
+
+                <h2>
+                    Free
+                </h2>
+
+                <div class="plan-description">
+                    Everything you need to get started with Nova AI.
+                </div>
+
+                <div class="price">
+                    £0
+                    <span>
+                        / forever
+                    </span>
+                </div>
+
+                <ul>
+
+                    <li>
+                        20 AI messages per day
+                    </li>
+
+                    <li>
+                        3 image generations per day
+                    </li>
+
+                    <li>
+                        Chat history
+                    </li>
+
+                    <li>
+                        Copy responses
+                    </li>
+
+                    <li>
+                        Standard priority
+                    </li>
+
+                </ul>
+
+                <button
+                    class="plan-button"
+                    onclick="selectPlan('Free')"
+                >
+                    Current plan
+                </button>
+
+            </div>
+
+            <!-- PLUS -->
+
+            <div class="plan featured">
+
+                <div class="plan-badge">
+                    Popular
+                </div>
+
+                <h2>
+                    Plus
+                </h2>
+
+                <div class="plan-description">
+                    More room for everyday AI use.
+                </div>
+
+                <div class="price">
+                    £4.99
+                    <span>
+                        / month
+                    </span>
+                </div>
+
+                <ul>
+
+                    <li>
+                        100 AI messages per day
+                    </li>
+
+                    <li>
+                        15 image generations per day
+                    </li>
+
+                    <li>
+                        Faster priority
+                    </li>
+
+                    <li>
+                        Longer conversations
+                    </li>
+
+                    <li>
+                        Premium themes
+                    </li>
+
+                </ul>
+
+                <button
+                    class="plan-button"
+                    onclick="selectPlan('Plus')"
+                >
+                    Coming soon
+                </button>
+
+            </div>
+
+            <!-- PRO -->
+
+            <div class="plan">
+
+                <h2>
+                    Pro
+                </h2>
+
+                <div class="plan-description">
+                    Maximum Nova AI access for power users.
+                </div>
+
+                <div class="price">
+                    £9.99
+                    <span>
+                        / month
+                    </span>
+                </div>
+
+                <ul>
+
+                    <li>
+                        500 AI messages per day
+                    </li>
+
+                    <li>
+                        50 image generations per day
+                    </li>
+
+                    <li>
+                        Highest priority
+                    </li>
+
+                    <li>
+                        Advanced features
+                    </li>
+
+                    <li>
+                        Longer context
+                    </li>
+
+                </ul>
+
+                <button
+                    class="plan-button"
+                    onclick="selectPlan('Pro')"
+                >
+                    Coming soon
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- USAGE -->
+
+        <div class="usage-box">
+
+            <h3>
+                🆓 Your Free usage
+            </h3>
+
+            <div class="usage-row">
+
+                <span>
+                    AI messages
+                </span>
+
+                <span id="messageUsageText">
+                    0 / 20
+                </span>
+
+            </div>
+
+            <div class="usage-bar">
+
+                <div
+                    class="usage-fill"
+                    id="messageUsageFill"
+                ></div>
+
+            </div>
+
+            <div class="usage-row">
+
+                <span>
+                    Images
+                </span>
+
+                <span id="imageUsageText">
+                    0 / 3
+                </span>
+
+            </div>
+
+            <div class="usage-bar">
+
+                <div
+                    class="usage-fill"
+                    id="imageUsageFill"
+                ></div>
+
+            </div>
+
+        </div>
+
+        <div class="premium-note">
+
+            Premium payments are not enabled yet.
+            These plans are currently a preview while Nova AI is being developed.
+
+        </div>
+
+    </div>
+
+</section>
 
 </div>
 
-
 <script>
 
+/* =========================
+   ELEMENTS
+========================= */
 
 const input =
     document.getElementById("messageInput");
@@ -764,30 +1367,62 @@ const sendButton =
 const newChatButton =
     document.getElementById("newChatButton");
 
+const premiumButton =
+    document.getElementById("premiumButton");
+
+const premiumBack =
+    document.getElementById("premiumBack");
+
+const premiumScreen =
+    document.getElementById("premiumScreen");
+
 const messages =
     document.getElementById("messages");
 
 const chatHistory =
     document.getElementById("chatHistory");
 
+const messageUsageText =
+    document.getElementById("messageUsageText");
+
+const imageUsageText =
+    document.getElementById("imageUsageText");
+
+const messageUsageFill =
+    document.getElementById("messageUsageFill");
+
+const imageUsageFill =
+    document.getElementById("imageUsageFill");
+
+
+/* =========================
+   DATA
+========================= */
 
 let chats = [];
 
 let currentChat = null;
 
+let usage = {
+    date: new Date().toISOString().slice(0,10),
+    messages: 0,
+    images: 0
+};
 
-/* LOAD */
+
+/* =========================
+   LOAD DATA
+========================= */
 
 try {
 
-    chats = JSON.parse(
-        localStorage.getItem("novaChats") || "[]"
-    );
+    chats =
+        JSON.parse(
+            localStorage.getItem("novaChats") || "[]"
+        );
 
     if (!Array.isArray(chats)) {
-
         chats = [];
-
     }
 
 } catch {
@@ -797,7 +1432,46 @@ try {
 }
 
 
-/* SAVE */
+try {
+
+    usage =
+        JSON.parse(
+            localStorage.getItem("novaUsage") ||
+            "null"
+        ) || usage;
+
+} catch {
+
+    usage = {
+        date: new Date().toISOString().slice(0,10),
+        messages: 0,
+        images: 0
+    };
+
+}
+
+
+/* RESET DAILY USAGE */
+
+const today =
+    new Date().toISOString().slice(0,10);
+
+if (usage.date !== today) {
+
+    usage = {
+        date: today,
+        messages: 0,
+        images: 0
+    };
+
+    saveUsage();
+
+}
+
+
+/* =========================
+   SAVE
+========================= */
 
 function saveChats() {
 
@@ -809,7 +1483,117 @@ function saveChats() {
 }
 
 
-/* COPY */
+function saveUsage() {
+
+    localStorage.setItem(
+        "novaUsage",
+        JSON.stringify(usage)
+    );
+
+}
+
+
+/* =========================
+   USAGE UI
+========================= */
+
+function updateUsageUI() {
+
+    const messageLimit = 20;
+
+    const imageLimit = 3;
+
+    messageUsageText.textContent =
+        `${usage.messages} / ${messageLimit}`;
+
+    imageUsageText.textContent =
+        `${usage.images} / ${imageLimit}`;
+
+    messageUsageFill.style.width =
+        Math.min(
+            100,
+            (usage.messages / messageLimit) * 100
+        ) + "%";
+
+    imageUsageFill.style.width =
+        Math.min(
+            100,
+            (usage.images / imageLimit) * 100
+        ) + "%";
+
+}
+
+
+function canSendMessage() {
+
+    return usage.messages < 20;
+
+}
+
+
+function canGenerateImage() {
+
+    return usage.images < 3;
+
+}
+
+
+/* =========================
+   PREMIUM
+========================= */
+
+function openPremium() {
+
+    premiumScreen.classList.add("active");
+
+    updateUsageUI();
+
+}
+
+
+function closePremium() {
+
+    premiumScreen.classList.remove("active");
+
+    input.focus();
+
+}
+
+
+function selectPlan(plan) {
+
+    if (plan === "Free") {
+
+        alert(
+            "You are already using Nova AI Free."
+        );
+
+        return;
+
+    }
+
+    alert(
+        `${plan} is coming soon. You can keep using Nova AI for free!`
+    );
+
+}
+
+
+premiumButton.addEventListener(
+    "click",
+    openPremium
+);
+
+
+premiumBack.addEventListener(
+    "click",
+    closePremium
+);
+
+
+/* =========================
+   COPY
+========================= */
 
 async function copyText(
     text,
@@ -825,13 +1609,18 @@ async function copyText(
         const textarea =
             document.createElement("textarea");
 
-        textarea.value = text;
+        textarea.value =
+            text;
 
-        document.body.appendChild(textarea);
+        document.body.appendChild(
+            textarea
+        );
 
         textarea.select();
 
-        document.execCommand("copy");
+        document.execCommand(
+            "copy"
+        );
 
         textarea.remove();
 
@@ -855,20 +1644,21 @@ async function copyText(
 }
 
 
-/* ADD TEXT MESSAGE */
+/* =========================
+   ADD MESSAGE
+========================= */
 
 function addMessage(
     text,
-    type
+    type,
+    shouldScroll = true
 ) {
 
     const welcome =
         document.getElementById("welcome");
 
     if (welcome) {
-
         welcome.remove();
-
     }
 
 
@@ -896,9 +1686,13 @@ function addMessage(
         text;
 
 
-    row.appendChild(content);
+    row.appendChild(
+        content
+    );
 
-    message.appendChild(row);
+    message.appendChild(
+        row
+    );
 
 
     if (type === "assistant") {
@@ -926,14 +1720,28 @@ function addMessage(
         );
 
 
-        tools.appendChild(copy);
+        tools.appendChild(
+            copy
+        );
 
-        message.appendChild(tools);
+        message.appendChild(
+            tools
+        );
 
     }
 
 
-    messages.appendChild(message);
+    messages.appendChild(
+        message
+    );
+
+
+    if (shouldScroll) {
+
+        messages.scrollTop =
+            messages.scrollHeight;
+
+    }
 
 
     return message;
@@ -941,19 +1749,20 @@ function addMessage(
 }
 
 
-/* ADD IMAGE */
+/* =========================
+   ADD IMAGE
+========================= */
 
 function addImage(
-    imageUrl
+    imageUrl,
+    shouldScroll = true
 ) {
 
     const welcome =
         document.getElementById("welcome");
 
     if (welcome) {
-
         welcome.remove();
-
     }
 
 
@@ -977,9 +1786,21 @@ function addImage(
         "AI generated image";
 
 
-    message.appendChild(image);
+    message.appendChild(
+        image
+    );
 
-    messages.appendChild(message);
+    messages.appendChild(
+        message
+    );
+
+
+    if (shouldScroll) {
+
+        messages.scrollTop =
+            messages.scrollHeight;
+
+    }
 
 
     return message;
@@ -987,7 +1808,9 @@ function addImage(
 }
 
 
-/* HISTORY */
+/* =========================
+   HISTORY
+========================= */
 
 function renderHistory() {
 
@@ -1014,7 +1837,9 @@ function renderHistory() {
             );
 
 
-            chatHistory.appendChild(item);
+            chatHistory.appendChild(
+                item
+            );
 
         }
     );
@@ -1022,7 +1847,9 @@ function renderHistory() {
 }
 
 
-/* LOAD CHAT */
+/* =========================
+   LOAD CHAT
+========================= */
 
 function loadChat(index) {
 
@@ -1030,9 +1857,7 @@ function loadChat(index) {
         chats[index];
 
     if (!chat) {
-
         return;
-
     }
 
 
@@ -1051,7 +1876,8 @@ function loadChat(index) {
             ) {
 
                 addImage(
-                    message.url
+                    message.url,
+                    false
                 );
 
             } else {
@@ -1060,7 +1886,8 @@ function loadChat(index) {
                     message.content,
                     message.role === "user"
                         ? "user"
-                        : "assistant"
+                        : "assistant",
+                    false
                 );
 
             }
@@ -1074,7 +1901,9 @@ function loadChat(index) {
 }
 
 
-/* NEW CHAT */
+/* =========================
+   NEW CHAT
+========================= */
 
 function newChat() {
 
@@ -1109,9 +1938,13 @@ function newChat() {
 }
 
 
-/* CHECK IMAGE REQUEST */
+/* =========================
+   IMAGE DETECTION
+========================= */
 
-function isImageRequest(text) {
+function isImageRequest(
+    text
+) {
 
     const lower =
         text.toLowerCase();
@@ -1135,17 +1968,33 @@ function isImageRequest(text) {
 
     return phrases.some(
         phrase =>
-            lower.includes(phrase)
+            lower.includes(
+                phrase
+            )
     );
 
 }
 
 
-/* SEND TEXT */
+/* =========================
+   SEND TEXT
+========================= */
 
 async function sendText(
     text
 ) {
+
+    if (!canSendMessage()) {
+
+        addMessage(
+            "You've reached today's Free AI message limit. Open Nova Premium to see the available plans.",
+            "assistant"
+        );
+
+        return;
+
+    }
+
 
     const history =
         currentChat.messages
@@ -1160,13 +2009,9 @@ async function sendText(
     const loading =
         addMessage(
             "Nova AI is thinking...",
-            "assistant"
+            "assistant",
+            true
         );
-
-
-    loading
-        .querySelector(".message-content")
-        .classList.add("loading");
 
 
     try {
@@ -1179,10 +2024,8 @@ async function sendText(
                     method: "POST",
 
                     headers: {
-
                         "Content-Type":
                             "application/json"
-
                     },
 
                     body:
@@ -1212,7 +2055,8 @@ async function sendText(
             addMessage(
                 data.error ||
                 "AI request failed.",
-                "assistant"
+                "assistant",
+                false
             );
 
             return;
@@ -1225,9 +2069,17 @@ async function sendText(
             "I couldn't generate a response.";
 
 
+        usage.messages++;
+
+        saveUsage();
+
+        updateUsageUI();
+
+
         addMessage(
             reply,
-            "assistant"
+            "assistant",
+            false
         );
 
 
@@ -1244,7 +2096,6 @@ async function sendText(
 
         saveChats();
 
-
         renderHistory();
 
 
@@ -1255,7 +2106,8 @@ async function sendText(
 
         addMessage(
             "I couldn't connect to Nova AI.",
-            "assistant"
+            "assistant",
+            false
         );
 
     }
@@ -1263,11 +2115,25 @@ async function sendText(
 }
 
 
-/* IMAGE */
+/* =========================
+   IMAGE GENERATION
+========================= */
 
 async function generateImage(
     prompt
 ) {
+
+    if (!canGenerateImage()) {
+
+        addMessage(
+            "You've reached today's Free image limit. Open Nova Premium to see the available plans.",
+            "assistant"
+        );
+
+        return;
+
+    }
+
 
     const loading =
         document.createElement("div");
@@ -1289,7 +2155,9 @@ async function generateImage(
     `;
 
 
-    messages.appendChild(loading);
+    messages.appendChild(
+        loading
+    );
 
 
     messages.scrollTop =
@@ -1298,12 +2166,26 @@ async function generateImage(
 
     try {
 
+        const controller =
+            new AbortController();
+
+
+        const timeout =
+            setTimeout(
+                () => controller.abort(),
+                35000
+            );
+
+
         const response =
             await fetch(
                 "/api/image",
                 {
 
                     method: "POST",
+
+                    signal:
+                        controller.signal,
 
                     headers: {
 
@@ -1324,6 +2206,11 @@ async function generateImage(
             );
 
 
+        clearTimeout(
+            timeout
+        );
+
+
         const data =
             await response.json();
 
@@ -1336,7 +2223,8 @@ async function generateImage(
             addMessage(
                 data.error ||
                 "Image generation failed.",
-                "assistant"
+                "assistant",
+                false
             );
 
             return;
@@ -1344,8 +2232,16 @@ async function generateImage(
         }
 
 
+        usage.images++;
+
+        saveUsage();
+
+        updateUsageUI();
+
+
         addImage(
-            data.image
+            data.image,
+            false
         );
 
 
@@ -1368,22 +2264,39 @@ async function generateImage(
         renderHistory();
 
 
-    } catch {
+    } catch (error) {
 
         loading.remove();
 
 
-        addMessage(
-            "I couldn't create the image.",
-            "assistant"
-        );
+        if (
+            error.name === "AbortError"
+        ) {
+
+            addMessage(
+                "Image generation took too long. Please try again.",
+                "assistant",
+                false
+            );
+
+        } else {
+
+            addMessage(
+                "I couldn't create the image.",
+                "assistant",
+                false
+            );
+
+        }
 
     }
 
 }
 
 
-/* SEND */
+/* =========================
+   SEND
+========================= */
 
 async function sendMessage() {
 
@@ -1392,18 +2305,47 @@ async function sendMessage() {
 
 
     if (!text) {
+        return;
+    }
+
+
+    /* CHECK FREE LIMIT */
+
+    if (
+        !isImageRequest(text) &&
+        !canSendMessage()
+    ) {
+
+        openPremium();
 
         return;
 
     }
 
 
+    if (
+        isImageRequest(text) &&
+        !canGenerateImage()
+    ) {
+
+        openPremium();
+
+        return;
+
+    }
+
+
+    /* CREATE CHAT */
+
     if (!currentChat) {
 
         currentChat = {
 
             title:
-                text.substring(0, 35),
+                text.substring(
+                    0,
+                    35
+                ),
 
             messages: []
 
@@ -1422,6 +2364,8 @@ async function sendMessage() {
     }
 
 
+    /* SAVE USER MESSAGE */
+
     currentChat.messages.push({
 
         role:
@@ -1433,41 +2377,58 @@ async function sendMessage() {
     });
 
 
+    /* SHOW USER MESSAGE */
+
     addMessage(
         text,
-        "user"
+        "user",
+        true
     );
 
 
     input.value = "";
 
 
-    input.disabled = true;
+    input.disabled =
+        true;
 
-    sendButton.disabled = true;
+    sendButton.disabled =
+        true;
 
 
-    if (isImageRequest(text)) {
+    /* AI */
 
-        await generateImage(text);
+    if (
+        isImageRequest(text)
+    ) {
+
+        await generateImage(
+            text
+        );
 
     } else {
 
-        await sendText(text);
+        await sendText(
+            text
+        );
 
     }
 
 
-    input.disabled = false;
+    input.disabled =
+        false;
 
-    sendButton.disabled = false;
+    sendButton.disabled =
+        false;
 
     input.focus();
 
 }
 
 
-/* BUTTON */
+/* =========================
+   EVENTS
+========================= */
 
 sendButton.addEventListener(
     "click",
@@ -1475,13 +2436,13 @@ sendButton.addEventListener(
 );
 
 
-/* ENTER */
-
 input.addEventListener(
     "keydown",
     event => {
 
-        if (event.key === "Enter") {
+        if (
+            event.key === "Enter"
+        ) {
 
             event.preventDefault();
 
@@ -1493,23 +2454,23 @@ input.addEventListener(
 );
 
 
-/* NEW CHAT */
-
 newChatButton.addEventListener(
     "click",
     newChat
 );
 
 
-/* START */
+/* =========================
+   START
+========================= */
 
 renderHistory();
 
-input.focus();
+updateUsageUI();
 
+input.focus();
 
 </script>
 
 </body>
-
 </html>
