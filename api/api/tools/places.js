@@ -1,27 +1,51 @@
 const NOMINATIM_URL = "https://nominatim.openstreetmap.org/search";
 const OVERPASS_URL = "https://overpass-api.de/api/interpreter";
 
-const USER_AGENT = "Nova-AI/1.0";
+const USER_AGENT = "Nova-AI/1.0 (Places Search)";
 
-async function fetchJSON(url, options = {}) {
-  const response = await fetch(url, options);
+const REQUEST_TIMEOUT = 12000;
+const DEFAULT_RADIUS = 3000;
+const DEFAULT_LIMIT = 8;
 
-  let data = null;
+/*
+==================================================
+SAFE FETCH
+==================================================
+*/
+
+async function safeFetch(url, options = {}, timeout = REQUEST_TIMEOUT) {
+  const controller = new AbortController();
+
+  const timer = setTimeout(() => {
+    controller.abort();
+  }, timeout);
 
   try {
-    data = await response.json();
-  } catch {
-    data = null;
-  }
+    const response = await fetch(url, {
+      ...options,
+      signal: controller.signal
+    });
 
-  if (!response.ok) {
-    throw new Error(
-      data?.error ||
+    const text = await response.text();
+
+    if (!response.ok) {
+      throw new Error(
         `Request failed with status ${response.status}`
-    );
-  }
+      );
+    }
 
-  return data;
+    if (!text) {
+      throw new Error("Empty response from places service.");
+    }
+
+    try {
+      return JSON.parse(text);
+    } catch {
+      throw new Error("Places service returned invalid JSON.");
+    }
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 /*
@@ -31,72 +55,93 @@ GEOCODE LOCATION
 */
 
 async function geocodeLocation(location) {
-  const url =
-    `${NOMINATIM_URL}?` +
-    new URLSearchParams({
-      q: location,
-      format: "jsonv2",
-      limit: "1",
-      addressdetails: "1"
-    }).toString();
+  if (!location || typeof location !== "string") {
+    return null;
+  }
 
-  const data = await fetchJSON(url, {
-    headers: {
-      "User-Agent": USER_AGENT,
-      Accept: "application/json"
-    }
+  const cleanLocation = location.trim();
+
+  if (!cleanLocation) {
+    return null;
+  }
+
+  const params = new URLSearchParams({
+    q: cleanLocation,
+    format: "jsonv2",
+    limit: "1",
+    addressdetails: "1"
   });
 
-  if (!Array.isArray(data) || !data.length) {
+  const data = await safeFetch(
+    `${NOMINATIM_URL}?${params.toString()}`,
+    {
+      method: "GET",
+      headers: {
+        "User-Agent": USER_AGENT,
+        Accept: "application/json"
+      }
+    }
+  );
+
+  if (!Array.isArray(data) || data.length === 0) {
+    return null;
+  }
+
+  const result = data[0];
+
+  const latitude = Number(result.lat);
+  const longitude = Number(result.lon);
+
+  if (
+    !Number.isFinite(latitude) ||
+    !Number.isFinite(longitude)
+  ) {
     return null;
   }
 
   return {
-    latitude: Number(data[0].lat),
-    longitude: Number(data[0].lon),
-    displayName: data[0].display_name,
-    type: data[0].type,
-    address: data[0].address || {}
+    latitude,
+    longitude,
+    displayName: result.display_name || cleanLocation,
+    type: result.type || "place",
+    address: result.address || {}
   };
 }
 
 /*
 ==================================================
-CATEGORY MAPPING
+CATEGORY FILTERS
 ==================================================
 */
 
 function getCategoryFilters(query) {
-  const text = query.toLowerCase();
+  const text = String(query || "").toLowerCase();
 
   if (
     text.includes("restaurant") ||
-    text.includes("restaurants") ||
-    text.includes("food") ||
-    text.includes("eat")
+    text.includes("restaurants")
   ) {
     return [
-      '[amenity~"restaurant|fast_food|cafe"]'
+      '[amenity="restaurant"]'
+    ];
+  }
+
+  if (
+    text.includes("fast food") ||
+    text.includes("takeaway") ||
+    text.includes("takeout")
+  ) {
+    return [
+      '[amenity="fast_food"]'
     ];
   }
 
   if (
     text.includes("cafe") ||
-    text.includes("coffee") ||
-    text.includes("coffee shop")
+    text.includes("coffee")
   ) {
     return [
       '[amenity="cafe"]'
-    ];
-  }
-
-  if (
-    text.includes("shop") ||
-    text.includes("shops") ||
-    text.includes("shopping")
-  ) {
-    return [
-      '[shop]'
     ];
   }
 
@@ -106,7 +151,18 @@ function getCategoryFilters(query) {
     text.includes("groceries")
   ) {
     return [
-      '[shop~"supermarket|convenience|grocery"]'
+      '[shop="supermarket"]',
+      '[shop="convenience"]'
+    ];
+  }
+
+  if (
+    text.includes("shop") ||
+    text.includes("shops") ||
+    text.includes("shopping")
+  ) {
+    return [
+      "[shop]"
     ];
   }
 
@@ -183,8 +239,8 @@ function getCategoryFilters(query) {
   }
 
   if (
-    text.includes("station") ||
-    text.includes("train station")
+    text.includes("train station") ||
+    text.includes("railway station")
   ) {
     return [
       '[railway="station"]'
@@ -228,14 +284,37 @@ function getCategoryFilters(query) {
     ];
   }
 
+  if (
+    text.includes("dentist") ||
+    text.includes("dentists")
+  ) {
+    return [
+      '[amenity="dentist"]'
+    ];
+  }
+
+  if (
+    text.includes("doctor") ||
+    text.includes("doctors") ||
+    text.includes("gp")
+  ) {
+    return [
+      '[amenity="doctors"]'
+    ];
+  }
+
+  /*
+  Generic named places.
+  */
+
   return [
-    '[name]'
+    "[name]"
   ];
 }
 
 /*
 ==================================================
-OVERPASS QUERY
+OVERPASS SEARCH
 ==================================================
 */
 
@@ -243,7 +322,7 @@ async function searchNearbyPlaces(
   latitude,
   longitude,
   query,
-  radius = 5000
+  radius = DEFAULT_RADIUS
 ) {
   const filters = getCategoryFilters(query);
 
@@ -264,42 +343,38 @@ async function searchNearbyPlaces(
   }
 
   const overpassQuery = `
-[out:json][timeout:20];
+[out:json][timeout:15];
 
 (
-  ${statements.join("\n")}
+${statements.join("\n")}
 );
 
 out center tags;
 `;
 
-  const response = await fetch(
+  const body =
+    `data=${encodeURIComponent(overpassQuery)}`;
+
+  const data = await safeFetch(
     OVERPASS_URL,
     {
       method: "POST",
       headers: {
         "Content-Type":
           "application/x-www-form-urlencoded",
-        "User-Agent": USER_AGENT
+        "User-Agent": USER_AGENT,
+        Accept: "application/json"
       },
-      body:
-        `data=${encodeURIComponent(
-          overpassQuery
-        )}`
-    }
+      body
+    },
+    18000
   );
 
-  if (!response.ok) {
-    throw new Error(
-      `Places search failed with status ${response.status}`
-    );
+  if (!data || !Array.isArray(data.elements)) {
+    return [];
   }
 
-  const data = await response.json();
-
-  return Array.isArray(data.elements)
-    ? data.elements
-    : [];
+  return data.elements;
 }
 
 /*
@@ -344,7 +419,7 @@ function distanceKm(
 
 /*
 ==================================================
-NORMALISE RESULTS
+NORMALISE PLACE
 ==================================================
 */
 
@@ -352,23 +427,26 @@ function normalisePlace(
   element,
   origin
 ) {
-  const tags = element.tags || {};
+  const tags = element?.tags || {};
 
-  let latitude = element.lat;
-  let longitude = element.lon;
+  let latitude = element?.lat;
+  let longitude = element?.lon;
 
   if (
     (latitude == null ||
       longitude == null) &&
-    element.center
+    element?.center
   ) {
     latitude = element.center.lat;
     longitude = element.center.lon;
   }
 
+  latitude = Number(latitude);
+  longitude = Number(longitude);
+
   if (
-    latitude == null ||
-    longitude == null
+    !Number.isFinite(latitude) ||
+    !Number.isFinite(longitude)
   ) {
     return null;
   }
@@ -376,9 +454,26 @@ function normalisePlace(
   const distance = distanceKm(
     origin.latitude,
     origin.longitude,
-    Number(latitude),
-    Number(longitude)
+    latitude,
+    longitude
   );
+
+  const type =
+    tags.amenity ||
+    tags.shop ||
+    tags.tourism ||
+    tags.leisure ||
+    tags.railway ||
+    tags.highway ||
+    tags.office ||
+    "place";
+
+  const addressParts = [
+    tags["addr:housenumber"],
+    tags["addr:street"],
+    tags["addr:city"],
+    tags["addr:postcode"]
+  ].filter(Boolean);
 
   return {
     name:
@@ -386,29 +481,19 @@ function normalisePlace(
       tags["name:en"] ||
       "Unnamed place",
 
-    type:
-      tags.amenity ||
-      tags.shop ||
-      tags.tourism ||
-      tags.leisure ||
-      tags.railway ||
-      tags.highway ||
-      "place",
+    type,
 
-    latitude: Number(latitude),
-    longitude: Number(longitude),
+    latitude,
+
+    longitude,
 
     distanceKm:
       Math.round(distance * 100) / 100,
 
     address:
-      [
-        tags["addr:housenumber"],
-        tags["addr:street"],
-        tags["addr:postcode"]
-      ]
-        .filter(Boolean)
-        .join(" ") || null,
+      addressParts.length > 0
+        ? addressParts.join(", ")
+        : null,
 
     phone:
       tags.phone ||
@@ -428,62 +513,139 @@ function normalisePlace(
 
 /*
 ==================================================
-MAIN PLACES SEARCH
+REMOVE DUPLICATES
+==================================================
+*/
+
+function removeDuplicates(results) {
+  const seen = new Set();
+
+  return results.filter((place) => {
+    const key = [
+      place.name.toLowerCase(),
+      place.latitude.toFixed(5),
+      place.longitude.toFixed(5)
+    ].join("|");
+
+    if (seen.has(key)) {
+      return false;
+    }
+
+    seen.add(key);
+    return true;
+  });
+}
+
+/*
+==================================================
+MAIN SEARCH
 ==================================================
 */
 
 async function searchPlaces({
   query,
   location,
-  radius = 5000,
-  limit = 10
+  radius = DEFAULT_RADIUS,
+  limit = DEFAULT_LIMIT
 }) {
-  if (!query) {
+  if (
+    !query ||
+    typeof query !== "string"
+  ) {
     throw new Error(
       "A place search query is required."
     );
   }
 
-  if (!location) {
+  if (
+    !location ||
+    typeof location !== "string"
+  ) {
     throw new Error(
       "A location is required."
     );
   }
 
-  const place =
+  const safeRadius = Math.min(
+    Math.max(Number(radius) || DEFAULT_RADIUS, 500),
+    10000
+  );
+
+  const safeLimit = Math.min(
+    Math.max(Number(limit) || DEFAULT_LIMIT, 1),
+    15
+  );
+
+  /*
+  First convert the user's location
+  into coordinates.
+  */
+
+  const origin =
     await geocodeLocation(location);
 
-  if (!place) {
+  if (!origin) {
     return {
       location,
+      latitude: null,
+      longitude: null,
       results: []
     };
   }
 
+  /*
+  Search OpenStreetMap data.
+  */
+
   const elements =
     await searchNearbyPlaces(
-      place.latitude,
-      place.longitude,
+      origin.latitude,
+      origin.longitude,
       query,
-      radius
+      safeRadius
     );
 
-  const results = elements
+  /*
+  Convert raw OSM objects into
+  simple Nova place objects.
+  */
+
+  let results = elements
     .map((element) =>
-      normalisePlace(element, place)
+      normalisePlace(
+        element,
+        origin
+      )
     )
-    .filter(Boolean)
-    .sort(
-      (a, b) =>
-        a.distanceKm -
-        b.distanceKm
-    )
-    .slice(0, limit);
+    .filter(Boolean);
+
+  /*
+  Remove duplicates.
+  */
+
+  results = removeDuplicates(results);
+
+  /*
+  Sort nearest first.
+  */
+
+  results.sort(
+    (a, b) =>
+      a.distanceKm -
+      b.distanceKm
+  );
+
+  /*
+  Limit results.
+  */
+
+  results =
+    results.slice(0, safeLimit);
 
   return {
-    location: place.displayName,
-    latitude: place.latitude,
-    longitude: place.longitude,
+    location: origin.displayName,
+    latitude: origin.latitude,
+    longitude: origin.longitude,
     results
   };
 }
