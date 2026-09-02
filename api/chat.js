@@ -1,7 +1,7 @@
 const OPENROUTER_URL =
   "https://openrouter.ai/api/v1/chat/completions";
 
-// const { searchPlaces } = require("./tools/places");
+const { searchPlaces } = require("./tools/places");
 
 /* =========================
    GENERAL FETCH
