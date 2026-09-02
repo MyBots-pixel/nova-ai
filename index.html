@@ -34,9 +34,9 @@ body {
 .space {
     position: fixed;
     inset: 0;
-    z-index: 0;
-    pointer-events: none;
     overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
 }
 
 .stars {
@@ -131,8 +131,7 @@ body {
     flex-direction: column;
 
     transition:
-        transform .25s ease,
-        opacity .25s ease;
+        transform .25s ease;
 }
 
 .logo {
@@ -141,8 +140,17 @@ body {
     margin-bottom: 20px;
 }
 
+/* =========================
+   BUTTONS
+========================= */
+
+button {
+    font-family: inherit;
+}
+
 .new-chat,
-.premium-button {
+.premium-button,
+.account-button {
     width: 100%;
 
     border-radius: 12px;
@@ -150,8 +158,6 @@ body {
     padding: 13px;
 
     color: white;
-
-    font-size: 15px;
 
     cursor: pointer;
 
@@ -166,11 +172,13 @@ body {
 
     background:
         rgba(88,101,242,.9);
+
+    font-size: 15px;
 }
 
 .new-chat:hover {
-    transform: translateY(-1px);
     background: #6672ff;
+    transform: translateY(-1px);
 }
 
 .premium-button {
@@ -186,12 +194,11 @@ body {
             rgba(120,80,255,.18)
         );
 
+    font-size: 14px;
     font-weight: 600;
 }
 
 .premium-button:hover {
-    transform: translateY(-1px);
-
     background:
         linear-gradient(
             135deg,
@@ -199,6 +206,75 @@ body {
             rgba(120,80,255,.28)
         );
 }
+
+.account-button {
+    margin-top: 10px;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    border:
+        1px solid rgba(120,140,190,.18);
+
+    background:
+        rgba(20,29,48,.8);
+
+    text-align: left;
+
+    font-size: 14px;
+}
+
+.account-button:hover {
+    background:
+        rgba(35,47,73,.9);
+}
+
+.account-avatar {
+    width: 32px;
+    height: 32px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #5865f2,
+            #7b61ff
+        );
+
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.account-info {
+    min-width: 0;
+}
+
+.account-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    color: white;
+    font-weight: 600;
+}
+
+.account-status {
+    color: #7f8ba3;
+    font-size: 11px;
+    margin-top: 2px;
+}
+
+/* =========================
+   HISTORY
+========================= */
 
 .history-title {
     margin-top: 25px;
@@ -216,6 +292,7 @@ body {
 .chat-history {
     display: flex;
     flex-direction: column;
+
     gap: 5px;
 
     overflow-y: auto;
@@ -241,12 +318,12 @@ body {
     text-overflow: ellipsis;
 
     transition: .15s;
-
-    -webkit-tap-highlight-color: transparent;
 }
 
 .history-item:hover {
-    background: rgba(30,40,65,.65);
+    background:
+        rgba(30,40,65,.65);
+
     color: white;
 }
 
@@ -260,19 +337,25 @@ body {
     width: 42px;
     height: 42px;
 
+    flex-shrink: 0;
+
     border: none;
     border-radius: 11px;
 
-    background: rgba(30,40,65,.8);
+    background:
+        rgba(30,40,65,.8);
 
     color: white;
 
     font-size: 21px;
 
     cursor: pointer;
-
-    flex-shrink: 0;
 }
+
+/*
+ IMPORTANT:
+ The overlay is COMPLETELY invisible when closed.
+*/
 
 .mobile-overlay {
     display: none;
@@ -282,7 +365,12 @@ body {
 
     z-index: 50;
 
-    background: rgba(0,0,0,.55);
+    background:
+        rgba(0,0,0,.55);
+}
+
+.mobile-overlay.active {
+    display: block;
 
     backdrop-filter: blur(3px);
     -webkit-backdrop-filter: blur(3px);
@@ -295,6 +383,7 @@ body {
 .main {
     flex: 1;
     min-width: 0;
+
     height: 100%;
 
     display: flex;
@@ -302,7 +391,7 @@ body {
 }
 
 /* =========================
-   TOP BAR
+   TOPBAR
 ========================= */
 
 .topbar {
@@ -331,6 +420,25 @@ body {
 
     font-size: 16px;
     font-weight: 600;
+}
+
+.account-top-button {
+    margin-left: auto;
+
+    width: 40px;
+    height: 40px;
+
+    border: none;
+    border-radius: 50%;
+
+    background:
+        rgba(30,40,65,.8);
+
+    color: white;
+
+    cursor: pointer;
+
+    font-weight: bold;
 }
 
 /* =========================
@@ -371,7 +479,8 @@ body {
 }
 
 .welcome h1 {
-    font-size: clamp(31px, 5vw, 42px);
+    font-size:
+        clamp(31px, 5vw, 42px);
 
     margin-bottom: 10px;
 
@@ -381,7 +490,8 @@ body {
 .welcome p {
     color: #8c97ad;
 
-    font-size: clamp(14px, 2vw, 17px);
+    font-size:
+        clamp(14px, 2vw, 17px);
 }
 
 /* =========================
@@ -440,6 +550,7 @@ body {
 
 .message-tools {
     display: flex;
+
     align-items: center;
 
     margin-top: 5px;
@@ -469,7 +580,7 @@ body {
 }
 
 /* =========================
-   IMAGES
+   IMAGE
 ========================= */
 
 .generated-image {
@@ -488,10 +599,6 @@ body {
 
     margin-top: 4px;
 }
-
-/* =========================
-   IMAGE LOADING
-========================= */
 
 .image-loading {
     display: flex;
@@ -536,10 +643,12 @@ body {
 ========================= */
 
 .input-area {
-    width: min(850px, calc(100% - 40px));
+    width:
+        min(850px, calc(100% - 40px));
 
     margin:
-        0 auto max(24px, env(safe-area-inset-bottom));
+        0 auto
+        max(24px, env(safe-area-inset-bottom));
 }
 
 .input-box {
@@ -602,27 +711,314 @@ body {
     border: none;
     border-radius: 12px;
 
-    background: #5865f2;
+    background:
+        #5865f2;
 
     color: white;
 
     font-size: 21px;
 
     cursor: pointer;
-
-    transition: .2s;
-
-    -webkit-tap-highlight-color: transparent;
-}
-
-.send:hover {
-    transform: translateY(-1px);
-    opacity: .9;
 }
 
 .send:disabled {
     opacity: .45;
     cursor: not-allowed;
+}
+
+/* =========================
+   ACCOUNT SCREEN
+========================= */
+
+.account-screen {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 80;
+
+    display: none;
+
+    overflow-y: auto;
+
+    background:
+        rgba(2,6,23,.97);
+
+    padding:
+        30px 20px
+        max(40px, env(safe-area-inset-bottom));
+}
+
+.account-screen.active {
+    display: block;
+}
+
+.account-container {
+    width:
+        min(500px, 100%);
+
+    margin: 0 auto;
+}
+
+.account-header {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 35px;
+}
+
+.account-header strong {
+    font-size: 18px;
+}
+
+.close-account {
+    border: none;
+
+    background:
+        rgba(30,40,65,.8);
+
+    color: white;
+
+    border-radius: 10px;
+
+    padding: 10px 14px;
+
+    cursor: pointer;
+}
+
+.account-card {
+    padding: 30px;
+
+    border-radius: 22px;
+
+    background:
+        rgba(12,20,38,.9);
+
+    border:
+        1px solid rgba(120,140,190,.15);
+
+    box-shadow:
+        0 25px 70px rgba(0,0,0,.3);
+}
+
+.account-card h1 {
+    font-size: 32px;
+
+    margin-bottom: 8px;
+}
+
+.account-card > p {
+    color: #8995ad;
+
+    line-height: 1.5;
+
+    margin-bottom: 25px;
+}
+
+/* AUTH BUTTONS */
+
+.auth-button {
+    width: 100%;
+
+    height: 50px;
+
+    margin-top: 10px;
+
+    border-radius: 12px;
+
+    border:
+        1px solid rgba(120,140,190,.18);
+
+    background:
+        rgba(30,40,65,.8);
+
+    color: white;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+}
+
+.auth-button:hover {
+    background:
+        rgba(45,58,88,.9);
+}
+
+.google-icon {
+    color: #4285f4;
+    font-size: 19px;
+}
+
+.apple-icon {
+    font-size: 19px;
+}
+
+.auth-divider {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    color: #66738d;
+
+    font-size: 12px;
+
+    margin: 22px 0;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    content: "";
+
+    flex: 1;
+
+    height: 1px;
+
+    background:
+        rgba(120,140,190,.15);
+}
+
+.email-form {
+    display: flex;
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+.email-input {
+    width: 100%;
+
+    height: 48px;
+
+    padding: 0 14px;
+
+    border-radius: 11px;
+
+    border:
+        1px solid rgba(120,140,190,.18);
+
+    outline: none;
+
+    background:
+        rgba(4,10,24,.8);
+
+    color: white;
+
+    font-size: 15px;
+}
+
+.email-input:focus {
+    border-color:
+        #5865f2;
+}
+
+.email-submit {
+    height: 48px;
+
+    border: none;
+
+    border-radius: 11px;
+
+    background:
+        #5865f2;
+
+    color: white;
+
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.auth-note {
+    margin-top: 18px;
+
+    color: #65728b;
+
+    font-size: 12px;
+
+    line-height: 1.6;
+
+    text-align: center;
+}
+
+/* SIGNED IN */
+
+.signed-in {
+    display: none;
+}
+
+.signed-in.active {
+    display: block;
+}
+
+.profile-avatar-large {
+    width: 80px;
+    height: 80px;
+
+    margin: 0 auto 18px;
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background:
+        linear-gradient(
+            135deg,
+            #5865f2,
+            #7b61ff
+        );
+
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.profile-name {
+    text-align: center;
+
+    font-size: 22px;
+
+    margin-bottom: 5px;
+}
+
+.profile-email {
+    text-align: center;
+
+    color: #7f8ba3;
+
+    font-size: 13px;
+
+    margin-bottom: 25px;
+}
+
+.sign-out {
+    width: 100%;
+
+    height: 48px;
+
+    border-radius: 11px;
+
+    border:
+        1px solid rgba(255,100,100,.2);
+
+    background:
+        rgba(100,30,40,.25);
+
+    color: #ffb1b1;
+
+    cursor: pointer;
 }
 
 /* =========================
@@ -634,7 +1030,7 @@ body {
 
     inset: 0;
 
-    z-index: 40;
+    z-index: 70;
 
     display: none;
 
@@ -656,7 +1052,8 @@ body {
 }
 
 .premium-container {
-    width: min(1050px, 100%);
+    width:
+        min(1050px, 100%);
 
     margin: 0 auto;
 }
@@ -685,15 +1082,6 @@ body {
     border-radius: 10px;
 
     cursor: pointer;
-
-    transition: .2s;
-}
-
-.premium-back:hover {
-    background:
-        rgba(50,65,100,.8);
-
-    color: white;
 }
 
 .premium-title {
@@ -704,11 +1092,13 @@ body {
 
 .premium-title .icon {
     font-size: 48px;
+
     margin-bottom: 12px;
 }
 
 .premium-title h1 {
-    font-size: clamp(31px, 5vw, 40px);
+    font-size:
+        clamp(31px, 5vw, 40px);
 
     margin-bottom: 10px;
 }
@@ -717,13 +1107,7 @@ body {
     color: #8995ad;
 
     font-size: 16px;
-
-    line-height: 1.5;
 }
-
-/* =========================
-   PLANS
-========================= */
 
 .plans {
     display: grid;
@@ -751,15 +1135,6 @@ body {
 
     box-shadow:
         0 20px 60px rgba(0,0,0,.25);
-
-    transition: .25s;
-}
-
-.plan:hover {
-    transform: translateY(-5px);
-
-    border-color:
-        rgba(120,145,255,.35);
 }
 
 .plan.featured {
@@ -790,12 +1165,9 @@ body {
     color: white;
 
     font-size: 11px;
-
     font-weight: bold;
 
     text-transform: uppercase;
-
-    letter-spacing: .5px;
 }
 
 .plan h2 {
@@ -889,10 +1261,6 @@ body {
         #5865f2;
 }
 
-.plan-button:hover {
-    opacity: .9;
-}
-
 /* =========================
    USAGE
 ========================= */
@@ -921,8 +1289,6 @@ body {
     display: flex;
 
     justify-content: space-between;
-
-    gap: 15px;
 
     color: #9ba6ba;
 
@@ -972,29 +1338,16 @@ body {
 }
 
 /* =========================
-   TABLETS
+   RESPONSIVE
 ========================= */
 
 @media (max-width: 950px) {
-
-    .sidebar {
-        width: 230px;
-        min-width: 230px;
-    }
 
     .plans {
         grid-template-columns: 1fr;
     }
 
-    .plan {
-        width: 100%;
-    }
-
 }
-
-/* =========================
-   PHONES
-========================= */
 
 @media (max-width: 700px) {
 
@@ -1007,20 +1360,19 @@ body {
 
         z-index: 60;
 
-        width: min(290px, 82vw);
+        width:
+            min(290px, 82vw);
 
-        transform: translateX(-100%);
+        transform:
+            translateX(-100%);
 
         box-shadow:
             15px 0 50px rgba(0,0,0,.4);
     }
 
     .sidebar.mobile-open {
-        transform: translateX(0);
-    }
-
-    .mobile-overlay.active {
-        display: block;
+        transform:
+            translateX(0);
     }
 
     .menu-button {
@@ -1031,8 +1383,7 @@ body {
         height: 58px;
         min-height: 58px;
 
-        padding:
-            0 12px;
+        padding: 0 12px;
 
         font-size: 15px;
     }
@@ -1064,7 +1415,8 @@ body {
     }
 
     .input-area {
-        width: calc(100% - 16px);
+        width:
+            calc(100% - 16px);
 
         margin:
             0 auto
@@ -1078,6 +1430,10 @@ body {
     #messageInput {
         height: 43px;
 
+        /*
+         Prevents iPhone from zooming in
+         when the keyboard opens.
+        */
         font-size: 16px;
     }
 
@@ -1113,21 +1469,17 @@ body {
         border-radius: 17px;
     }
 
-    .premium-back {
-        padding: 9px 12px;
-
-        font-size: 13px;
+    .account-screen {
+        padding:
+            20px 12px
+            max(30px, env(safe-area-inset-bottom));
     }
 
-    .premium-top strong {
-        font-size: 15px;
+    .account-card {
+        padding: 23px;
     }
 
 }
-
-/* =========================
-   VERY SMALL PHONES
-========================= */
 
 @media (max-width: 380px) {
 
@@ -1139,31 +1491,12 @@ body {
         max-width: 92%;
     }
 
+    .account-card h1 {
+        font-size: 28px;
+    }
+
     .premium-title h1 {
         font-size: 28px;
-    }
-
-    .plan h2 {
-        font-size: 20px;
-    }
-
-    .price {
-        font-size: 28px;
-    }
-
-}
-
-/* =========================
-   TOUCH DEVICES
-========================= */
-
-@media (hover: none) {
-
-    .new-chat:hover,
-    .premium-button:hover,
-    .plan:hover,
-    .send:hover {
-        transform: none;
     }
 
 }
@@ -1183,18 +1516,24 @@ body {
     }
 
 }
-
 </style>
 </head>
 
 <body>
+
+<!-- BACKGROUND -->
 
 <div class="space">
     <div class="stars"></div>
     <div class="glow"></div>
 </div>
 
-<div class="mobile-overlay" id="mobileOverlay"></div>
+<!-- MOBILE OVERLAY -->
+
+<div
+    class="mobile-overlay"
+    id="mobileOverlay"
+></div>
 
 <div class="app">
 
@@ -1202,7 +1541,10 @@ body {
      SIDEBAR
 ========================= -->
 
-<aside class="sidebar" id="sidebar">
+<aside
+    class="sidebar"
+    id="sidebar"
+>
 
     <div class="logo">
         ✦ Nova AI
@@ -1220,6 +1562,38 @@ body {
         id="premiumButton"
     >
         💎 Nova Premium
+    </button>
+
+    <button
+        class="account-button"
+        id="accountButton"
+    >
+
+        <div
+            class="account-avatar"
+            id="accountAvatar"
+        >
+            ?
+        </div>
+
+        <div class="account-info">
+
+            <div
+                class="account-name"
+                id="accountName"
+            >
+                Guest
+            </div>
+
+            <div
+                class="account-status"
+                id="accountStatus"
+            >
+                Sign in
+            </div>
+
+        </div>
+
     </button>
 
     <div class="history-title">
@@ -1252,6 +1626,14 @@ body {
     <span>
         Nova AI
     </span>
+
+    <button
+        class="account-top-button"
+        id="accountTopButton"
+        aria-label="Account"
+    >
+        ?
+    </button>
 
 </header>
 
@@ -1347,8 +1729,6 @@ body {
 
     <div class="plans">
 
-        <!-- FREE -->
-
         <div class="plan">
 
             <h2>
@@ -1361,33 +1741,15 @@ body {
 
             <div class="price">
                 £0
-                <span>
-                    / forever
-                </span>
+                <span>/ forever</span>
             </div>
 
             <ul>
-
-                <li>
-                    20 AI messages per day
-                </li>
-
-                <li>
-                    3 image generations per day
-                </li>
-
-                <li>
-                    Chat history
-                </li>
-
-                <li>
-                    Copy responses
-                </li>
-
-                <li>
-                    Standard priority
-                </li>
-
+                <li>20 AI messages per day</li>
+                <li>3 image generations per day</li>
+                <li>Chat history</li>
+                <li>Copy responses</li>
+                <li>Standard priority</li>
             </ul>
 
             <button
@@ -1398,8 +1760,6 @@ body {
             </button>
 
         </div>
-
-        <!-- PLUS -->
 
         <div class="plan featured">
 
@@ -1417,33 +1777,15 @@ body {
 
             <div class="price">
                 £4.99
-                <span>
-                    / month
-                </span>
+                <span>/ month</span>
             </div>
 
             <ul>
-
-                <li>
-                    100 AI messages per day
-                </li>
-
-                <li>
-                    15 image generations per day
-                </li>
-
-                <li>
-                    Faster priority
-                </li>
-
-                <li>
-                    Longer conversations
-                </li>
-
-                <li>
-                    Premium themes
-                </li>
-
+                <li>100 AI messages per day</li>
+                <li>15 image generations per day</li>
+                <li>Faster priority</li>
+                <li>Longer conversations</li>
+                <li>Premium themes</li>
             </ul>
 
             <button
@@ -1454,8 +1796,6 @@ body {
             </button>
 
         </div>
-
-        <!-- PRO -->
 
         <div class="plan">
 
@@ -1469,33 +1809,15 @@ body {
 
             <div class="price">
                 £9.99
-                <span>
-                    / month
-                </span>
+                <span>/ month</span>
             </div>
 
             <ul>
-
-                <li>
-                    500 AI messages per day
-                </li>
-
-                <li>
-                    50 image generations per day
-                </li>
-
-                <li>
-                    Highest priority
-                </li>
-
-                <li>
-                    Advanced features
-                </li>
-
-                <li>
-                    Longer context
-                </li>
-
+                <li>500 AI messages per day</li>
+                <li>50 image generations per day</li>
+                <li>Highest priority</li>
+                <li>Advanced features</li>
+                <li>Longer context</li>
             </ul>
 
             <button
@@ -1560,9 +1882,145 @@ body {
     </div>
 
     <div class="premium-note">
-
         Premium payments are not enabled yet.
-        Nova AI Free will always remain available.
+        Nova AI Free will remain available.
+    </div>
+
+</div>
+
+</section>
+
+<!-- =========================
+     ACCOUNT SCREEN
+========================= -->
+
+<section
+    class="account-screen"
+    id="accountScreen"
+>
+
+<div class="account-container">
+
+    <div class="account-header">
+
+        <strong>
+            ✦ Nova AI
+        </strong>
+
+        <button
+            class="close-account"
+            id="closeAccount"
+        >
+            ← Back
+        </button>
+
+    </div>
+
+    <div class="account-card">
+
+        <!-- LOGGED OUT -->
+
+        <div id="loggedOut">
+
+            <h1>
+                Welcome to Nova
+            </h1>
+
+            <p>
+                Sign in to unlock image generation and keep your Nova account connected across devices.
+            </p>
+
+            <button
+                class="auth-button"
+                id="googleButton"
+            >
+                <span class="google-icon">
+                    G
+                </span>
+
+                Continue with Google
+            </button>
+
+            <button
+                class="auth-button"
+                id="appleButton"
+            >
+                <span class="apple-icon">
+                    
+                </span>
+
+                Continue with Apple
+            </button>
+
+            <div class="auth-divider">
+                OR
+            </div>
+
+            <form
+                class="email-form"
+                id="emailForm"
+            >
+
+                <input
+                    class="email-input"
+                    id="emailInput"
+                    type="email"
+                    placeholder="Enter your email"
+                    autocomplete="email"
+                    required
+                >
+
+                <button
+                    class="email-submit"
+                    type="submit"
+                >
+                    Continue with email
+                </button>
+
+            </form>
+
+            <div class="auth-note">
+                Real Google, Apple and email authentication will be connected to the secure Nova backend next.
+            </div>
+
+        </div>
+
+        <!-- LOGGED IN -->
+
+        <div
+            class="signed-in"
+            id="signedIn"
+        >
+
+            <div
+                class="profile-avatar-large"
+                id="profileAvatar"
+            >
+                N
+            </div>
+
+            <div
+                class="profile-name"
+                id="profileName"
+            >
+                Nova User
+            </div>
+
+            <div
+                class="profile-email"
+                id="profileEmail"
+            >
+                Signed in
+            </div>
+
+            <button
+                class="sign-out"
+                id="signOutButton"
+            >
+                Sign out
+            </button>
+
+        </div>
 
     </div>
 
@@ -1611,6 +2069,57 @@ const sidebar =
 const mobileOverlay =
     document.getElementById("mobileOverlay");
 
+const accountButton =
+    document.getElementById("accountButton");
+
+const accountTopButton =
+    document.getElementById("accountTopButton");
+
+const accountScreen =
+    document.getElementById("accountScreen");
+
+const closeAccount =
+    document.getElementById("closeAccount");
+
+const loggedOut =
+    document.getElementById("loggedOut");
+
+const signedIn =
+    document.getElementById("signedIn");
+
+const googleButton =
+    document.getElementById("googleButton");
+
+const appleButton =
+    document.getElementById("appleButton");
+
+const emailForm =
+    document.getElementById("emailForm");
+
+const emailInput =
+    document.getElementById("emailInput");
+
+const signOutButton =
+    document.getElementById("signOutButton");
+
+const accountAvatar =
+    document.getElementById("accountAvatar");
+
+const accountName =
+    document.getElementById("accountName");
+
+const accountStatus =
+    document.getElementById("accountStatus");
+
+const profileAvatar =
+    document.getElementById("profileAvatar");
+
+const profileName =
+    document.getElementById("profileName");
+
+const profileEmail =
+    document.getElementById("profileEmail");
+
 const messageUsageText =
     document.getElementById("messageUsageText");
 
@@ -1625,16 +2134,21 @@ const imageUsageFill =
 
 
 /* =========================
-   DATA
+   LOCAL DATA
 ========================= */
 
 let chats = [];
 
 let currentChat = null;
 
+let account = null;
+
 let usage = {
-    date: new Date().toISOString().slice(0,10),
+    date:
+        new Date().toISOString().slice(0,10),
+
     messages: 0,
+
     images: 0
 };
 
@@ -1647,16 +2161,51 @@ try {
 
     chats =
         JSON.parse(
-            localStorage.getItem("novaChats") || "[]"
+            localStorage.getItem(
+                "novaChats"
+            ) || "[]"
         );
 
-    if (!Array.isArray(chats)) {
+    if (
+        !Array.isArray(chats)
+    ) {
+
         chats = [];
+
     }
 
 } catch {
 
     chats = [];
+
+}
+
+
+/* =========================
+   LOAD ACCOUNT
+========================= */
+
+try {
+
+    const savedAccount =
+        localStorage.getItem(
+            "novaDemoAccount"
+        );
+
+    if (
+        savedAccount
+    ) {
+
+        account =
+            JSON.parse(
+                savedAccount
+            );
+
+    }
+
+} catch {
+
+    account = null;
 
 }
 
@@ -1669,7 +2218,9 @@ try {
 
     const savedUsage =
         JSON.parse(
-            localStorage.getItem("novaUsage") || "null"
+            localStorage.getItem(
+                "novaUsage"
+            ) || "null"
         );
 
     if (
@@ -1677,15 +2228,19 @@ try {
         typeof savedUsage === "object"
     ) {
 
-        usage = savedUsage;
+        usage =
+            savedUsage;
 
     }
 
 } catch {
 
     usage = {
-        date: new Date().toISOString().slice(0,10),
+        date:
+            new Date().toISOString().slice(0,10),
+
         messages: 0,
+
         images: 0
     };
 
@@ -1739,6 +2294,96 @@ function saveUsage() {
 
 
 /* =========================
+   ACCOUNT STATE
+========================= */
+
+function isSignedIn() {
+
+    return !!account;
+
+}
+
+
+function updateAccountUI() {
+
+    if (
+        account
+    ) {
+
+        const name =
+            account.name ||
+            "Nova User";
+
+        const email =
+            account.email ||
+            "Signed in";
+
+        const firstLetter =
+            name
+                .charAt(0)
+                .toUpperCase() ||
+            "N";
+
+
+        accountAvatar.textContent =
+            firstLetter;
+
+        accountName.textContent =
+            name;
+
+        accountStatus.textContent =
+            "Signed in";
+
+
+        accountTopButton.textContent =
+            firstLetter;
+
+
+        profileAvatar.textContent =
+            firstLetter;
+
+        profileName.textContent =
+            name;
+
+        profileEmail.textContent =
+            email;
+
+
+        loggedOut.style.display =
+            "none";
+
+        signedIn.classList.add(
+            "active"
+        );
+
+    } else {
+
+        accountAvatar.textContent =
+            "?";
+
+        accountName.textContent =
+            "Guest";
+
+        accountStatus.textContent =
+            "Sign in";
+
+        accountTopButton.textContent =
+            "?";
+
+
+        loggedOut.style.display =
+            "block";
+
+        signedIn.classList.remove(
+            "active"
+        );
+
+    }
+
+}
+
+
+/* =========================
    MOBILE MENU
 ========================= */
 
@@ -1781,30 +2426,259 @@ mobileOverlay.addEventListener(
 
 
 /* =========================
-   USAGE UI
+   ACCOUNT SCREEN
+========================= */
+
+function openAccount() {
+
+    closeMobileMenu();
+
+    accountScreen.classList.add(
+        "active"
+    );
+
+    updateAccountUI();
+
+}
+
+
+function closeAccountScreen() {
+
+    accountScreen.classList.remove(
+        "active"
+    );
+
+    input.focus();
+
+}
+
+
+accountButton.addEventListener(
+    "click",
+    openAccount
+);
+
+
+accountTopButton.addEventListener(
+    "click",
+    openAccount
+);
+
+
+closeAccount.addEventListener(
+    "click",
+    closeAccountScreen
+);
+
+
+/* =========================
+   DEMO ACCOUNT
+========================= */
+
+function createDemoAccount(
+    provider,
+    email = ""
+) {
+
+    if (
+        provider === "Google"
+    ) {
+
+        account = {
+            name:
+                "Google User",
+
+            email:
+                email ||
+                "google@example.com",
+
+            provider:
+                "Google"
+        };
+
+    }
+
+    if (
+        provider === "Apple"
+    ) {
+
+        account = {
+            name:
+                "Apple User",
+
+            email:
+                email ||
+                "apple@example.com",
+
+            provider:
+                "Apple"
+        };
+
+    }
+
+    if (
+        provider === "Email"
+    ) {
+
+        account = {
+            name:
+                email
+                    .split("@")[0]
+                    .replace(
+                        /[^a-zA-Z0-9]/g,
+                        " "
+                    ),
+
+            email:
+                email,
+
+            provider:
+                "Email"
+        };
+
+    }
+
+
+    localStorage.setItem(
+        "novaDemoAccount",
+        JSON.stringify(account)
+    );
+
+
+    updateAccountUI();
+
+}
+
+
+/*
+ These buttons are UI placeholders for now.
+ The real OAuth backend will replace
+ this demo behavior.
+*/
+
+googleButton.addEventListener(
+    "click",
+    () => {
+
+        createDemoAccount(
+            "Google"
+        );
+
+        alert(
+            "Google sign-in will be connected to the real Nova authentication system next."
+        );
+
+    }
+);
+
+
+appleButton.addEventListener(
+    "click",
+    () => {
+
+        createDemoAccount(
+            "Apple"
+        );
+
+        alert(
+            "Apple sign-in will be connected to the real Nova authentication system next."
+        );
+
+    }
+);
+
+
+emailForm.addEventListener(
+    "submit",
+    event => {
+
+        event.preventDefault();
+
+        const email =
+            emailInput.value.trim();
+
+        if (
+            !email
+        ) {
+
+            return;
+
+        }
+
+
+        createDemoAccount(
+            "Email",
+            email
+        );
+
+
+        emailInput.value = "";
+
+
+        alert(
+            "Email authentication will be connected to the real Nova authentication system next."
+        );
+
+    }
+);
+
+
+/* =========================
+   SIGN OUT
+========================= */
+
+signOutButton.addEventListener(
+    "click",
+    () => {
+
+        account = null;
+
+        localStorage.removeItem(
+            "novaDemoAccount"
+        );
+
+        updateAccountUI();
+
+    }
+);
+
+
+/* =========================
+   USAGE
 ========================= */
 
 function updateUsageUI() {
 
-    const messageLimit = 20;
-    const imageLimit = 3;
+    const messageLimit =
+        20;
+
+    const imageLimit =
+        3;
+
 
     messageUsageText.textContent =
         `${usage.messages} / ${messageLimit}`;
 
+
     imageUsageText.textContent =
         `${usage.images} / ${imageLimit}`;
+
 
     messageUsageFill.style.width =
         Math.min(
             100,
-            (usage.messages / messageLimit) * 100
+            (usage.messages /
+                messageLimit) *
+                100
         ) + "%";
+
 
     imageUsageFill.style.width =
         Math.min(
             100,
-            (usage.images / imageLimit) * 100
+            (usage.images /
+                imageLimit) *
+                100
         ) + "%";
 
 }
@@ -1812,14 +2686,18 @@ function updateUsageUI() {
 
 function canSendMessage() {
 
-    return usage.messages < 20;
+    return (
+        usage.messages < 20
+    );
 
 }
 
 
 function canGenerateImage() {
 
-    return usage.images < 3;
+    return (
+        usage.images < 3
+    );
 
 }
 
@@ -1866,6 +2744,7 @@ function selectPlan(plan) {
 
     }
 
+
     alert(
         `${plan} is coming soon. You can keep using Nova AI for free!`
     );
@@ -1903,7 +2782,9 @@ async function copyText(
     } catch {
 
         const textarea =
-            document.createElement("textarea");
+            document.createElement(
+                "textarea"
+            );
 
         textarea.value =
             text;
@@ -1944,7 +2825,7 @@ async function copyText(
 
 
 /* =========================
-   ADD TEXT MESSAGE
+   ADD MESSAGE
 ========================= */
 
 function addMessage(
@@ -1954,29 +2835,42 @@ function addMessage(
 ) {
 
     const welcome =
-        document.getElementById("welcome");
+        document.getElementById(
+            "welcome"
+        );
 
-    if (welcome) {
+    if (
+        welcome
+    ) {
+
         welcome.remove();
+
     }
 
 
     const message =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
     message.className =
-        "message " + type;
+        "message " +
+        type;
 
 
     const row =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
     row.className =
         "message-row";
 
 
     const content =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
     content.className =
         "message-content";
@@ -1999,14 +2893,18 @@ function addMessage(
     ) {
 
         const tools =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
         tools.className =
             "message-tools";
 
 
         const copy =
-            document.createElement("button");
+            document.createElement(
+                "button"
+            );
 
         copy.className =
             "copy-button";
@@ -2017,10 +2915,11 @@ function addMessage(
 
         copy.addEventListener(
             "click",
-            () => copyText(
-                text,
-                copy
-            )
+            () =>
+                copyText(
+                    text,
+                    copy
+                )
         );
 
 
@@ -2040,7 +2939,9 @@ function addMessage(
     );
 
 
-    if (shouldScroll) {
+    if (
+        shouldScroll
+    ) {
 
         messages.scrollTop =
             messages.scrollHeight;
@@ -2054,7 +2955,7 @@ function addMessage(
 
 
 /* =========================
-   ADD IMAGE
+   IMAGE
 ========================= */
 
 function addImage(
@@ -2063,22 +2964,32 @@ function addImage(
 ) {
 
     const welcome =
-        document.getElementById("welcome");
+        document.getElementById(
+            "welcome"
+        );
 
-    if (welcome) {
+    if (
+        welcome
+    ) {
+
         welcome.remove();
+
     }
 
 
     const message =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
     message.className =
         "message assistant";
 
 
     const image =
-        document.createElement("img");
+        document.createElement(
+            "img"
+        );
 
     image.className =
         "generated-image";
@@ -2099,7 +3010,9 @@ function addImage(
     );
 
 
-    if (shouldScroll) {
+    if (
+        shouldScroll
+    ) {
 
         messages.scrollTop =
             messages.scrollHeight;
@@ -2118,14 +3031,17 @@ function addImage(
 
 function renderHistory() {
 
-    chatHistory.innerHTML = "";
+    chatHistory.innerHTML =
+        "";
 
 
     chats.forEach(
         (chat, index) => {
 
             const item =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
             item.className =
                 "history-item";
@@ -2166,8 +3082,13 @@ function loadChat(index) {
     const chat =
         chats[index];
 
-    if (!chat) {
+
+    if (
+        !chat
+    ) {
+
         return;
+
     }
 
 
@@ -2175,14 +3096,16 @@ function loadChat(index) {
         chat;
 
 
-    messages.innerHTML = "";
+    messages.innerHTML =
+        "";
 
 
     chat.messages.forEach(
         message => {
 
             if (
-                message.type === "image"
+                message.type ===
+                "image"
             ) {
 
                 addImage(
@@ -2241,7 +3164,9 @@ function newChat() {
     `;
 
 
-    input.value = "";
+    input.value =
+        "";
+
 
     closeMobileMenu();
 
@@ -2250,8 +3175,14 @@ function newChat() {
 }
 
 
+newChatButton.addEventListener(
+    "click",
+    newChat
+);
+
+
 /* =========================
-   IMAGE REQUEST DETECTION
+   IMAGE REQUEST
 ========================= */
 
 function isImageRequest(
@@ -2311,8 +3242,10 @@ async function sendText(
         currentChat.messages
             .filter(
                 message =>
-                    message.role === "user" ||
-                    message.role === "assistant"
+                    message.role ===
+                        "user" ||
+                    message.role ===
+                        "assistant"
             )
             .slice(-30);
 
@@ -2332,7 +3265,8 @@ async function sendText(
                 "/api/chat",
                 {
 
-                    method: "POST",
+                    method:
+                        "POST",
 
                     headers: {
                         "Content-Type":
@@ -2436,6 +3370,33 @@ async function generateImage(
     prompt
 ) {
 
+    /*
+       IMPORTANT:
+       Images require an account.
+    */
+
+    if (
+        !isSignedIn()
+    ) {
+
+        openAccount();
+
+        setTimeout(
+            () => {
+
+                alert(
+                    "Please sign in to Nova before creating images."
+                );
+
+            },
+            100
+        );
+
+        return;
+
+    }
+
+
     if (
         !canGenerateImage()
     ) {
@@ -2448,7 +3409,9 @@ async function generateImage(
 
 
     const loading =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
     loading.className =
         "message assistant";
@@ -2484,7 +3447,8 @@ async function generateImage(
 
         const timeout =
             setTimeout(
-                () => controller.abort(),
+                () =>
+                    controller.abort(),
                 35000
             );
 
@@ -2494,7 +3458,8 @@ async function generateImage(
                 "/api/image",
                 {
 
-                    method: "POST",
+                    method:
+                        "POST",
 
                     signal:
                         controller.signal,
@@ -2584,7 +3549,8 @@ async function generateImage(
 
 
         if (
-            error.name === "AbortError"
+            error.name ===
+            "AbortError"
         ) {
 
             addMessage(
@@ -2609,7 +3575,7 @@ async function generateImage(
 
 
 /* =========================
-   SEND MESSAGE
+   SEND
 ========================= */
 
 async function sendMessage() {
@@ -2618,13 +3584,35 @@ async function sendMessage() {
         input.value.trim();
 
 
-    if (!text) {
+    if (
+        !text
+    ) {
+
         return;
+
     }
 
 
     const imageRequest =
-        isImageRequest(text);
+        isImageRequest(
+            text
+        );
+
+
+    if (
+        imageRequest &&
+        !isSignedIn()
+    ) {
+
+        openAccount();
+
+        alert(
+            "You need to sign in to create images."
+        );
+
+        return;
+
+    }
 
 
     if (
@@ -2651,7 +3639,9 @@ async function sendMessage() {
     }
 
 
-    if (!currentChat) {
+    if (
+        !currentChat
+    ) {
 
         currentChat = {
 
@@ -2661,7 +3651,8 @@ async function sendMessage() {
                     35
                 ),
 
-            messages: []
+            messages:
+                []
 
         };
 
@@ -2696,7 +3687,8 @@ async function sendMessage() {
     );
 
 
-    input.value = "";
+    input.value =
+        "";
 
 
     input.disabled =
@@ -2749,7 +3741,8 @@ input.addEventListener(
     event => {
 
         if (
-            event.key === "Enter"
+            event.key ===
+            "Enter"
         ) {
 
             event.preventDefault();
@@ -2762,12 +3755,6 @@ input.addEventListener(
 );
 
 
-newChatButton.addEventListener(
-    "click",
-    newChat
-);
-
-
 /* =========================
    START
 ========================= */
@@ -2775,6 +3762,8 @@ newChatButton.addEventListener(
 renderHistory();
 
 updateUsageUI();
+
+updateAccountUI();
 
 input.focus();
 
