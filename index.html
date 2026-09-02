@@ -2,24 +2,29 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#020617">
 
 <title>Nova AI</title>
 
 <style>
-
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
 body {
     font-family: Arial, Helvetica, sans-serif;
     background: #020617;
     color: white;
-    height: 100vh;
-    overflow: hidden;
 }
 
 /* =========================
@@ -29,14 +34,14 @@ body {
 .space {
     position: fixed;
     inset: 0;
+    z-index: 0;
     pointer-events: none;
     overflow: hidden;
-    z-index: 0;
 }
 
 .stars {
     position: absolute;
-    inset: 0;
+    inset: -120px;
 
     background-image:
         radial-gradient(circle, rgba(255,255,255,.8) 1px, transparent 1px),
@@ -69,8 +74,8 @@ body {
 .glow {
     position: absolute;
 
-    width: 700px;
-    height: 700px;
+    width: min(700px, 100vw);
+    height: min(700px, 100vw);
 
     left: 50%;
     top: 45%;
@@ -98,7 +103,9 @@ body {
     display: flex;
 
     width: 100%;
-    height: 100vh;
+    height: 100dvh;
+
+    overflow: hidden;
 }
 
 /* =========================
@@ -108,12 +115,12 @@ body {
 .sidebar {
     width: 260px;
     min-width: 260px;
-
-    height: 100vh;
+    height: 100%;
 
     background: rgba(3,8,20,.88);
 
     backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
 
     border-right:
         1px solid rgba(120,140,190,.16);
@@ -122,26 +129,25 @@ body {
 
     display: flex;
     flex-direction: column;
+
+    transition:
+        transform .25s ease,
+        opacity .25s ease;
 }
 
 .logo {
     font-size: 22px;
     font-weight: 700;
-
     margin-bottom: 20px;
 }
 
-.new-chat {
+.new-chat,
+.premium-button {
     width: 100%;
-
-    border:
-        1px solid rgba(255,255,255,.08);
 
     border-radius: 12px;
 
     padding: 13px;
-
-    background: rgba(88,101,242,.9);
 
     color: white;
 
@@ -150,27 +156,28 @@ body {
     cursor: pointer;
 
     transition: .2s;
+
+    -webkit-tap-highlight-color: transparent;
+}
+
+.new-chat {
+    border:
+        1px solid rgba(255,255,255,.08);
+
+    background:
+        rgba(88,101,242,.9);
 }
 
 .new-chat:hover {
     transform: translateY(-1px);
-
     background: #6672ff;
 }
 
-/* PREMIUM BUTTON */
-
 .premium-button {
-    width: 100%;
-
     margin-top: 10px;
 
     border:
         1px solid rgba(120,150,255,.25);
-
-    border-radius: 12px;
-
-    padding: 12px;
 
     background:
         linear-gradient(
@@ -179,14 +186,7 @@ body {
             rgba(120,80,255,.18)
         );
 
-    color: #dce2ff;
-
-    font-size: 14px;
     font-weight: 600;
-
-    cursor: pointer;
-
-    transition: .2s;
 }
 
 .premium-button:hover {
@@ -198,9 +198,6 @@ body {
             rgba(88,101,242,.38),
             rgba(120,80,255,.28)
         );
-
-    border-color:
-        rgba(130,150,255,.45);
 }
 
 .history-title {
@@ -213,17 +210,17 @@ body {
     font-weight: bold;
 
     text-transform: uppercase;
-
     letter-spacing: 1px;
 }
 
 .chat-history {
     display: flex;
     flex-direction: column;
-
     gap: 5px;
 
     overflow-y: auto;
+
+    min-height: 0;
 }
 
 .history-item {
@@ -240,18 +237,55 @@ body {
     cursor: pointer;
 
     white-space: nowrap;
-
     overflow: hidden;
-
     text-overflow: ellipsis;
 
     transition: .15s;
+
+    -webkit-tap-highlight-color: transparent;
 }
 
 .history-item:hover {
     background: rgba(30,40,65,.65);
+    color: white;
+}
+
+/* =========================
+   MOBILE MENU
+========================= */
+
+.menu-button {
+    display: none;
+
+    width: 42px;
+    height: 42px;
+
+    border: none;
+    border-radius: 11px;
+
+    background: rgba(30,40,65,.8);
 
     color: white;
+
+    font-size: 21px;
+
+    cursor: pointer;
+
+    flex-shrink: 0;
+}
+
+.mobile-overlay {
+    display: none;
+
+    position: fixed;
+    inset: 0;
+
+    z-index: 50;
+
+    background: rgba(0,0,0,.55);
+
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
 }
 
 /* =========================
@@ -260,10 +294,8 @@ body {
 
 .main {
     flex: 1;
-
     min-width: 0;
-
-    height: 100vh;
+    height: 100%;
 
     display: flex;
     flex-direction: column;
@@ -284,11 +316,18 @@ body {
         rgba(3,8,20,.45);
 
     backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
 
     display: flex;
     align-items: center;
 
-    padding: 0 25px;
+    gap: 12px;
+
+    padding:
+        0 max(25px, env(safe-area-inset-left));
+
+    padding-right:
+        max(25px, env(safe-area-inset-right));
 
     font-size: 16px;
     font-weight: 600;
@@ -300,12 +339,15 @@ body {
 
 .messages {
     flex: 1;
+    min-height: 0;
 
     overflow-y: auto;
+    overflow-x: hidden;
 
-    padding: 35px 25px;
+    padding:
+        35px 25px;
 
-    scroll-behavior: auto;
+    overscroll-behavior: contain;
 }
 
 /* =========================
@@ -324,11 +366,12 @@ body {
 
     text-align: center;
 
-    padding-bottom: 80px;
+    padding:
+        20px 15px 80px;
 }
 
 .welcome h1 {
-    font-size: 42px;
+    font-size: clamp(31px, 5vw, 42px);
 
     margin-bottom: 10px;
 
@@ -338,7 +381,7 @@ body {
 .welcome p {
     color: #8c97ad;
 
-    font-size: 17px;
+    font-size: clamp(14px, 2vw, 17px);
 }
 
 /* =========================
@@ -347,7 +390,6 @@ body {
 
 .message {
     width: 100%;
-
     max-width: 850px;
 
     margin: 0 auto 24px;
@@ -398,7 +440,6 @@ body {
 
 .message-tools {
     display: flex;
-
     align-items: center;
 
     margin-top: 5px;
@@ -415,7 +456,7 @@ body {
 
     cursor: pointer;
 
-    padding: 4px 7px;
+    padding: 6px 8px;
 
     border-radius: 6px;
 }
@@ -428,15 +469,17 @@ body {
 }
 
 /* =========================
-   IMAGE
+   IMAGES
 ========================= */
 
 .generated-image {
     display: block;
 
-    max-width: min(700px, 90%);
-
     width: auto;
+
+    max-width: min(700px, 100%);
+
+    height: auto;
 
     border-radius: 16px;
 
@@ -468,6 +511,8 @@ body {
     width: 18px;
     height: 18px;
 
+    flex-shrink: 0;
+
     border-radius: 50%;
 
     border:
@@ -493,20 +538,21 @@ body {
 .input-area {
     width: min(850px, calc(100% - 40px));
 
-    margin: 0 auto 24px;
+    margin:
+        0 auto max(24px, env(safe-area-inset-bottom));
 }
 
 .input-box {
     width: 100%;
 
     display: flex;
-
     align-items: center;
 
     background:
         rgba(14,22,39,.9);
 
     backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
 
     border:
         1px solid rgba(120,140,190,.22);
@@ -527,7 +573,6 @@ body {
 
 #messageInput {
     flex: 1;
-
     min-width: 0;
 
     height: 45px;
@@ -537,7 +582,6 @@ body {
     background: transparent;
 
     border: none;
-
     outline: none;
 
     color: white;
@@ -549,10 +593,6 @@ body {
     color: #6f7b91;
 }
 
-/* =========================
-   SEND
-========================= */
-
 .send {
     width: 45px;
     height: 45px;
@@ -560,11 +600,9 @@ body {
     flex-shrink: 0;
 
     border: none;
-
     border-radius: 12px;
 
-    background:
-        #5865f2;
+    background: #5865f2;
 
     color: white;
 
@@ -573,41 +611,44 @@ body {
     cursor: pointer;
 
     transition: .2s;
+
+    -webkit-tap-highlight-color: transparent;
 }
 
 .send:hover {
     transform: translateY(-1px);
-
     opacity: .9;
 }
 
 .send:disabled {
     opacity: .45;
-
     cursor: not-allowed;
 }
 
 /* =========================
-   PREMIUM SCREEN
+   PREMIUM
 ========================= */
 
 .premium-screen {
-    position: absolute;
+    position: fixed;
 
     inset: 0;
 
-    z-index: 20;
+    z-index: 40;
 
     display: none;
 
     overflow-y: auto;
 
     background:
-        rgba(2,6,23,.96);
+        rgba(2,6,23,.97);
 
     backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
 
-    padding: 45px 25px;
+    padding:
+        35px max(25px, env(safe-area-inset-left))
+        45px max(25px, env(safe-area-inset-right));
 }
 
 .premium-screen.active {
@@ -624,8 +665,9 @@ body {
     display: flex;
 
     justify-content: space-between;
-
     align-items: center;
+
+    gap: 15px;
 
     margin-bottom: 45px;
 }
@@ -662,12 +704,11 @@ body {
 
 .premium-title .icon {
     font-size: 48px;
-
     margin-bottom: 12px;
 }
 
 .premium-title h1 {
-    font-size: 40px;
+    font-size: clamp(31px, 5vw, 40px);
 
     margin-bottom: 10px;
 }
@@ -676,9 +717,13 @@ body {
     color: #8995ad;
 
     font-size: 16px;
+
+    line-height: 1.5;
 }
 
-/* PLAN GRID */
+/* =========================
+   PLANS
+========================= */
 
 .plans {
     display: grid;
@@ -791,7 +836,6 @@ body {
     list-style: none;
 
     display: flex;
-
     flex-direction: column;
 
     gap: 12px;
@@ -849,7 +893,9 @@ body {
     opacity: .9;
 }
 
-/* FREE USAGE */
+/* =========================
+   USAGE
+========================= */
 
 .usage-box {
     margin-top: 35px;
@@ -875,6 +921,8 @@ body {
     display: flex;
 
     justify-content: space-between;
+
+    gap: 15px;
 
     color: #9ba6ba;
 
@@ -924,51 +972,214 @@ body {
 }
 
 /* =========================
-   MOBILE
+   TABLETS
 ========================= */
 
-@media (max-width: 800px) {
+@media (max-width: 950px) {
+
+    .sidebar {
+        width: 230px;
+        min-width: 230px;
+    }
 
     .plans {
         grid-template-columns: 1fr;
     }
 
-    .premium-screen {
-        padding: 25px 15px;
-    }
-
-    .premium-title h1 {
-        font-size: 32px;
+    .plan {
+        width: 100%;
     }
 
 }
 
+/* =========================
+   PHONES
+========================= */
+
 @media (max-width: 700px) {
 
     .sidebar {
-        display: none;
+        position: fixed;
+
+        left: 0;
+        top: 0;
+        bottom: 0;
+
+        z-index: 60;
+
+        width: min(290px, 82vw);
+
+        transform: translateX(-100%);
+
+        box-shadow:
+            15px 0 50px rgba(0,0,0,.4);
+    }
+
+    .sidebar.mobile-open {
+        transform: translateX(0);
+    }
+
+    .mobile-overlay.active {
+        display: block;
+    }
+
+    .menu-button {
+        display: block;
     }
 
     .topbar {
-        padding: 0 18px;
+        height: 58px;
+        min-height: 58px;
+
+        padding:
+            0 12px;
+
+        font-size: 15px;
     }
 
     .messages {
-        padding: 25px 12px;
+        padding:
+            20px 10px;
     }
 
-    .welcome h1 {
-        font-size: 31px;
+    .message {
+        margin-bottom: 18px;
     }
 
     .message-content {
         max-width: 88%;
+
+        padding:
+            11px 13px;
+
+        font-size: 14px;
+
+        border-radius: 14px;
+    }
+
+    .generated-image {
+        max-width: 100%;
+
+        border-radius: 13px;
     }
 
     .input-area {
-        width: calc(100% - 20px);
+        width: calc(100% - 16px);
 
-        margin-bottom: 12px;
+        margin:
+            0 auto
+            max(9px, env(safe-area-inset-bottom));
+    }
+
+    .input-box {
+        border-radius: 15px;
+    }
+
+    #messageInput {
+        height: 43px;
+
+        font-size: 16px;
+    }
+
+    .send {
+        width: 43px;
+        height: 43px;
+    }
+
+    .premium-screen {
+        padding:
+            20px 12px
+            max(30px, env(safe-area-inset-bottom));
+    }
+
+    .premium-top {
+        margin-bottom: 30px;
+    }
+
+    .premium-title {
+        margin-bottom: 30px;
+    }
+
+    .premium-title .icon {
+        font-size: 40px;
+    }
+
+    .premium-title p {
+        font-size: 14px;
+    }
+
+    .plan {
+        padding: 21px;
+        border-radius: 17px;
+    }
+
+    .premium-back {
+        padding: 9px 12px;
+
+        font-size: 13px;
+    }
+
+    .premium-top strong {
+        font-size: 15px;
+    }
+
+}
+
+/* =========================
+   VERY SMALL PHONES
+========================= */
+
+@media (max-width: 380px) {
+
+    .welcome h1 {
+        font-size: 28px;
+    }
+
+    .message-content {
+        max-width: 92%;
+    }
+
+    .premium-title h1 {
+        font-size: 28px;
+    }
+
+    .plan h2 {
+        font-size: 20px;
+    }
+
+    .price {
+        font-size: 28px;
+    }
+
+}
+
+/* =========================
+   TOUCH DEVICES
+========================= */
+
+@media (hover: none) {
+
+    .new-chat:hover,
+    .premium-button:hover,
+    .plan:hover,
+    .send:hover {
+        transform: none;
+    }
+
+}
+
+/* =========================
+   REDUCED MOTION
+========================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
     }
 
 }
@@ -978,15 +1189,12 @@ body {
 
 <body>
 
-<!-- BACKGROUND -->
-
 <div class="space">
-
     <div class="stars"></div>
-
     <div class="glow"></div>
-
 </div>
+
+<div class="mobile-overlay" id="mobileOverlay"></div>
 
 <div class="app">
 
@@ -994,7 +1202,7 @@ body {
      SIDEBAR
 ========================= -->
 
-<aside class="sidebar">
+<aside class="sidebar" id="sidebar">
 
     <div class="logo">
         ✦ Nova AI
@@ -1032,7 +1240,19 @@ body {
 <main class="main">
 
 <header class="topbar">
-    Nova AI
+
+    <button
+        class="menu-button"
+        id="menuButton"
+        aria-label="Open menu"
+    >
+        ☰
+    </button>
+
+    <span>
+        Nova AI
+    </span>
+
 </header>
 
 <section
@@ -1066,11 +1286,13 @@ body {
             type="text"
             placeholder="Message Nova AI..."
             autocomplete="off"
+            enterkeyhint="send"
         >
 
         <button
             class="send"
             id="sendButton"
+            aria-label="Send message"
         >
             ↑
         </button>
@@ -1090,263 +1312,261 @@ body {
     id="premiumScreen"
 >
 
-    <div class="premium-container">
+<div class="premium-container">
 
-        <div class="premium-top">
+    <div class="premium-top">
 
-            <strong>
-                ✦ Nova AI
-            </strong>
+        <strong>
+            ✦ Nova AI
+        </strong>
+
+        <button
+            class="premium-back"
+            id="premiumBack"
+        >
+            ← Back to Nova
+        </button>
+
+    </div>
+
+    <div class="premium-title">
+
+        <div class="icon">
+            💎
+        </div>
+
+        <h1>
+            Upgrade Nova
+        </h1>
+
+        <p>
+            More power, more usage, more possibilities.
+        </p>
+
+    </div>
+
+    <div class="plans">
+
+        <!-- FREE -->
+
+        <div class="plan">
+
+            <h2>
+                Free
+            </h2>
+
+            <div class="plan-description">
+                Everything you need to get started with Nova AI.
+            </div>
+
+            <div class="price">
+                £0
+                <span>
+                    / forever
+                </span>
+            </div>
+
+            <ul>
+
+                <li>
+                    20 AI messages per day
+                </li>
+
+                <li>
+                    3 image generations per day
+                </li>
+
+                <li>
+                    Chat history
+                </li>
+
+                <li>
+                    Copy responses
+                </li>
+
+                <li>
+                    Standard priority
+                </li>
+
+            </ul>
 
             <button
-                class="premium-back"
-                id="premiumBack"
+                class="plan-button"
+                onclick="selectPlan('Free')"
             >
-                ← Back to Nova
+                Current plan
             </button>
 
         </div>
 
-        <div class="premium-title">
+        <!-- PLUS -->
 
-            <div class="icon">
-                💎
+        <div class="plan featured">
+
+            <div class="plan-badge">
+                Popular
             </div>
 
-            <h1>
-                Upgrade Nova
-            </h1>
+            <h2>
+                Plus
+            </h2>
 
-            <p>
-                More power, more usage, more possibilities.
-            </p>
-
-        </div>
-
-        <div class="plans">
-
-            <!-- FREE -->
-
-            <div class="plan">
-
-                <h2>
-                    Free
-                </h2>
-
-                <div class="plan-description">
-                    Everything you need to get started with Nova AI.
-                </div>
-
-                <div class="price">
-                    £0
-                    <span>
-                        / forever
-                    </span>
-                </div>
-
-                <ul>
-
-                    <li>
-                        20 AI messages per day
-                    </li>
-
-                    <li>
-                        3 image generations per day
-                    </li>
-
-                    <li>
-                        Chat history
-                    </li>
-
-                    <li>
-                        Copy responses
-                    </li>
-
-                    <li>
-                        Standard priority
-                    </li>
-
-                </ul>
-
-                <button
-                    class="plan-button"
-                    onclick="selectPlan('Free')"
-                >
-                    Current plan
-                </button>
-
+            <div class="plan-description">
+                More room for everyday AI use.
             </div>
 
-            <!-- PLUS -->
-
-            <div class="plan featured">
-
-                <div class="plan-badge">
-                    Popular
-                </div>
-
-                <h2>
-                    Plus
-                </h2>
-
-                <div class="plan-description">
-                    More room for everyday AI use.
-                </div>
-
-                <div class="price">
-                    £4.99
-                    <span>
-                        / month
-                    </span>
-                </div>
-
-                <ul>
-
-                    <li>
-                        100 AI messages per day
-                    </li>
-
-                    <li>
-                        15 image generations per day
-                    </li>
-
-                    <li>
-                        Faster priority
-                    </li>
-
-                    <li>
-                        Longer conversations
-                    </li>
-
-                    <li>
-                        Premium themes
-                    </li>
-
-                </ul>
-
-                <button
-                    class="plan-button"
-                    onclick="selectPlan('Plus')"
-                >
-                    Coming soon
-                </button>
-
-            </div>
-
-            <!-- PRO -->
-
-            <div class="plan">
-
-                <h2>
-                    Pro
-                </h2>
-
-                <div class="plan-description">
-                    Maximum Nova AI access for power users.
-                </div>
-
-                <div class="price">
-                    £9.99
-                    <span>
-                        / month
-                    </span>
-                </div>
-
-                <ul>
-
-                    <li>
-                        500 AI messages per day
-                    </li>
-
-                    <li>
-                        50 image generations per day
-                    </li>
-
-                    <li>
-                        Highest priority
-                    </li>
-
-                    <li>
-                        Advanced features
-                    </li>
-
-                    <li>
-                        Longer context
-                    </li>
-
-                </ul>
-
-                <button
-                    class="plan-button"
-                    onclick="selectPlan('Pro')"
-                >
-                    Coming soon
-                </button>
-
-            </div>
-
-        </div>
-
-        <!-- USAGE -->
-
-        <div class="usage-box">
-
-            <h3>
-                🆓 Your Free usage
-            </h3>
-
-            <div class="usage-row">
-
+            <div class="price">
+                £4.99
                 <span>
-                    AI messages
+                    / month
                 </span>
-
-                <span id="messageUsageText">
-                    0 / 20
-                </span>
-
             </div>
 
-            <div class="usage-bar">
+            <ul>
 
-                <div
-                    class="usage-fill"
-                    id="messageUsageFill"
-                ></div>
+                <li>
+                    100 AI messages per day
+                </li>
 
-            </div>
+                <li>
+                    15 image generations per day
+                </li>
 
-            <div class="usage-row">
+                <li>
+                    Faster priority
+                </li>
 
-                <span>
-                    Images
-                </span>
+                <li>
+                    Longer conversations
+                </li>
 
-                <span id="imageUsageText">
-                    0 / 3
-                </span>
+                <li>
+                    Premium themes
+                </li>
 
-            </div>
+            </ul>
 
-            <div class="usage-bar">
-
-                <div
-                    class="usage-fill"
-                    id="imageUsageFill"
-                ></div>
-
-            </div>
+            <button
+                class="plan-button"
+                onclick="selectPlan('Plus')"
+            >
+                Coming soon
+            </button>
 
         </div>
 
-        <div class="premium-note">
+        <!-- PRO -->
 
-            Premium payments are not enabled yet.
-            These plans are currently a preview while Nova AI is being developed.
+        <div class="plan">
+
+            <h2>
+                Pro
+            </h2>
+
+            <div class="plan-description">
+                Maximum Nova AI access for power users.
+            </div>
+
+            <div class="price">
+                £9.99
+                <span>
+                    / month
+                </span>
+            </div>
+
+            <ul>
+
+                <li>
+                    500 AI messages per day
+                </li>
+
+                <li>
+                    50 image generations per day
+                </li>
+
+                <li>
+                    Highest priority
+                </li>
+
+                <li>
+                    Advanced features
+                </li>
+
+                <li>
+                    Longer context
+                </li>
+
+            </ul>
+
+            <button
+                class="plan-button"
+                onclick="selectPlan('Pro')"
+            >
+                Coming soon
+            </button>
 
         </div>
 
     </div>
+
+    <div class="usage-box">
+
+        <h3>
+            🆓 Your Free usage
+        </h3>
+
+        <div class="usage-row">
+
+            <span>
+                AI messages
+            </span>
+
+            <span id="messageUsageText">
+                0 / 20
+            </span>
+
+        </div>
+
+        <div class="usage-bar">
+
+            <div
+                class="usage-fill"
+                id="messageUsageFill"
+            ></div>
+
+        </div>
+
+        <div class="usage-row">
+
+            <span>
+                Images
+            </span>
+
+            <span id="imageUsageText">
+                0 / 3
+            </span>
+
+        </div>
+
+        <div class="usage-bar">
+
+            <div
+                class="usage-fill"
+                id="imageUsageFill"
+            ></div>
+
+        </div>
+
+    </div>
+
+    <div class="premium-note">
+
+        Premium payments are not enabled yet.
+        Nova AI Free will always remain available.
+
+    </div>
+
+</div>
 
 </section>
 
@@ -1382,6 +1602,15 @@ const messages =
 const chatHistory =
     document.getElementById("chatHistory");
 
+const menuButton =
+    document.getElementById("menuButton");
+
+const sidebar =
+    document.getElementById("sidebar");
+
+const mobileOverlay =
+    document.getElementById("mobileOverlay");
+
 const messageUsageText =
     document.getElementById("messageUsageText");
 
@@ -1411,7 +1640,7 @@ let usage = {
 
 
 /* =========================
-   LOAD DATA
+   LOAD CHATS
 ========================= */
 
 try {
@@ -1432,13 +1661,25 @@ try {
 }
 
 
+/* =========================
+   LOAD USAGE
+========================= */
+
 try {
 
-    usage =
+    const savedUsage =
         JSON.parse(
-            localStorage.getItem("novaUsage") ||
-            "null"
-        ) || usage;
+            localStorage.getItem("novaUsage") || "null"
+        );
+
+    if (
+        savedUsage &&
+        typeof savedUsage === "object"
+    ) {
+
+        usage = savedUsage;
+
+    }
 
 } catch {
 
@@ -1451,12 +1692,16 @@ try {
 }
 
 
-/* RESET DAILY USAGE */
+/* =========================
+   DAILY RESET
+========================= */
 
 const today =
     new Date().toISOString().slice(0,10);
 
-if (usage.date !== today) {
+if (
+    usage.date !== today
+) {
 
     usage = {
         date: today,
@@ -1494,13 +1739,54 @@ function saveUsage() {
 
 
 /* =========================
+   MOBILE MENU
+========================= */
+
+function openMobileMenu() {
+
+    sidebar.classList.add(
+        "mobile-open"
+    );
+
+    mobileOverlay.classList.add(
+        "active"
+    );
+
+}
+
+
+function closeMobileMenu() {
+
+    sidebar.classList.remove(
+        "mobile-open"
+    );
+
+    mobileOverlay.classList.remove(
+        "active"
+    );
+
+}
+
+
+menuButton.addEventListener(
+    "click",
+    openMobileMenu
+);
+
+
+mobileOverlay.addEventListener(
+    "click",
+    closeMobileMenu
+);
+
+
+/* =========================
    USAGE UI
 ========================= */
 
 function updateUsageUI() {
 
     const messageLimit = 20;
-
     const imageLimit = 3;
 
     messageUsageText.textContent =
@@ -1544,7 +1830,11 @@ function canGenerateImage() {
 
 function openPremium() {
 
-    premiumScreen.classList.add("active");
+    closeMobileMenu();
+
+    premiumScreen.classList.add(
+        "active"
+    );
 
     updateUsageUI();
 
@@ -1553,7 +1843,9 @@ function openPremium() {
 
 function closePremium() {
 
-    premiumScreen.classList.remove("active");
+    premiumScreen.classList.remove(
+        "active"
+    );
 
     input.focus();
 
@@ -1562,10 +1854,12 @@ function closePremium() {
 
 function selectPlan(plan) {
 
-    if (plan === "Free") {
+    if (
+        plan === "Free"
+    ) {
 
         alert(
-            "You are already using Nova AI Free."
+            "You're already using Nova AI Free."
         );
 
         return;
@@ -1602,7 +1896,9 @@ async function copyText(
 
     try {
 
-        await navigator.clipboard.writeText(text);
+        await navigator.clipboard.writeText(
+            text
+        );
 
     } catch {
 
@@ -1634,18 +1930,21 @@ async function copyText(
         "Copied!";
 
 
-    setTimeout(() => {
+    setTimeout(
+        () => {
 
-        button.textContent =
-            oldText;
+            button.textContent =
+                oldText;
 
-    }, 1200);
+        },
+        1200
+    );
 
 }
 
 
 /* =========================
-   ADD MESSAGE
+   ADD TEXT MESSAGE
 ========================= */
 
 function addMessage(
@@ -1695,7 +1994,9 @@ function addMessage(
     );
 
 
-    if (type === "assistant") {
+    if (
+        type === "assistant"
+    ) {
 
         const tools =
             document.createElement("div");
@@ -1716,7 +2017,10 @@ function addMessage(
 
         copy.addEventListener(
             "click",
-            () => copyText(text, copy)
+            () => copyText(
+                text,
+                copy
+            )
         );
 
 
@@ -1833,7 +2137,13 @@ function renderHistory() {
 
             item.addEventListener(
                 "click",
-                () => loadChat(index)
+                () => {
+
+                    loadChat(index);
+
+                    closeMobileMenu();
+
+                }
             );
 
 
@@ -1933,13 +2243,15 @@ function newChat() {
 
     input.value = "";
 
+    closeMobileMenu();
+
     input.focus();
 
 }
 
 
 /* =========================
-   IMAGE DETECTION
+   IMAGE REQUEST DETECTION
 ========================= */
 
 function isImageRequest(
@@ -1984,12 +2296,11 @@ async function sendText(
     text
 ) {
 
-    if (!canSendMessage()) {
+    if (
+        !canSendMessage()
+    ) {
 
-        addMessage(
-            "You've reached today's Free AI message limit. Open Nova Premium to see the available plans.",
-            "assistant"
-        );
+        openPremium();
 
         return;
 
@@ -2050,7 +2361,9 @@ async function sendText(
         loading.remove();
 
 
-        if (!response.ok) {
+        if (
+            !response.ok
+        ) {
 
             addMessage(
                 data.error ||
@@ -2123,12 +2436,11 @@ async function generateImage(
     prompt
 ) {
 
-    if (!canGenerateImage()) {
+    if (
+        !canGenerateImage()
+    ) {
 
-        addMessage(
-            "You've reached today's Free image limit. Open Nova Premium to see the available plans.",
-            "assistant"
-        );
+        openPremium();
 
         return;
 
@@ -2218,7 +2530,9 @@ async function generateImage(
         loading.remove();
 
 
-        if (!response.ok) {
+        if (
+            !response.ok
+        ) {
 
             addMessage(
                 data.error ||
@@ -2295,7 +2609,7 @@ async function generateImage(
 
 
 /* =========================
-   SEND
+   SEND MESSAGE
 ========================= */
 
 async function sendMessage() {
@@ -2309,10 +2623,12 @@ async function sendMessage() {
     }
 
 
-    /* CHECK FREE LIMIT */
+    const imageRequest =
+        isImageRequest(text);
+
 
     if (
-        !isImageRequest(text) &&
+        !imageRequest &&
         !canSendMessage()
     ) {
 
@@ -2324,7 +2640,7 @@ async function sendMessage() {
 
 
     if (
-        isImageRequest(text) &&
+        imageRequest &&
         !canGenerateImage()
     ) {
 
@@ -2334,8 +2650,6 @@ async function sendMessage() {
 
     }
 
-
-    /* CREATE CHAT */
 
     if (!currentChat) {
 
@@ -2364,8 +2678,6 @@ async function sendMessage() {
     }
 
 
-    /* SAVE USER MESSAGE */
-
     currentChat.messages.push({
 
         role:
@@ -2376,8 +2688,6 @@ async function sendMessage() {
 
     });
 
-
-    /* SHOW USER MESSAGE */
 
     addMessage(
         text,
@@ -2396,10 +2706,8 @@ async function sendMessage() {
         true;
 
 
-    /* AI */
-
     if (
-        isImageRequest(text)
+        imageRequest
     ) {
 
         await generateImage(
