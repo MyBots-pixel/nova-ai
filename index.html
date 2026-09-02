@@ -3,11 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Nova AI</title>
 
     <style>
-
         * {
             box-sizing: border-box;
             margin: 0;
@@ -26,8 +24,6 @@
         input {
             font-family: inherit;
         }
-
-        /* APP */
 
         .app {
             display: flex;
@@ -116,8 +112,6 @@
             flex-direction: column;
         }
 
-        /* TOP BAR */
-
         .topbar {
             height: 64px;
             min-height: 64px;
@@ -159,26 +153,27 @@
             font-size: 17px;
         }
 
-        /* CHAT MESSAGES */
+        /* MESSAGE */
 
         .message {
             width: 100%;
             max-width: 850px;
-            margin: 0 auto 22px;
+            margin: 0 auto 24px;
+        }
+
+        .message-row {
             display: flex;
+            align-items: flex-start;
+            gap: 10px;
         }
 
-        .message.user {
+        .message.user .message-row {
             justify-content: flex-end;
-        }
-
-        .message.assistant {
-            justify-content: flex-start;
         }
 
         .message-content {
             max-width: 75%;
-            padding: 12px 16px;
+            padding: 13px 16px;
             border-radius: 15px;
             background: #151d2e;
             color: #e9edf5;
@@ -188,8 +183,34 @@
             overflow-wrap: anywhere;
         }
 
-        .user .message-content {
+        .message.user .message-content {
             background: #5865f2;
+            color: white;
+        }
+
+        .message-tools {
+            display: flex;
+            align-items: center;
+            margin-top: 5px;
+        }
+
+        .message.user .message-tools {
+            justify-content: flex-end;
+        }
+
+        .copy-button {
+            border: none;
+            background: transparent;
+            color: #748099;
+            font-size: 12px;
+            cursor: pointer;
+            padding: 4px 7px;
+            border-radius: 6px;
+            transition: 0.15s;
+        }
+
+        .copy-button:hover {
+            background: #151d2e;
             color: white;
         }
 
@@ -261,8 +282,6 @@
             transform: none;
         }
 
-        /* MOBILE */
-
         @media (max-width: 700px) {
 
             .sidebar {
@@ -293,9 +312,7 @@
                 width: calc(100% - 20px);
                 margin-bottom: 12px;
             }
-
         }
-
     </style>
 </head>
 
@@ -303,18 +320,13 @@
 
 <div class="app">
 
-    <!-- SIDEBAR -->
-
     <aside class="sidebar">
 
         <div class="logo">
             ✦ Nova AI
         </div>
 
-        <button
-            class="new-chat"
-            id="newChatButton"
-        >
+        <button class="new-chat" id="newChatButton">
             + New chat
         </button>
 
@@ -322,15 +334,9 @@
             Recent chats
         </div>
 
-        <div
-            class="chat-history"
-            id="chatHistory"
-        ></div>
+        <div class="chat-history" id="chatHistory"></div>
 
     </aside>
-
-
-    <!-- MAIN -->
 
     <main class="main">
 
@@ -338,18 +344,9 @@
             Nova AI
         </header>
 
+        <section class="messages" id="messages">
 
-        <!-- MESSAGES -->
-
-        <section
-            class="messages"
-            id="messages"
-        >
-
-            <div
-                class="welcome"
-                id="welcome"
-            >
+            <div class="welcome" id="welcome">
 
                 <h1>
                     How can I help?
@@ -362,9 +359,6 @@
             </div>
 
         </section>
-
-
-        <!-- INPUT -->
 
         <div class="input-area">
 
@@ -393,66 +387,214 @@
 
 </div>
 
-
 <script>
 
-    const input = document.getElementById("messageInput");
-    const sendButton = document.getElementById("sendButton");
-    const newChatButton = document.getElementById("newChatButton");
-    const messages = document.getElementById("messages");
-    const chatHistory = document.getElementById("chatHistory");
+const input = document.getElementById("messageInput");
+const sendButton = document.getElementById("sendButton");
+const newChatButton = document.getElementById("newChatButton");
+const messages = document.getElementById("messages");
+const chatHistory = document.getElementById("chatHistory");
+
+let chats = [];
+let currentChat = null;
 
 
-    let chats = [];
+/* LOAD CHATS */
 
-    let currentChat = null;
+try {
+
+    chats = JSON.parse(
+        localStorage.getItem("novaChats") || "[]"
+    );
+
+    if (!Array.isArray(chats)) {
+        chats = [];
+    }
+
+} catch {
+
+    chats = [];
+
+}
 
 
-    /* LOAD SAVED CHATS */
+/* SAVE */
+
+function saveChats() {
+
+    localStorage.setItem(
+        "novaChats",
+        JSON.stringify(chats)
+    );
+
+}
+
+
+/* COPY */
+
+async function copyText(text, button) {
 
     try {
 
-        chats = JSON.parse(
-            localStorage.getItem("novaChats") || "[]"
-        );
+        await navigator.clipboard.writeText(text);
 
-        if (!Array.isArray(chats)) {
-            chats = [];
-        }
+        const original =
+            button.textContent;
+
+        button.textContent = "Copied!";
+
+        setTimeout(() => {
+
+            button.textContent = original;
+
+        }, 1500);
 
     } catch {
 
-        chats = [];
+        const textarea =
+            document.createElement("textarea");
+
+        textarea.value = text;
+
+        document.body.appendChild(textarea);
+
+        textarea.select();
+
+        document.execCommand("copy");
+
+        textarea.remove();
+
+        const original =
+            button.textContent;
+
+        button.textContent = "Copied!";
+
+        setTimeout(() => {
+
+            button.textContent = original;
+
+        }, 1500);
 
     }
 
+}
 
-    /* SAVE */
 
-    function saveChats() {
+/* ADD MESSAGE */
 
-        localStorage.setItem(
-            "novaChats",
-            JSON.stringify(chats)
+function addMessage(text, type) {
+
+    const welcome =
+        document.getElementById("welcome");
+
+    if (welcome) {
+        welcome.remove();
+    }
+
+
+    const message =
+        document.createElement("div");
+
+    message.className =
+        "message " + type;
+
+
+    const row =
+        document.createElement("div");
+
+    row.className =
+        "message-row";
+
+
+    const content =
+        document.createElement("div");
+
+    content.className =
+        "message-content";
+
+    content.textContent = text;
+
+
+    row.appendChild(content);
+
+    message.appendChild(row);
+
+
+    /*
+        Only Nova's responses get
+        a Copy button.
+    */
+
+    if (type === "assistant") {
+
+        const tools =
+            document.createElement("div");
+
+        tools.className =
+            "message-tools";
+
+
+        const copyButton =
+            document.createElement("button");
+
+        copyButton.className =
+            "copy-button";
+
+        copyButton.textContent =
+            "Copy";
+
+
+        copyButton.addEventListener(
+            "click",
+            function() {
+
+                copyText(
+                    text,
+                    copyButton
+                );
+
+            }
         );
 
+
+        tools.appendChild(copyButton);
+
+        message.appendChild(tools);
+
     }
 
 
-    /* HISTORY */
+    messages.appendChild(message);
 
-    function renderHistory() {
+    messages.scrollTop =
+        messages.scrollHeight;
 
-        chatHistory.innerHTML = "";
 
-        chats.forEach((chat, index) => {
+    return message;
 
-            const item = document.createElement("div");
+}
 
-            item.className = "history-item";
+
+/* HISTORY */
+
+function renderHistory() {
+
+    chatHistory.innerHTML = "";
+
+
+    chats.forEach(
+        function(chat, index) {
+
+            const item =
+                document.createElement("div");
+
+            item.className =
+                "history-item";
 
             item.textContent =
-                chat.title || "New conversation";
+                chat.title ||
+                "New conversation";
+
 
             item.addEventListener(
                 "click",
@@ -463,64 +605,37 @@
                 }
             );
 
+
             chatHistory.appendChild(item);
 
-        });
-
-    }
-
-
-    /* SHOW MESSAGE */
-
-    function addMessage(text, type) {
-
-        const welcome =
-            document.getElementById("welcome");
-
-        if (welcome) {
-            welcome.remove();
         }
+    );
+
+}
 
 
-        const message =
-            document.createElement("div");
+/* LOAD CHAT */
 
-        message.className =
-            "message " + type;
+function loadChat(index) {
 
+    const chat =
+        chats[index];
 
-        const content =
-            document.createElement("div");
-
-        content.className =
-            "message-content";
-
-        content.textContent = text;
-
-
-        message.appendChild(content);
-
-        messages.appendChild(message);
-
-
-        messages.scrollTop =
-            messages.scrollHeight;
-
-
-        return message;
-
+    if (!chat) {
+        return;
     }
 
 
-    /* NEW CHAT */
+    currentChat = chat;
 
-    function startNewChat() {
 
-        currentChat = {
-            title: "New conversation",
-            messages: []
-        };
+    messages.innerHTML = "";
 
+
+    if (
+        !chat.messages ||
+        chat.messages.length === 0
+    ) {
 
         messages.innerHTML = `
 
@@ -541,311 +656,326 @@
 
         `;
 
-
-        input.value = "";
-
-        input.focus();
+        return;
 
     }
 
 
-    /* LOAD CHAT */
+    chat.messages.forEach(
+        function(message) {
 
-    function loadChat(index) {
+            addMessage(
 
-        const chat = chats[index];
+                message.content,
 
-        if (!chat) {
-            return;
+                message.role === "user"
+                    ? "user"
+                    : "assistant"
+
+            );
+
         }
+    );
 
 
-        currentChat = chat;
+    input.focus();
+
+}
 
 
-        messages.innerHTML = "";
+/* NEW CHAT */
+
+function startNewChat() {
+
+    currentChat = null;
 
 
-        chat.messages.forEach(
-            function(message) {
+    messages.innerHTML = `
 
-                addMessage(
-                    message.content,
-                    message.role === "user"
-                        ? "user"
-                        : "assistant"
-                );
+        <div
+            class="welcome"
+            id="welcome"
+        >
 
-            }
+            <h1>
+                How can I help?
+            </h1>
+
+            <p>
+                Ask Nova AI anything.
+            </p>
+
+        </div>
+
+    `;
+
+
+    input.value = "";
+
+    input.focus();
+
+}
+
+
+/* SEND */
+
+async function sendMessage() {
+
+    const text =
+        input.value.trim();
+
+
+    if (!text) {
+        return;
+    }
+
+
+    /*
+        Create a chat.
+    */
+
+    if (!currentChat) {
+
+        currentChat = {
+
+            title:
+                text.substring(0, 35),
+
+            messages: []
+
+        };
+
+
+        chats.push(currentChat);
+
+        saveChats();
+
+        renderHistory();
+
+    }
+
+
+    /*
+        Add user message.
+    */
+
+    currentChat.messages.push({
+
+        role: "user",
+
+        content: text
+
+    });
+
+
+    addMessage(
+        text,
+        "user"
+    );
+
+
+    input.value = "";
+
+
+    /*
+        Disable controls.
+    */
+
+    input.disabled = true;
+
+    sendButton.disabled = true;
+
+
+    /*
+        Loading.
+    */
+
+    const loading =
+        addMessage(
+            "Nova AI is thinking...",
+            "assistant"
         );
 
 
-        input.focus();
-
-    }
-
-
-    /* SEND MESSAGE */
-
-    async function sendMessage() {
-
-        const text =
-            input.value.trim();
+    loading
+        .querySelector(".message-content")
+        .classList.add("loading");
 
 
-        if (!text) {
+    try {
+
+        /*
+            Send the previous conversation
+            to the backend.
+        */
+
+        const history =
+            currentChat.messages.slice(
+                0,
+                -1
+            );
+
+
+        const response =
+            await fetch(
+                "/api/chat",
+                {
+
+                    method: "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json"
+
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            message:
+                                text,
+
+                            history:
+                                history
+
+                        })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        loading.remove();
+
+
+        /*
+            API error.
+        */
+
+        if (!response.ok) {
+
+            addMessage(
+
+                data.error ||
+                "AI request failed.",
+
+                "assistant"
+
+            );
+
             return;
+
         }
 
 
         /*
-            Create a chat if there isn't one.
+            Add response.
         */
 
-        if (!currentChat) {
+        const reply =
+            data.reply ||
+            "I couldn't generate a response.";
 
-            currentChat = {
 
-                title:
-                    text.substring(0, 35),
-
-                messages: []
-
-            };
-
-            chats.push(currentChat);
-
-            saveChats();
-
-            renderHistory();
-
-        }
+        addMessage(
+            reply,
+            "assistant"
+        );
 
 
         /*
-            If this is the first message,
-            use it as the chat title.
-        */
-
-        if (
-            currentChat.messages.length === 0
-        ) {
-
-            currentChat.title =
-                text.substring(0, 35);
-
-            saveChats();
-
-            renderHistory();
-
-        }
-
-
-        /*
-            Add user's message.
+            Save response.
         */
 
         currentChat.messages.push({
 
-            role: "user",
+            role: "assistant",
 
-            content: text
+            content: reply
 
         });
 
 
+        saveChats();
+
+        renderHistory();
+
+
+    } catch (error) {
+
+        console.error(error);
+
+
+        loading.remove();
+
+
         addMessage(
-            text,
-            "user"
+
+            "I couldn't connect to Nova AI.",
+
+            "assistant"
+
         );
-
-
-        input.value = "";
-
-
-        /*
-            Disable input while waiting.
-        */
-
-        input.disabled = true;
-
-        sendButton.disabled = true;
-
-
-        /*
-            Loading message.
-        */
-
-        const loading =
-            addMessage(
-                "Nova AI is thinking...",
-                "assistant"
-            );
-
-
-        loading
-            .querySelector(".message-content")
-            .classList.add("loading");
-
-
-        try {
-
-            const response =
-                await fetch(
-                    "/api/chat",
-                    {
-
-                        method: "POST",
-
-                        headers: {
-
-                            "Content-Type":
-                                "application/json"
-
-                        },
-
-                        body:
-                            JSON.stringify({
-
-                                message: text
-
-                            })
-
-                    }
-                );
-
-
-            const data =
-                await response.json();
-
-
-            loading.remove();
-
-
-            /*
-                API error.
-            */
-
-            if (!response.ok) {
-
-                addMessage(
-
-                    data.error ||
-                    "AI request failed.",
-
-                    "assistant"
-
-                );
-
-                return;
-
-            }
-
-
-            /*
-                AI response.
-            */
-
-            const reply =
-                data.reply ||
-                "I couldn't generate a response.";
-
-
-            addMessage(
-                reply,
-                "assistant"
-            );
-
-
-            /*
-                Save AI response.
-            */
-
-            currentChat.messages.push({
-
-                role: "assistant",
-
-                content: reply
-
-            });
-
-
-            saveChats();
-
-            renderHistory();
-
-
-        } catch (error) {
-
-            console.error(error);
-
-
-            loading.remove();
-
-
-            addMessage(
-
-                "I couldn't connect to Nova AI.",
-
-                "assistant"
-
-            );
-
-        }
-
-
-        /*
-            Re-enable input.
-        */
-
-        input.disabled = false;
-
-        sendButton.disabled = false;
-
-        input.focus();
 
     }
 
 
-    /* BUTTON */
+    /*
+        Re-enable controls.
+    */
 
-    sendButton.addEventListener(
-        "click",
-        sendMessage
-    );
+    input.disabled = false;
 
-
-    /* ENTER */
-
-    input.addEventListener(
-        "keydown",
-        function(event) {
-
-            if (event.key === "Enter") {
-
-                event.preventDefault();
-
-                sendMessage();
-
-            }
-
-        }
-    );
-
-
-    /* NEW CHAT BUTTON */
-
-    newChatButton.addEventListener(
-        "click",
-        startNewChat
-    );
-
-
-    /* START */
-
-    renderHistory();
+    sendButton.disabled = false;
 
     input.focus();
+
+}
+
+
+/* BUTTON */
+
+sendButton.addEventListener(
+    "click",
+    sendMessage
+);
+
+
+/* ENTER */
+
+input.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (event.key === "Enter") {
+
+            event.preventDefault();
+
+            sendMessage();
+
+        }
+
+    }
+);
+
+
+/* NEW CHAT */
+
+newChatButton.addEventListener(
+    "click",
+    startNewChat
+);
+
+
+/* START */
+
+renderHistory();
+
+input.focus();
 
 </script>
 
