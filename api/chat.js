@@ -58,9 +58,16 @@ for (const modulePath of possiblePlacesModules) {
 }
 
 if (!searchPlaces) {
-  throw new Error(
-    "PLACES_MODULE_LOAD_FAILED"
+  console.error(
+    "Places function is not available."
   );
+
+  return {
+    success: false,
+    places: [],
+    error:
+      "The Places module could not be loaded by the server."
+  };
 }
 /* =========================================================
    SAFE FETCH
