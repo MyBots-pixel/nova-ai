@@ -1,144 +1,90 @@
 const NOMINATIM_URL = "https://nominatim.openstreetmap.org/search";
 const OVERPASS_URL = "https://overpass-api.de/api/interpreter";
 
-const USER_AGENT = "Nova-AI/1.0 (Places Search)";
+const USER_AGENT = "Nova-AI/1.0";
 
-const REQUEST_TIMEOUT = 12000;
-const DEFAULT_RADIUS = 3000;
-const DEFAULT_LIMIT = 8;
+async function fetchJSON(url, options = {}) {
+  const response = await fetch(url, options);
 
-/*
-==================================================
-SAFE FETCH
-==================================================
-*/
-
-async function safeFetch(url, options = {}, timeout = REQUEST_TIMEOUT) {
-  const controller = new AbortController();
-
-  const timer = setTimeout(() => {
-    controller.abort();
-  }, timeout);
+  let data = null;
 
   try {
-    const response = await fetch(url, {
-      ...options,
-      signal: controller.signal
-    });
-
-    const text = await response.text();
-
-    if (!response.ok) {
-      throw new Error(
-        `Request failed with status ${response.status}`
-      );
-    }
-
-    if (!text) {
-      throw new Error("Empty response from places service.");
-    }
-
-    try {
-      return JSON.parse(text);
-    } catch {
-      throw new Error("Places service returned invalid JSON.");
-    }
-  } finally {
-    clearTimeout(timer);
+    data = await response.json();
+  } catch {
+    data = null;
   }
+
+  if (!response.ok) {
+    throw new Error(
+      data?.error ||
+        `Request failed with status ${response.status}`
+    );
+  }
+
+  return data;
 }
 
-/*
-==================================================
-GEOCODE LOCATION
-==================================================
-*/
+/* =========================
+   GEOCODING
+========================= */
 
 async function geocodeLocation(location) {
   if (!location || typeof location !== "string") {
     return null;
   }
 
-  const cleanLocation = location.trim();
+  const url =
+    `${NOMINATIM_URL}?` +
+    new URLSearchParams({
+      q: location,
+      format: "jsonv2",
+      limit: "1",
+      addressdetails: "1"
+    }).toString();
 
-  if (!cleanLocation) {
-    return null;
-  }
-
-  const params = new URLSearchParams({
-    q: cleanLocation,
-    format: "jsonv2",
-    limit: "1",
-    addressdetails: "1"
-  });
-
-  const data = await safeFetch(
-    `${NOMINATIM_URL}?${params.toString()}`,
-    {
-      method: "GET",
-      headers: {
-        "User-Agent": USER_AGENT,
-        Accept: "application/json"
-      }
+  const data = await fetchJSON(url, {
+    headers: {
+      "User-Agent": USER_AGENT,
+      Accept: "application/json"
     }
-  );
+  });
 
   if (!Array.isArray(data) || data.length === 0) {
     return null;
   }
 
-  const result = data[0];
-
-  const latitude = Number(result.lat);
-  const longitude = Number(result.lon);
-
-  if (
-    !Number.isFinite(latitude) ||
-    !Number.isFinite(longitude)
-  ) {
-    return null;
-  }
-
   return {
-    latitude,
-    longitude,
-    displayName: result.display_name || cleanLocation,
-    type: result.type || "place",
-    address: result.address || {}
+    latitude: Number(data[0].lat),
+    longitude: Number(data[0].lon),
+    displayName: data[0].display_name || "",
+    type: data[0].type || "",
+    address: data[0].address || {}
   };
 }
 
-/*
-==================================================
-CATEGORY FILTERS
-==================================================
-*/
+/* =========================
+   CATEGORY DETECTION
+========================= */
 
 function getCategoryFilters(query) {
   const text = String(query || "").toLowerCase();
 
   if (
     text.includes("restaurant") ||
-    text.includes("restaurants")
+    text.includes("restaurants") ||
+    text.includes("food") ||
+    text.includes("eat") ||
+    text.includes("dining")
   ) {
     return [
-      '[amenity="restaurant"]'
-    ];
-  }
-
-  if (
-    text.includes("fast food") ||
-    text.includes("takeaway") ||
-    text.includes("takeout")
-  ) {
-    return [
-      '[amenity="fast_food"]'
+      '[amenity~"restaurant|fast_food|cafe|food_court"]'
     ];
   }
 
   if (
     text.includes("cafe") ||
-    text.includes("coffee")
+    text.includes("coffee") ||
+    text.includes("coffee shop")
   ) {
     return [
       '[amenity="cafe"]'
@@ -146,41 +92,35 @@ function getCategoryFilters(query) {
   }
 
   if (
+    text.includes("shop") ||
+    text.includes("shops") ||
+    text.includes("store") ||
+    text.includes("stores")
+  ) {
+    return [
+      '[shop]'
+    ];
+  }
+
+  if (
     text.includes("supermarket") ||
+    text.includes("supermarkets") ||
     text.includes("grocery") ||
     text.includes("groceries")
   ) {
     return [
-      '[shop="supermarket"]',
-      '[shop="convenience"]'
+      '[shop~"supermarket|convenience|grocery"]'
     ];
   }
 
   if (
-    text.includes("shop") ||
-    text.includes("shops") ||
-    text.includes("shopping")
+    text.includes("petrol") ||
+    text.includes("petrol station") ||
+    text.includes("fuel") ||
+    text.includes("gas station")
   ) {
     return [
-      "[shop]"
-    ];
-  }
-
-  if (
-    text.includes("cinema") ||
-    text.includes("movie")
-  ) {
-    return [
-      '[amenity="cinema"]'
-    ];
-  }
-
-  if (
-    text.includes("park") ||
-    text.includes("parks")
-  ) {
-    return [
-      '[leisure="park"]'
+      '[amenity="fuel"]'
     ];
   }
 
@@ -195,74 +135,12 @@ function getCategoryFilters(query) {
 
   if (
     text.includes("pharmacy") ||
-    text.includes("pharmacies")
+    text.includes("pharmacies") ||
+    text.includes("chemist") ||
+    text.includes("chemists")
   ) {
     return [
       '[amenity="pharmacy"]'
-    ];
-  }
-
-  if (
-    text.includes("hotel") ||
-    text.includes("hotels")
-  ) {
-    return [
-      '[tourism="hotel"]'
-    ];
-  }
-
-  if (
-    text.includes("gym") ||
-    text.includes("gyms")
-  ) {
-    return [
-      '[leisure="fitness_centre"]'
-    ];
-  }
-
-  if (
-    text.includes("library") ||
-    text.includes("libraries")
-  ) {
-    return [
-      '[amenity="library"]'
-    ];
-  }
-
-  if (
-    text.includes("museum") ||
-    text.includes("museums")
-  ) {
-    return [
-      '[tourism="museum"]'
-    ];
-  }
-
-  if (
-    text.includes("train station") ||
-    text.includes("railway station")
-  ) {
-    return [
-      '[railway="station"]'
-    ];
-  }
-
-  if (
-    text.includes("bus stop") ||
-    text.includes("bus stops")
-  ) {
-    return [
-      '[highway="bus_stop"]'
-    ];
-  }
-
-  if (
-    text.includes("petrol") ||
-    text.includes("fuel") ||
-    text.includes("gas station")
-  ) {
-    return [
-      '[amenity="fuel"]'
     ];
   }
 
@@ -276,11 +154,89 @@ function getCategoryFilters(query) {
   }
 
   if (
+    text.includes("hotel") ||
+    text.includes("hotels")
+  ) {
+    return [
+      '[tourism="hotel"]',
+      '[tourism="hostel"]',
+      '[tourism="guest_house"]'
+    ];
+  }
+
+  if (
+    text.includes("gym") ||
+    text.includes("gyms") ||
+    text.includes("fitness")
+  ) {
+    return [
+      '[leisure="fitness_centre"]',
+      '[leisure="sports_centre"]'
+    ];
+  }
+
+  if (
+    text.includes("park") ||
+    text.includes("parks")
+  ) {
+    return [
+      '[leisure="park"]',
+      '[leisure="garden"]'
+    ];
+  }
+
+  if (
+    text.includes("police") ||
+    text.includes("police station")
+  ) {
+    return [
+      '[amenity="police"]'
+    ];
+  }
+
+  if (
+    text.includes("fire station") ||
+    text.includes("fire stations")
+  ) {
+    return [
+      '[amenity="fire_station"]'
+    ];
+  }
+
+  if (
     text.includes("bank") ||
     text.includes("banks")
   ) {
     return [
       '[amenity="bank"]'
+    ];
+  }
+
+  if (
+    text.includes("atm") ||
+    text.includes("cash machine") ||
+    text.includes("cashpoint")
+  ) {
+    return [
+      '[amenity="atm"]'
+    ];
+  }
+
+  if (
+    text.includes("cinema") ||
+    text.includes("cinemas")
+  ) {
+    return [
+      '[amenity="cinema"]'
+    ];
+  }
+
+  if (
+    text.includes("library") ||
+    text.includes("libraries")
+  ) {
+    return [
+      '[amenity="library"]'
     ];
   }
 
@@ -303,113 +259,189 @@ function getCategoryFilters(query) {
     ];
   }
 
-  /*
-  Generic named places.
-  */
-
   return [
-    "[name]"
+    '[name]',
+    '[amenity]',
+    '[shop]',
+    '[tourism]',
+    '[leisure]'
   ];
 }
 
-/*
-==================================================
-OVERPASS SEARCH
-==================================================
-*/
+/* =========================
+   OVERPASS SEARCH
+========================= */
 
-async function searchNearbyPlaces(
+async function searchNearbyPlaces({
   latitude,
   longitude,
   query,
-  radius = DEFAULT_RADIUS
-) {
+  radius = 5000,
+  limit = 8
+}) {
+  if (
+    typeof latitude !== "number" ||
+    typeof longitude !== "number"
+  ) {
+    return [];
+  }
+
   const filters = getCategoryFilters(query);
 
-  const statements = [];
+  const parts = [];
 
   for (const filter of filters) {
-    statements.push(
+    parts.push(
       `node(around:${radius},${latitude},${longitude})${filter};`
     );
 
-    statements.push(
+    parts.push(
       `way(around:${radius},${latitude},${longitude})${filter};`
     );
 
-    statements.push(
+    parts.push(
       `relation(around:${radius},${latitude},${longitude})${filter};`
     );
   }
 
   const overpassQuery = `
-[out:json][timeout:15];
-
+[out:json][timeout:20];
 (
-${statements.join("\n")}
+${parts.join("\n")}
 );
-
 out center tags;
 `;
 
-  const body =
-    `data=${encodeURIComponent(overpassQuery)}`;
-
-  const data = await safeFetch(
-    OVERPASS_URL,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type":
-          "application/x-www-form-urlencoded",
-        "User-Agent": USER_AGENT,
-        Accept: "application/json"
-      },
-      body
+  const data = await fetchJSON(OVERPASS_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      "User-Agent": USER_AGENT
     },
-    18000
-  );
+    body:
+      "data=" +
+      encodeURIComponent(overpassQuery)
+  });
 
   if (!data || !Array.isArray(data.elements)) {
     return [];
   }
 
-  return data.elements;
+  const places = data.elements
+    .map((element) => {
+      const tags = element.tags || {};
+
+      const elementLatitude =
+        typeof element.lat === "number"
+          ? element.lat
+          : element.center?.lat;
+
+      const elementLongitude =
+        typeof element.lon === "number"
+          ? element.lon
+          : element.center?.lon;
+
+      if (
+        typeof elementLatitude !== "number" ||
+        typeof elementLongitude !== "number"
+      ) {
+        return null;
+      }
+
+      const name =
+        tags.name ||
+        tags["name:en"] ||
+        tags.brand ||
+        tags.operator;
+
+      if (!name) {
+        return null;
+      }
+
+      return {
+        name,
+        latitude: elementLatitude,
+        longitude: elementLongitude,
+        type:
+          tags.amenity ||
+          tags.shop ||
+          tags.tourism ||
+          tags.leisure ||
+          "place",
+        address: buildAddress(tags),
+        phone:
+          tags.phone ||
+          tags["contact:phone"] ||
+          null,
+        website:
+          tags.website ||
+          tags["contact:website"] ||
+          null
+      };
+    })
+    .filter(Boolean);
+
+  return removeDuplicates(places).slice(0, limit);
 }
 
-/*
-==================================================
-DISTANCE
-==================================================
-*/
+/* =========================
+   ADDRESS
+========================= */
 
-function distanceKm(
-  lat1,
-  lon1,
-  lat2,
-  lon2
+function buildAddress(tags) {
+  const parts = [];
+
+  if (tags["addr:housenumber"]) {
+    parts.push(tags["addr:housenumber"]);
+  }
+
+  if (tags["addr:street"]) {
+    parts.push(tags["addr:street"]);
+  }
+
+  if (tags["addr:city"]) {
+    parts.push(tags["addr:city"]);
+  }
+
+  if (tags["addr:postcode"]) {
+    parts.push(tags["addr:postcode"]);
+  }
+
+  return parts.join(", ");
+}
+
+/* =========================
+   DISTANCE
+========================= */
+
+function calculateDistance(
+  latitude1,
+  longitude1,
+  latitude2,
+  longitude2
 ) {
   const earthRadius = 6371;
 
-  const dLat =
-    ((lat2 - lat1) * Math.PI) / 180;
+  const lat1 =
+    (latitude1 * Math.PI) / 180;
 
-  const dLon =
-    ((lon2 - lon1) * Math.PI) / 180;
+  const lat2 =
+    (latitude2 * Math.PI) / 180;
+
+  const deltaLat =
+    ((latitude2 - latitude1) * Math.PI) / 180;
+
+  const deltaLon =
+    ((longitude2 - longitude1) * Math.PI) / 180;
 
   const a =
-    Math.sin(dLat / 2) ** 2 +
-    Math.cos(
-      (lat1 * Math.PI) / 180
-    ) *
-      Math.cos(
-        (lat2 * Math.PI) / 180
-      ) *
-      Math.sin(dLon / 2) ** 2;
+    Math.sin(deltaLat / 2) ** 2 +
+    Math.cos(lat1) *
+      Math.cos(lat2) *
+      Math.sin(deltaLon / 2) ** 2;
 
   const c =
-    2 *
-    Math.atan2(
+    2 * Math.atan2(
       Math.sqrt(a),
       Math.sqrt(1 - a)
     );
@@ -417,246 +449,163 @@ function distanceKm(
   return earthRadius * c;
 }
 
-/*
-==================================================
-NORMALISE PLACE
-==================================================
-*/
+/* =========================
+   DUPLICATES
+========================= */
 
-function normalisePlace(
-  element,
-  origin
-) {
-  const tags = element?.tags || {};
-
-  let latitude = element?.lat;
-  let longitude = element?.lon;
-
-  if (
-    (latitude == null ||
-      longitude == null) &&
-    element?.center
-  ) {
-    latitude = element.center.lat;
-    longitude = element.center.lon;
-  }
-
-  latitude = Number(latitude);
-  longitude = Number(longitude);
-
-  if (
-    !Number.isFinite(latitude) ||
-    !Number.isFinite(longitude)
-  ) {
-    return null;
-  }
-
-  const distance = distanceKm(
-    origin.latitude,
-    origin.longitude,
-    latitude,
-    longitude
-  );
-
-  const type =
-    tags.amenity ||
-    tags.shop ||
-    tags.tourism ||
-    tags.leisure ||
-    tags.railway ||
-    tags.highway ||
-    tags.office ||
-    "place";
-
-  const addressParts = [
-    tags["addr:housenumber"],
-    tags["addr:street"],
-    tags["addr:city"],
-    tags["addr:postcode"]
-  ].filter(Boolean);
-
-  return {
-    name:
-      tags.name ||
-      tags["name:en"] ||
-      "Unnamed place",
-
-    type,
-
-    latitude,
-
-    longitude,
-
-    distanceKm:
-      Math.round(distance * 100) / 100,
-
-    address:
-      addressParts.length > 0
-        ? addressParts.join(", ")
-        : null,
-
-    phone:
-      tags.phone ||
-      tags["contact:phone"] ||
-      null,
-
-    website:
-      tags.website ||
-      tags["contact:website"] ||
-      null,
-
-    openingHours:
-      tags.opening_hours ||
-      null
-  };
-}
-
-/*
-==================================================
-REMOVE DUPLICATES
-==================================================
-*/
-
-function removeDuplicates(results) {
+function removeDuplicates(places) {
   const seen = new Set();
 
-  return results.filter((place) => {
-    const key = [
-      place.name.toLowerCase(),
-      place.latitude.toFixed(5),
-      place.longitude.toFixed(5)
-    ].join("|");
+  return places.filter((place) => {
+    const key =
+      `${place.name}|` +
+      `${place.latitude.toFixed(5)}|` +
+      `${place.longitude.toFixed(5)}`;
 
     if (seen.has(key)) {
       return false;
     }
 
     seen.add(key);
+
     return true;
   });
 }
 
-/*
-==================================================
-MAIN SEARCH
-==================================================
-*/
+/* =========================
+   NEAR ME
+========================= */
+
+async function searchPlacesByCoordinates({
+  query = "places",
+  latitude,
+  longitude,
+  radius = 5000,
+  limit = 8
+}) {
+  const places = await searchNearbyPlaces({
+    latitude,
+    longitude,
+    query,
+    radius,
+    limit: 50
+  });
+
+  const withDistances = places.map((place) => ({
+    ...place,
+    distanceKm: calculateDistance(
+      latitude,
+      longitude,
+      place.latitude,
+      place.longitude
+    )
+  }));
+
+  withDistances.sort(
+    (a, b) => a.distanceKm - b.distanceKm
+  );
+
+  return withDistances.slice(0, limit);
+}
+
+/* =========================
+   NAMED LOCATION SEARCH
+========================= */
 
 async function searchPlaces({
-  query,
-  location,
-  radius = DEFAULT_RADIUS,
-  limit = DEFAULT_LIMIT
+  query = "places",
+  location = null,
+  latitude = null,
+  longitude = null,
+  radius = 5000,
+  limit = 8
 }) {
-  if (
-    !query ||
-    typeof query !== "string"
-  ) {
-    throw new Error(
-      "A place search query is required."
-    );
-  }
-
-  if (
-    !location ||
-    typeof location !== "string"
-  ) {
-    throw new Error(
-      "A location is required."
-    );
-  }
-
-  const safeRadius = Math.min(
-    Math.max(Number(radius) || DEFAULT_RADIUS, 500),
-    10000
-  );
-
-  const safeLimit = Math.min(
-    Math.max(Number(limit) || DEFAULT_LIMIT, 1),
-    15
-  );
+  let coordinates = null;
 
   /*
-  First convert the user's location
-  into coordinates.
+    If the browser has supplied coordinates,
+    use them directly.
+
+    This is what makes:
+    "restaurants near me"
+    actually use the user's location.
   */
 
-  const origin =
-    await geocodeLocation(location);
-
-  if (!origin) {
-    return {
-      location,
-      latitude: null,
-      longitude: null,
-      results: []
+  if (
+    typeof latitude === "number" &&
+    typeof longitude === "number"
+  ) {
+    coordinates = {
+      latitude,
+      longitude
     };
   }
 
   /*
-  Search OpenStreetMap data.
+    Otherwise geocode a named location such as:
+    "Oxford"
+    "Peterborough"
+    "London"
   */
 
-  const elements =
-    await searchNearbyPlaces(
-      origin.latitude,
-      origin.longitude,
+  if (!coordinates && location) {
+    coordinates = await geocodeLocation(location);
+  }
+
+  if (!coordinates) {
+    return {
+      success: false,
+      places: [],
+      error:
+        "I couldn't determine the location to search."
+    };
+  }
+
+  const places =
+    await searchNearbyPlaces({
+      latitude: coordinates.latitude,
+      longitude: coordinates.longitude,
       query,
-      safeRadius
-    );
+      radius,
+      limit: 50
+    });
 
-  /*
-  Convert raw OSM objects into
-  simple Nova place objects.
-  */
-
-  let results = elements
-    .map((element) =>
-      normalisePlace(
-        element,
-        origin
+  const withDistances = places.map(
+    (place) => ({
+      ...place,
+      distanceKm: calculateDistance(
+        coordinates.latitude,
+        coordinates.longitude,
+        place.latitude,
+        place.longitude
       )
-    )
-    .filter(Boolean);
-
-  /*
-  Remove duplicates.
-  */
-
-  results = removeDuplicates(results);
-
-  /*
-  Sort nearest first.
-  */
-
-  results.sort(
-    (a, b) =>
-      a.distanceKm -
-      b.distanceKm
+    })
   );
 
-  /*
-  Limit results.
-  */
-
-  results =
-    results.slice(0, safeLimit);
+  withDistances.sort(
+    (a, b) =>
+      a.distanceKm - b.distanceKm
+  );
 
   return {
-    location: origin.displayName,
-    latitude: origin.latitude,
-    longitude: origin.longitude,
-    results
+    success: true,
+    places: withDistances.slice(0, limit),
+    location: {
+      latitude: coordinates.latitude,
+      longitude: coordinates.longitude,
+      name:
+        location ||
+        "your current location"
+    }
   };
 }
 
-/*
-==================================================
-EXPORT
-==================================================
-*/
+/* =========================
+   EXPORTS
+========================= */
 
 module.exports = {
   searchPlaces,
+  searchPlacesByCoordinates,
   geocodeLocation
 };
