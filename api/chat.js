@@ -9,10 +9,27 @@ const OPENROUTER_MODEL = "openrouter/free";
 
 let searchPlaces = null;
 
-const possiblePlacesModules = [
-  "./tools/places",
-  "./places"
-];
+let searchPlaces = null;
+
+try {
+  const placesModule = require("./tools/places.js");
+
+  console.log("================================");
+  console.log("NOVA PLACES MODULE LOADED");
+  console.log("================================");
+
+  if (
+    placesModule &&
+    typeof placesModule.searchPlaces === "function"
+  ) {
+    searchPlaces = placesModule.searchPlaces;
+  }
+} catch (error) {
+  console.error("================================");
+  console.error("NOVA PLACES LOAD ERROR");
+  console.error(error?.stack || error);
+  console.error("================================");
+}
 
 for (const modulePath of possiblePlacesModules) {
   if (searchPlaces) {
@@ -41,11 +58,10 @@ for (const modulePath of possiblePlacesModules) {
 }
 
 if (!searchPlaces) {
-  console.error(
-    "Nova Places tool could not be loaded."
+  throw new Error(
+    "PLACES_MODULE_LOAD_FAILED"
   );
 }
-
 /* =========================================================
    SAFE FETCH
 ========================================================= */
