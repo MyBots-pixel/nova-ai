@@ -12,10 +12,6 @@
 
 <style>
 
-/* =========================================================
-   RESET
-========================================================= */
-
 * {
   box-sizing: border-box;
   margin: 0;
@@ -35,11 +31,6 @@ body {
   overflow-x: hidden;
 }
 
-
-/* =========================================================
-   BACKGROUND
-========================================================= */
-
 body::before {
   content: "";
   position: fixed;
@@ -52,13 +43,11 @@ body::before {
       rgba(49, 90, 255, 0.18),
       transparent 30%
     ),
-
     radial-gradient(
       circle at 80% 70%,
       rgba(98, 55, 255, 0.14),
       transparent 30%
     ),
-
     #05091b;
 }
 
@@ -66,11 +55,8 @@ body::after {
   content: "";
   position: fixed;
   inset: 0;
-
   z-index: -1;
-
   pointer-events: none;
-
   opacity: .35;
 
   background-image:
@@ -79,7 +65,6 @@ body::after {
       white 1px,
       transparent 1px
     ),
-
     radial-gradient(
       circle,
       white 1px,
@@ -95,11 +80,6 @@ body::after {
     50px 80px;
 }
 
-
-/* =========================================================
-   APP
-========================================================= */
-
 .app {
   min-height: 100vh;
 }
@@ -110,19 +90,14 @@ body::after {
 ========================================================= */
 
 .sidebar {
-
   position: fixed;
-
   left: 0;
   top: 0;
   bottom: 0;
-
   width: 270px;
 
   background: #080e25;
-
-  border-right:
-    1px solid #1a2548;
+  border-right: 1px solid #1a2548;
 
   padding: 20px;
 
@@ -133,22 +108,17 @@ body::after {
 }
 
 .logo {
-
   display: flex;
-
   align-items: center;
-
   gap: 12px;
 
   font-size: 22px;
-
   font-weight: 800;
 
   margin-bottom: 28px;
 }
 
 .logo-icon {
-
   width: 40px;
   height: 40px;
 
@@ -162,7 +132,6 @@ body::after {
     );
 
   display: flex;
-
   align-items: center;
   justify-content: center;
 
@@ -172,21 +141,17 @@ body::after {
 }
 
 .new-chat {
-
   width: 100%;
 
   border: 0;
-
   border-radius: 13px;
 
   padding: 13px;
 
   background: #17234d;
-
   color: white;
 
   font-size: 14px;
-
   font-weight: 700;
 
   cursor: pointer;
@@ -201,27 +166,21 @@ body::after {
 }
 
 .sidebar-title {
-
   color: #7481a8;
 
   font-size: 11px;
-
   text-transform: uppercase;
-
   letter-spacing: 1px;
 
   margin-bottom: 10px;
 }
 
 .recent {
-
   flex: 1;
-
   overflow-y: auto;
 }
 
 .chat-history-item {
-
   padding: 11px 12px;
 
   border-radius: 10px;
@@ -235,35 +194,26 @@ body::after {
   margin-bottom: 4px;
 
   white-space: nowrap;
-
   overflow: hidden;
-
   text-overflow: ellipsis;
 
   touch-action: manipulation;
 }
 
 .chat-history-item:hover {
-
   background: #111b3b;
-
   color: white;
 }
 
 .sidebar-bottom {
-
-  border-top:
-    1px solid #1a2548;
-
+  border-top: 1px solid #1a2548;
   padding-top: 15px;
 }
 
 .sidebar-button {
-
   width: 100%;
 
   border: 0;
-
   background: transparent;
 
   color: #bdc6e5;
@@ -284,9 +234,7 @@ body::after {
 }
 
 .sidebar-button:hover {
-
   background: #111b3b;
-
   color: white;
 }
 
@@ -296,7 +244,6 @@ body::after {
 ========================================================= */
 
 .main {
-
   margin-left: 270px;
 
   min-height: 100vh;
@@ -310,7 +257,6 @@ body::after {
 ========================================================= */
 
 .topbar {
-
   position: sticky;
 
   top: 0;
@@ -319,8 +265,7 @@ body::after {
 
   background: #070c20;
 
-  border-bottom:
-    1px solid #172142;
+  border-bottom: 1px solid #172142;
 
   display: flex;
 
@@ -332,14 +277,12 @@ body::after {
 }
 
 .mobile-menu-button {
-
   display: none;
 
   width: 42px;
   height: 42px;
 
-  border:
-    1px solid #202d52;
+  border: 1px solid #202d52;
 
   background: #101936;
 
@@ -357,9 +300,7 @@ body::after {
 }
 
 .topbar-title {
-
   font-weight: 700;
-
   font-size: 16px;
 }
 
@@ -368,9 +309,7 @@ body::after {
 }
 
 .account-button {
-
-  border:
-    1px solid #243154;
+  border: 1px solid #243154;
 
   background: #101936;
 
@@ -395,45 +334,35 @@ body::after {
 ========================================================= */
 
 .chat-area {
-
-  min-height:
-    calc(100vh - 72px);
+  min-height: calc(100vh - 72px);
 
   display: flex;
-
   flex-direction: column;
 }
 
 .messages {
-
   width:
     min(
       900px,
       calc(100% - 40px)
     );
 
-  margin:
-    0 auto;
+  margin: 0 auto;
 
-  padding:
-    35px 0 170px;
+  padding: 35px 0 170px;
 }
 
 .welcome {
-
   text-align: center;
 
-  padding:
-    90px 20px 50px;
+  padding: 90px 20px 50px;
 }
 
 .welcome-icon {
-
   width: 70px;
   height: 70px;
 
-  margin:
-    0 auto 22px;
+  margin: 0 auto 22px;
 
   border-radius: 22px;
 
@@ -457,16 +386,12 @@ body::after {
 }
 
 .welcome h1 {
-
   font-size: 40px;
-
   margin-bottom: 12px;
 }
 
 .welcome p {
-
   color: #8995ba;
-
   font-size: 15px;
 }
 
@@ -476,7 +401,6 @@ body::after {
 ========================================================= */
 
 .message {
-
   display: flex;
 
   gap: 14px;
@@ -485,7 +409,6 @@ body::after {
 }
 
 .avatar {
-
   flex-shrink: 0;
 
   width: 38px;
@@ -508,7 +431,6 @@ body::after {
 }
 
 .ai-avatar {
-
   background:
     linear-gradient(
       135deg,
@@ -518,14 +440,11 @@ body::after {
 }
 
 .message-content {
-
   flex: 1;
-
   min-width: 0;
 }
 
 .message-name {
-
   font-size: 12px;
 
   color: #7885aa;
@@ -534,7 +453,6 @@ body::after {
 }
 
 .message-text {
-
   color: #e7ebfa;
 
   line-height: 1.65;
@@ -547,11 +465,9 @@ body::after {
 }
 
 .copy-button {
-
   margin-top: 10px;
 
-  border:
-    1px solid #243154;
+  border: 1px solid #243154;
 
   background: #101936;
 
@@ -569,7 +485,6 @@ body::after {
 }
 
 .copy-button:hover {
-
   color: white;
 }
 
@@ -579,7 +494,6 @@ body::after {
 ========================================================= */
 
 .input-area {
-
   position: fixed;
 
   left: 270px;
@@ -587,19 +501,16 @@ body::after {
 
   bottom: 0;
 
-  padding:
-    18px 25px 22px;
+  padding: 18px 25px 22px;
 
   background: #05091b;
 
-  border-top:
-    1px solid #111b38;
+  border-top: 1px solid #111b38;
 
   z-index: 90;
 }
 
 .input-wrapper {
-
   width:
     min(
       900px,
@@ -610,7 +521,6 @@ body::after {
 }
 
 .input-box {
-
   display: flex;
 
   align-items: flex-end;
@@ -619,8 +529,7 @@ body::after {
 
   background: #0d1530;
 
-  border:
-    1px solid #26345b;
+  border: 1px solid #26345b;
 
   border-radius: 17px;
 
@@ -628,12 +537,10 @@ body::after {
 }
 
 .input-box:focus-within {
-
   border-color: #4569ff;
 }
 
 #messageInput {
-
   flex: 1;
 
   resize: none;
@@ -660,12 +567,10 @@ body::after {
 }
 
 #messageInput::placeholder {
-
   color: #68769f;
 }
 
 .send-button {
-
   width: 44px;
   height: 44px;
 
@@ -690,13 +595,10 @@ body::after {
 }
 
 .send-button:hover {
-
-  transform:
-    translateY(-1px);
+  transform: translateY(-1px);
 }
 
 .send-button:disabled {
-
   opacity: .6;
 
   cursor: default;
@@ -705,7 +607,6 @@ body::after {
 }
 
 .input-info {
-
   text-align: center;
 
   color: #596584;
@@ -721,22 +622,18 @@ body::after {
 ========================================================= */
 
 .screen {
-
   display: none;
 
-  min-height:
-    calc(100vh - 72px);
+  min-height: calc(100vh - 72px);
 
   padding: 45px;
 }
 
 .screen.active {
-
   display: block;
 }
 
 .screen-container {
-
   width:
     min(
       1000px,
@@ -747,14 +644,12 @@ body::after {
 }
 
 .screen-title {
-
   font-size: 30px;
 
   margin-bottom: 8px;
 }
 
 .screen-subtitle {
-
   color: #7f8bae;
 
   margin-bottom: 30px;
@@ -766,7 +661,6 @@ body::after {
 ========================================================= */
 
 .plans {
-
   display: grid;
 
   grid-template-columns:
@@ -776,11 +670,9 @@ body::after {
 }
 
 .plan {
-
   background: #0b1330;
 
-  border:
-    1px solid #1d2a4d;
+  border: 1px solid #1d2a4d;
 
   border-radius: 18px;
 
@@ -788,17 +680,14 @@ body::after {
 }
 
 .plan.featured {
-
   border-color: #536eff;
 }
 
 .plan h3 {
-
   margin-bottom: 10px;
 }
 
 .price {
-
   font-size: 29px;
 
   font-weight: 800;
@@ -807,7 +696,6 @@ body::after {
 }
 
 .price span {
-
   color: #7581a5;
 
   font-size: 12px;
@@ -816,7 +704,6 @@ body::after {
 }
 
 .plan ul {
-
   list-style: none;
 
   color: #aeb8d8;
@@ -827,15 +714,13 @@ body::after {
 }
 
 .plan-button {
-
   width: 100%;
 
   margin-top: 20px;
 
   padding: 11px;
 
-  border:
-    1px solid #27365e;
+  border: 1px solid #27365e;
 
   border-radius: 10px;
 
@@ -854,13 +739,11 @@ body::after {
 ========================================================= */
 
 .account-card {
-
   max-width: 600px;
 
   background: #0b1330;
 
-  border:
-    1px solid #1d2a4d;
+  border: 1px solid #1d2a4d;
 
   border-radius: 18px;
 
@@ -868,7 +751,6 @@ body::after {
 }
 
 .account-status {
-
   padding: 16px;
 
   border-radius: 12px;
@@ -881,16 +763,13 @@ body::after {
 }
 
 .auth-buttons {
-
   display: grid;
 
   gap: 10px;
 }
 
 .auth-button {
-
-  border:
-    1px solid #27365e;
+  border: 1px solid #27365e;
 
   background: #111b3a;
 
@@ -906,12 +785,10 @@ body::after {
 }
 
 .auth-button:hover {
-
   background: #19264c;
 }
 
 .signout {
-
   background: #281a28;
 
   border-color: #533047;
@@ -923,7 +800,6 @@ body::after {
 ========================================================= */
 
 .modal {
-
   display: none;
 
   position: fixed;
@@ -932,8 +808,7 @@ body::after {
 
   z-index: 3000;
 
-  background:
-    rgba(0,0,0,.75);
+  background: rgba(0,0,0,.75);
 
   align-items: center;
 
@@ -943,12 +818,10 @@ body::after {
 }
 
 .modal.active {
-
   display: flex;
 }
 
 .modal-card {
-
   width:
     min(
       460px,
@@ -957,8 +830,7 @@ body::after {
 
   background: #0a112a;
 
-  border:
-    1px solid #26345a;
+  border: 1px solid #26345a;
 
   border-radius: 20px;
 
@@ -966,12 +838,10 @@ body::after {
 }
 
 .modal-card h2 {
-
   margin-bottom: 10px;
 }
 
 .modal-card p {
-
   color: #8490b3;
 
   line-height: 1.5;
@@ -982,7 +852,6 @@ body::after {
 }
 
 .modal-close {
-
   width: 100%;
 
   padding: 12px;
@@ -1006,7 +875,6 @@ body::after {
 ========================================================= */
 
 .generated-image {
-
   display: block;
 
   max-width: 100%;
@@ -1017,8 +885,7 @@ body::after {
 
   margin-top: 12px;
 
-  border:
-    1px solid #25345d;
+  border: 1px solid #25345d;
 }
 
 
@@ -1027,7 +894,6 @@ body::after {
 ========================================================= */
 
 .typing {
-
   display: flex;
 
   gap: 5px;
@@ -1036,7 +902,6 @@ body::after {
 }
 
 .typing span {
-
   width: 7px;
   height: 7px;
 
@@ -1049,21 +914,17 @@ body::after {
 }
 
 .typing span:nth-child(2) {
-
   animation-delay: .15s;
 }
 
 .typing span:nth-child(3) {
-
   animation-delay: .3s;
 }
 
 @keyframes typing {
-
   0%,
   60%,
   100% {
-
     opacity: .3;
 
     transform:
@@ -1071,7 +932,6 @@ body::after {
   }
 
   30% {
-
     opacity: 1;
 
     transform:
@@ -1087,7 +947,6 @@ body::after {
 @media (max-width: 800px) {
 
   .sidebar {
-
     width: 280px;
 
     transform:
@@ -1102,18 +961,15 @@ body::after {
   }
 
   .sidebar.open {
-
     transform:
       translateX(0);
   }
 
   .main {
-
     margin-left: 0;
   }
 
   .topbar {
-
     height: 64px;
 
     padding:
@@ -1121,17 +977,14 @@ body::after {
   }
 
   .mobile-menu-button {
-
     display: block;
   }
 
   .topbar-title {
-
     font-size: 14px;
   }
 
   .account-button {
-
     padding:
       8px 10px;
 
@@ -1139,7 +992,6 @@ body::after {
   }
 
   .messages {
-
     width:
       calc(100% - 24px);
 
@@ -1148,23 +1000,19 @@ body::after {
   }
 
   .welcome {
-
     padding:
       60px 10px 35px;
   }
 
   .welcome h1 {
-
     font-size: 29px;
   }
 
   .welcome p {
-
     font-size: 13px;
   }
 
   .input-area {
-
     left: 0;
 
     padding:
@@ -1172,19 +1020,12 @@ body::after {
   }
 
   .input-box {
-
     border-radius: 14px;
 
     padding: 7px;
   }
 
-  /*
-    16px prevents iPhone Safari
-    from zooming when typing.
-  */
-
   #messageInput {
-
     font-size:
       16px !important;
 
@@ -1192,28 +1033,23 @@ body::after {
   }
 
   .screen {
-
     padding:
       25px 15px;
   }
 
   .screen-title {
-
     font-size: 25px;
   }
 
   .plans {
-
     grid-template-columns: 1fr;
   }
 
   .message {
-
     gap: 9px;
   }
 
   .avatar {
-
     width: 34px;
     height: 34px;
 
@@ -1221,7 +1057,6 @@ body::after {
   }
 
   .message-text {
-
     font-size: 14px;
   }
 }
@@ -1234,12 +1069,10 @@ body::after {
 @media (max-width: 420px) {
 
   .sidebar {
-
     width: 85vw;
   }
 
   .topbar-title {
-
     max-width: 120px;
 
     overflow: hidden;
@@ -1250,18 +1083,15 @@ body::after {
   }
 
   .account-button {
-
     font-size: 11px;
   }
 
   .welcome-icon {
-
     width: 60px;
     height: 60px;
   }
 
   .welcome h1 {
-
     font-size: 25px;
   }
 }
@@ -1353,7 +1183,6 @@ body::after {
 
 <header class="topbar">
 
-
   <button
     class="mobile-menu-button"
     id="mobileMenuButton"
@@ -1383,7 +1212,6 @@ body::after {
     Account
   </button>
 
-
 </header>
 
 
@@ -1396,12 +1224,10 @@ body::after {
   id="chatScreen"
 >
 
-
   <div
     class="messages"
     id="messages"
   >
-
 
     <div
       class="welcome"
@@ -1412,11 +1238,9 @@ body::after {
         ✦
       </div>
 
-
       <h1>
         How can I help?
       </h1>
-
 
       <p>
         Ask Nova AI anything.
@@ -1424,9 +1248,7 @@ body::after {
 
     </div>
 
-
   </div>
-
 
 </section>
 
@@ -1440,22 +1262,17 @@ body::after {
   id="premiumScreen"
 >
 
-
   <div class="screen-container">
-
 
     <h1 class="screen-title">
       Nova Premium
     </h1>
 
-
     <p class="screen-subtitle">
       Choose the plan that works best for you.
     </p>
 
-
     <div class="plans">
-
 
       <div class="plan">
 
@@ -1463,14 +1280,12 @@ body::after {
           Free
         </h3>
 
-
         <div class="price">
           £0
           <span>
             forever
           </span>
         </div>
-
 
         <ul>
 
@@ -1496,7 +1311,6 @@ body::after {
 
         </ul>
 
-
         <button
           class="plan-button"
           type="button"
@@ -1513,14 +1327,12 @@ body::after {
           Plus
         </h3>
 
-
         <div class="price">
           £4.99
           <span>
             /month
           </span>
         </div>
-
 
         <ul>
 
@@ -1546,7 +1358,6 @@ body::after {
 
         </ul>
 
-
         <button
           class="plan-button"
           type="button"
@@ -1564,14 +1375,12 @@ body::after {
           Pro
         </h3>
 
-
         <div class="price">
           £9.99
           <span>
             /month
           </span>
         </div>
-
 
         <ul>
 
@@ -1597,7 +1406,6 @@ body::after {
 
         </ul>
 
-
         <button
           class="plan-button"
           type="button"
@@ -1607,7 +1415,6 @@ body::after {
         </button>
 
       </div>
-
 
     </div>
 
@@ -1625,22 +1432,17 @@ body::after {
   id="accountScreen"
 >
 
-
   <div class="screen-container">
-
 
     <h1 class="screen-title">
       Account
     </h1>
 
-
     <p class="screen-subtitle">
       Manage your Nova AI account.
     </p>
 
-
     <div class="account-card">
-
 
       <div
         class="account-status"
@@ -1649,12 +1451,10 @@ body::after {
         You are currently signed out.
       </div>
 
-
       <div
         class="auth-buttons"
         id="authButtons"
       >
-
 
         <button
           class="auth-button"
@@ -1664,7 +1464,6 @@ body::after {
           Continue with Google
         </button>
 
-
         <button
           class="auth-button"
           type="button"
@@ -1672,7 +1471,6 @@ body::after {
         >
           Continue with Apple
         </button>
-
 
         <button
           class="auth-button"
@@ -1682,9 +1480,7 @@ body::after {
           Continue with Email
         </button>
 
-
       </div>
-
 
       <button
         class="auth-button signout"
@@ -1695,7 +1491,6 @@ body::after {
       >
         Sign Out
       </button>
-
 
     </div>
 
@@ -1713,12 +1508,9 @@ body::after {
   id="inputArea"
 >
 
-
   <div class="input-wrapper">
 
-
     <div class="input-box">
-
 
       <textarea
         id="messageInput"
@@ -1730,7 +1522,6 @@ body::after {
         spellcheck="true"
       ></textarea>
 
-
       <button
         class="send-button"
         id="sendButton"
@@ -1739,14 +1530,11 @@ body::after {
         ↑
       </button>
 
-
     </div>
-
 
     <div class="input-info">
       Nova AI can make mistakes. Check important information.
     </div>
-
 
   </div>
 
@@ -1767,19 +1555,15 @@ body::after {
   id="modal"
 >
 
-
   <div class="modal-card">
-
 
     <h2 id="modalTitle">
       Nova AI
     </h2>
 
-
     <p id="modalText">
       Coming soon.
     </p>
-
 
     <button
       class="modal-close"
@@ -1788,7 +1572,6 @@ body::after {
     >
       Close
     </button>
-
 
   </div>
 
@@ -1806,6 +1589,17 @@ let currentChat = [];
 let currentChatId = null;
 
 let isGenerating = false;
+
+
+/*
+  Stores the browser location for the
+  current Near Me request only.
+
+  We do NOT permanently save the user's
+  GPS coordinates in localStorage.
+*/
+
+let currentUserLocation = null;
 
 
 const STORAGE_CHATS =
@@ -1925,11 +1719,9 @@ mobileMenuButton.addEventListener(
 
     event.stopPropagation();
 
-
     sidebar.classList.toggle(
       "open"
     );
-
 
     if (
       sidebar.classList.contains(
@@ -1951,11 +1743,6 @@ mobileMenuButton.addEventListener(
 );
 
 
-/*
-  Sidebar clicks must not
-  trigger the main click.
-*/
-
 sidebar.addEventListener(
   "click",
   function(event) {
@@ -1965,14 +1752,6 @@ sidebar.addEventListener(
   }
 );
 
-
-/*
-  Clicking the main area closes
-  the mobile menu.
-
-  IMPORTANT:
-  This does NOT scroll anything.
-*/
 
 main.addEventListener(
   "click",
@@ -2143,16 +1922,12 @@ document.getElementById(
 
     saveCurrentChat();
 
-
     currentChat = [];
-
 
     currentChatId =
       Date.now().toString();
 
-
     renderMessages();
-
 
     showScreen(
       "chat"
@@ -2355,27 +2130,15 @@ function renderRecentChats() {
 function cleanResponse(text) {
 
   if (!text) {
-
     return "";
-
   }
 
-
   return String(text)
-
-    /*
-      Remove bold markers.
-    */
 
     .replace(
       /\*\*/g,
       ""
     )
-
-    /*
-      Remove stray markdown
-      headings.
-    */
 
     .replace(
       /^#{1,6}\s+/gm,
@@ -2424,13 +2187,6 @@ function renderMessages() {
 
 }
 
-
-/*
-  IMPORTANT:
-
-  There is NO scrollTo()
-  anywhere in this function.
-*/
 
 function addMessageToDOM(
   role,
@@ -2616,7 +2372,7 @@ function addMessageToDOM(
 
 
 /* =========================================================
-   TYPING INDICATOR
+   TYPING
 ========================================================= */
 
 function addTyping() {
@@ -2713,12 +2469,6 @@ function addTyping() {
 
 }
 
-
-/*
-  IMPORTANT:
-
-  No scrolling here either.
-*/
 
 function removeTyping() {
 
@@ -3040,29 +2790,17 @@ function wantsImage(
   const phrases = [
 
     "create an image",
-
     "create a picture",
-
     "generate an image",
-
     "generate a picture",
-
     "make an image",
-
     "make a picture",
-
     "draw an image",
-
     "draw a picture",
-
     "generate artwork",
-
     "create artwork",
-
     "make artwork",
-
     "create art",
-
     "generate art"
 
   ];
@@ -3073,6 +2811,164 @@ function wantsImage(
       value.includes(
         phrase
       )
+  );
+
+}
+
+
+/* =========================================================
+   NEAR ME DETECTION
+========================================================= */
+
+function isNearMeRequest(
+  text
+) {
+
+  const value =
+    String(text)
+      .toLowerCase()
+      .trim();
+
+
+  return (
+    value.includes("near me") ||
+    value.includes("nearby") ||
+    value.includes("around me") ||
+    value.includes("close to me") ||
+    value.includes("closest to me") ||
+    value.includes("nearest to me")
+  );
+
+}
+
+
+/* =========================================================
+   GET BROWSER LOCATION
+========================================================= */
+
+function getUserLocation() {
+
+  return new Promise(
+    function(resolve, reject) {
+
+      if (
+        !navigator.geolocation
+      ) {
+
+        reject(
+          new Error(
+            "Location services are not supported by this browser."
+          )
+        );
+
+        return;
+
+      }
+
+
+      navigator.geolocation.getCurrentPosition(
+
+        function(position) {
+
+          const latitude =
+            position.coords.latitude;
+
+          const longitude =
+            position.coords.longitude;
+
+
+          if (
+            !Number.isFinite(
+              latitude
+            ) ||
+            !Number.isFinite(
+              longitude
+            )
+          ) {
+
+            reject(
+              new Error(
+                "Nova received an invalid location from your browser."
+              )
+            );
+
+            return;
+
+          }
+
+
+          resolve({
+
+            latitude,
+
+            longitude
+
+          });
+
+        },
+
+
+        function(error) {
+
+          let message =
+            "Nova couldn't access your location.";
+
+
+          if (
+            error.code === 1
+          ) {
+
+            message =
+              "Location permission was denied. Please allow location access if you want Nova to find places near you.";
+
+          }
+
+
+          if (
+            error.code === 2
+          ) {
+
+            message =
+              "Your location could not be determined.";
+
+          }
+
+
+          if (
+            error.code === 3
+          ) {
+
+            message =
+              "The location request timed out. Please try again.";
+
+          }
+
+
+          reject(
+            new Error(
+              message
+            )
+          );
+
+        },
+
+
+        {
+
+          enableHighAccuracy:
+            true,
+
+          timeout:
+            10000,
+
+          maximumAge:
+            300000
+
+        }
+
+      );
+
+    }
   );
 
 }
@@ -3105,7 +3001,9 @@ async function sendMessage() {
 
 
   /*
-    Image request.
+  ---------------------------------------------------------
+  IMAGE REQUEST
+  ---------------------------------------------------------
   */
 
   if (
@@ -3113,7 +3011,6 @@ async function sendMessage() {
       message
     )
   ) {
-
 
     if (
       !isSignedIn()
@@ -3145,6 +3042,12 @@ async function sendMessage() {
   }
 
 
+  /*
+  ---------------------------------------------------------
+  USAGE LIMIT
+  ---------------------------------------------------------
+  */
+
   const usage =
     getUsage();
 
@@ -3163,6 +3066,65 @@ async function sendMessage() {
 
   }
 
+
+  /*
+  ---------------------------------------------------------
+  GET LOCATION IF NEEDED
+  ---------------------------------------------------------
+  */
+
+  currentUserLocation =
+    null;
+
+
+  if (
+    isNearMeRequest(
+      message
+    )
+  ) {
+
+    try {
+
+      /*
+        Ask the browser for the location.
+
+        This only happens for Near Me requests.
+      */
+
+      currentUserLocation =
+        await getUserLocation();
+
+    } catch (
+      locationError
+    ) {
+
+      showModal(
+        "Location required",
+        locationError.message
+      );
+
+
+      /*
+        Do not send the request if
+        location was required but unavailable.
+      */
+
+      currentUserLocation =
+        null;
+
+
+      return;
+
+    }
+
+  }
+
+
+  /*
+  ---------------------------------------------------------
+  START GENERATION
+  ---------------------------------------------------------
+  */
 
   isGenerating =
     true;
@@ -3223,6 +3185,12 @@ async function sendMessage() {
 
   try {
 
+    /*
+    -------------------------------------------------------
+    SEND TO NOVA
+    -------------------------------------------------------
+    */
+
     const response =
       await fetch(
         "/api/chat",
@@ -3247,7 +3215,15 @@ async function sendMessage() {
               history:
                 currentChat.slice(
                   -20
-                )
+                ),
+
+              /*
+                Browser coordinates are sent only
+                when a Near Me request is made.
+              */
+
+              location:
+                currentUserLocation
 
             })
 
@@ -3255,8 +3231,34 @@ async function sendMessage() {
       );
 
 
-    const data =
-      await response.json();
+    /*
+    -------------------------------------------------------
+    SAFELY READ RESPONSE
+    -------------------------------------------------------
+    */
+
+    const responseText =
+      await response.text();
+
+
+    let data = null;
+
+
+    try {
+
+      data =
+        JSON.parse(
+          responseText
+        );
+
+    } catch {
+
+      throw new Error(
+        responseText ||
+        "The server returned an invalid response."
+      );
+
+    }
 
 
     removeTyping();
@@ -3333,6 +3335,15 @@ async function sendMessage() {
 
 
   } finally {
+
+    /*
+      Clear temporary location data
+      after the request has finished.
+    */
+
+    currentUserLocation =
+      null;
+
 
     isGenerating =
       false;
@@ -3447,8 +3458,28 @@ async function generateImage(
       );
 
 
-    const data =
-      await response.json();
+    const responseText =
+      await response.text();
+
+
+    let data = null;
+
+
+    try {
+
+      data =
+        JSON.parse(
+          responseText
+        );
+
+    } catch {
+
+      throw new Error(
+        responseText ||
+        "The image server returned an invalid response."
+      );
+
+    }
 
 
     removeTyping();
@@ -3582,13 +3613,6 @@ async function generateImage(
     saveCurrentChat();
 
 
-    /*
-      NO scrollTo()
-      NO scrollIntoView()
-      NO automatic scrolling.
-    */
-
-
   } catch (
     error
   ) {
@@ -3617,7 +3641,6 @@ async function generateImage(
       errorText,
       false
     );
-
 
   } finally {
 
@@ -3760,7 +3783,6 @@ updateAccountUI();
 
 currentChatId =
   Date.now().toString();
-
 
 </script>
 
