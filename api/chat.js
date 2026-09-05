@@ -17,7 +17,6 @@ try {
     typeof placesModule.searchPlaces === "function"
   ) {
     searchPlaces = placesModule.searchPlaces;
-
     console.log("NOVA PLACES MODULE LOADED");
   } else {
     console.error(
@@ -51,10 +50,10 @@ async function safeFetch(url, options = {}) {
   if (!response.ok) {
     throw new Error(
       data?.error?.message ||
-      data?.error ||
-      data?.message ||
-      text?.slice(0, 500) ||
-      `Request failed with status ${response.status}`
+        data?.error ||
+        data?.message ||
+        text?.slice(0, 500) ||
+        `Request failed with status ${response.status}`
     );
   }
 
@@ -62,7 +61,7 @@ async function safeFetch(url, options = {}) {
 }
 
 /* =========================================================
-   WEATHER
+   WEATHER GEOCODING
 ========================================================= */
 
 async function geocodeLocation(location) {
@@ -96,9 +95,12 @@ async function geocodeLocation(location) {
   };
 }
 
+/* =========================================================
+   WEATHER
+========================================================= */
+
 async function getWeather(location) {
-  const place =
-    await geocodeLocation(location);
+  const place = await geocodeLocation(location);
 
   if (!place) {
     return null;
@@ -117,12 +119,10 @@ async function getWeather(location) {
         "weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,sunrise,sunset",
 
       timezone: "auto",
-
       forecast_days: "3"
     }).toString();
 
-  const weather =
-    await safeFetch(url);
+  const weather = await safeFetch(url);
 
   return {
     location: place,
@@ -136,8 +136,7 @@ async function getWeather(location) {
 ========================================================= */
 
 function isWeatherRequest(message) {
-  const text =
-    String(message || "").toLowerCase();
+  const text = String(message || "").toLowerCase();
 
   return (
     text.includes("weather") ||
@@ -152,8 +151,7 @@ function isWeatherRequest(message) {
 }
 
 function isPlacesRequest(message) {
-  const text =
-    String(message || "").toLowerCase();
+  const text = String(message || "").toLowerCase();
 
   return (
     text.includes("near me") ||
@@ -162,7 +160,9 @@ function isPlacesRequest(message) {
     text.includes("closest to me") ||
     text.includes("nearest to me") ||
     text.includes("close to me") ||
-
+    text.includes("find me") ||
+    text.includes("find a ") ||
+    text.includes("find some ") ||
     text.includes("restaurant") ||
     text.includes("restaurants") ||
     text.includes("cafe") ||
@@ -194,8 +194,7 @@ function isPlacesRequest(message) {
 }
 
 function isNearMeRequest(message) {
-  const text =
-    String(message || "").toLowerCase();
+  const text = String(message || "").toLowerCase();
 
   return (
     text.includes("near me") ||
@@ -218,18 +217,16 @@ function extractLocation(message) {
   ];
 
   for (const pattern of patterns) {
-    const match =
-      String(message || "").match(pattern);
+    const match = String(message || "").match(pattern);
 
     if (!match || !match[1]) {
       continue;
     }
 
-    const location =
-      match[1]
-        .trim()
-        .replace(/[?.!,]+$/, "")
-        .trim();
+    const location = match[1]
+      .trim()
+      .replace(/[?.!,]+$/, "")
+      .trim();
 
     if (
       location &&
@@ -248,8 +245,7 @@ function extractLocation(message) {
 ========================================================= */
 
 function extractPlaceQuery(message) {
-  const text =
-    String(message || "").toLowerCase();
+  const text = String(message || "").toLowerCase();
 
   if (
     text.includes("restaurant") ||
@@ -262,6 +258,7 @@ function extractPlaceQuery(message) {
 
   if (
     text.includes("cafe") ||
+    text.includes("cafes") ||
     text.includes("coffee")
   ) {
     return "cafe";
@@ -276,7 +273,9 @@ function extractPlaceQuery(message) {
 
   if (
     text.includes("shop") ||
-    text.includes("store")
+    text.includes("shops") ||
+    text.includes("store") ||
+    text.includes("stores")
   ) {
     return "shop";
   }
@@ -358,6 +357,10 @@ async function getPlacesData(
   userLocation = null
 ) {
   if (!searchPlaces) {
+    console.error(
+      "Places module is unavailable."
+    );
+
     return {
       success: false,
       places: [],
@@ -366,11 +369,8 @@ async function getPlacesData(
     };
   }
 
-  const query =
-    extractPlaceQuery(message);
-
-  const nearMe =
-    isNearMeRequest(message);
+  const query = extractPlaceQuery(message);
+  const nearMe = isNearMeRequest(message);
 
   try {
     if (nearMe) {
@@ -402,31 +402,39 @@ async function getPlacesData(
       }
 
       console.log(
-        "NOVA PLACES SEARCH",
+        "NOVA PLACES SEARCH:",
         query,
         latitude,
         longitude
       );
 
-      return await searchPlaces({
+      const result = await searchPlaces({
         query,
         latitude,
         longitude,
         radius: 5000,
         limit: 8
       });
+
+      console.log(
+        "NOVA PLACES RESULT:",
+        JSON.stringify(result)
+      );
+
+      return result;
     }
 
-    const location =
-      extractLocation(message);
+    const location = extractLocation(message);
 
     if (location) {
-      return await searchPlaces({
+      const result = await searchPlaces({
         query,
         location,
         radius: 5000,
         limit: 8
       });
+
+      return result;
     }
 
     return {
@@ -446,8 +454,7 @@ async function getPlacesData(
       places: [],
       error:
         `Places search failed: ${
-          error?.message ||
-          "Unknown error"
+          error?.message || "Unknown error"
         }`
     };
   }
@@ -464,8 +471,7 @@ async function getRealtimeData(
   const results = {};
 
   if (isWeatherRequest(message)) {
-    const location =
-      extractLocation(message);
+    const location = extractLocation(message);
 
     if (location) {
       try {
@@ -473,8 +479,7 @@ async function getRealtimeData(
           await getWeather(location);
 
         if (weather) {
-          results.weather =
-            weather;
+          results.weather = weather;
         }
       } catch (error) {
         console.error(
@@ -513,22 +518,22 @@ function buildRealtimeContext(data) {
   if (data.weather) {
     sections.push(
       "LIVE WEATHER DATA:\n" +
-      JSON.stringify(
-        data.weather,
-        null,
-        2
-      )
+        JSON.stringify(
+          data.weather,
+          null,
+          2
+        )
     );
   }
 
   if (data.places) {
     sections.push(
       "LIVE PLACES DATA:\n" +
-      JSON.stringify(
-        data.places,
-        null,
-        2
-      )
+        JSON.stringify(
+          data.places,
+          null,
+          2
+        )
     );
   }
 
@@ -606,41 +611,40 @@ async function askOpenRouter(
     ...messages
   ];
 
-  const response =
-    await fetch(
-      OPENROUTER_URL,
-      {
-        method: "POST",
+  const response = await fetch(
+    OPENROUTER_URL,
+    {
+      method: "POST",
 
-        headers: {
-          "Content-Type":
-            "application/json",
+      headers: {
+        "Content-Type":
+          "application/json",
 
-          Authorization:
-            `Bearer ${apiKey}`,
+        Authorization:
+          `Bearer ${apiKey}`,
 
-          "HTTP-Referer":
-            "https://nova-ai.vercel.app",
+        "HTTP-Referer":
+          "https://nova-ai.vercel.app",
 
-          "X-Title":
-            "Nova AI"
-        },
+        "X-Title":
+          "Nova AI"
+      },
 
-        body: JSON.stringify({
-          model:
-            OPENROUTER_MODEL,
+      body: JSON.stringify({
+        model:
+          OPENROUTER_MODEL,
 
-          messages:
-            finalMessages,
+        messages:
+          finalMessages,
 
-          max_tokens:
-            8192,
+        max_tokens:
+          8192,
 
-          temperature:
-            0.7
-        })
-      }
-    );
+        temperature:
+          0.7
+      })
+    }
+  );
 
   const data =
     await response.json();
@@ -648,8 +652,8 @@ async function askOpenRouter(
   if (!response.ok) {
     throw new Error(
       data?.error?.message ||
-      data?.error ||
-      `OpenRouter failed with status ${response.status}`
+        data?.error ||
+        `OpenRouter failed with status ${response.status}`
     );
   }
 
@@ -778,6 +782,11 @@ module.exports =
               body.location.longitude
             )
         };
+
+        console.log(
+          "NOVA BROWSER LOCATION RECEIVED:",
+          userLocation
+        );
       }
 
       const messages = [
@@ -814,7 +823,8 @@ module.exports =
     } catch (error) {
       console.error(
         "NOVA CHAT ERROR:",
-        error?.stack || error
+        error?.stack ||
+          error
       );
 
       return res
