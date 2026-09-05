@@ -4,71 +4,33 @@ const OPENROUTER_URL =
 const OPENROUTER_MODEL = "openrouter/free";
 
 /* =========================================================
-   LOAD PLACES TOOL
+   PLACES MODULE
 ========================================================= */
-
-let searchPlaces = null;
 
 let searchPlaces = null;
 
 try {
   const placesModule = require("./tools/places.js");
 
-  console.log("================================");
-  console.log("NOVA PLACES MODULE LOADED");
-  console.log("================================");
-
   if (
     placesModule &&
     typeof placesModule.searchPlaces === "function"
   ) {
     searchPlaces = placesModule.searchPlaces;
-  }
-} catch (error) {
-  console.error("================================");
-  console.error("NOVA PLACES LOAD ERROR");
-  console.error(error?.stack || error);
-  console.error("================================");
-}
 
-for (const modulePath of possiblePlacesModules) {
-  if (searchPlaces) {
-    break;
-  }
-
-  try {
-    const placesModule = require(modulePath);
-
-    if (
-      placesModule &&
-      typeof placesModule.searchPlaces === "function"
-    ) {
-      searchPlaces = placesModule.searchPlaces;
-
-      console.log(
-        `Nova Places loaded from ${modulePath}`
-      );
-    }
-  } catch (error) {
-    console.warn(
-      `Could not load ${modulePath}:`,
-      error?.message || error
+    console.log("NOVA PLACES MODULE LOADED");
+  } else {
+    console.error(
+      "places.js loaded, but searchPlaces was not found."
     );
   }
-}
-
-if (!searchPlaces) {
+} catch (error) {
   console.error(
-    "Places function is not available."
+    "NOVA PLACES LOAD ERROR:",
+    error?.stack || error
   );
-
-  return {
-    success: false,
-    places: [],
-    error:
-      "The Places module could not be loaded by the server."
-  };
 }
+
 /* =========================================================
    SAFE FETCH
 ========================================================= */
@@ -88,6 +50,7 @@ async function safeFetch(url, options = {}) {
 
   if (!response.ok) {
     throw new Error(
+      data?.error?.message ||
       data?.error ||
       data?.message ||
       text?.slice(0, 500) ||
@@ -99,10 +62,10 @@ async function safeFetch(url, options = {}) {
 }
 
 /* =========================================================
-   WEATHER GEOCODING
+   WEATHER
 ========================================================= */
 
-async function geocodeWeatherLocation(location) {
+async function geocodeLocation(location) {
   if (!location) {
     return null;
   }
@@ -133,13 +96,9 @@ async function geocodeWeatherLocation(location) {
   };
 }
 
-/* =========================================================
-   WEATHER
-========================================================= */
-
 async function getWeather(location) {
   const place =
-    await geocodeWeatherLocation(location);
+    await geocodeLocation(location);
 
   if (!place) {
     return null;
@@ -154,13 +113,11 @@ async function getWeather(location) {
       current:
         "temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m",
 
-      hourly:
-        "temperature_2m,precipitation_probability,weather_code",
-
       daily:
         "weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,sunrise,sunset",
 
       timezone: "auto",
+
       forecast_days: "3"
     }).toString();
 
@@ -171,25 +128,6 @@ async function getWeather(location) {
     location: place,
     current: weather.current,
     daily: weather.daily
-  };
-}
-
-/* =========================================================
-   TIME
-========================================================= */
-
-async function getTimeForLocation(location) {
-  const place =
-    await geocodeWeatherLocation(location);
-
-  if (!place) {
-    return null;
-  }
-
-  return {
-    location: place,
-    note:
-      "Use the location timezone when determining the exact local time."
   };
 }
 
@@ -208,21 +146,8 @@ function isWeatherRequest(message) {
     text.includes("raining") ||
     text.includes("rain") ||
     text.includes("sunny") ||
-    text.includes("snowing") ||
     text.includes("snow") ||
     text.includes("windy")
-  );
-}
-
-function isTimeRequest(message) {
-  const text =
-    String(message || "").toLowerCase();
-
-  return (
-    text.includes("what time") ||
-    text.includes("current time") ||
-    text.includes("local time") ||
-    text.includes("time in ")
   );
 }
 
@@ -238,15 +163,15 @@ function isPlacesRequest(message) {
     text.includes("nearest to me") ||
     text.includes("close to me") ||
 
-    text.includes("find me") ||
-    text.includes("find a ") ||
-    text.includes("find some ") ||
-
     text.includes("restaurant") ||
+    text.includes("restaurants") ||
     text.includes("cafe") ||
+    text.includes("cafes") ||
     text.includes("coffee") ||
     text.includes("shop") ||
+    text.includes("shops") ||
     text.includes("store") ||
+    text.includes("stores") ||
     text.includes("supermarket") ||
     text.includes("grocery") ||
     text.includes("hospital") ||
@@ -289,8 +214,7 @@ function isNearMeRequest(message) {
 function extractLocation(message) {
   const patterns = [
     /\bin\s+(.+)$/i,
-    /\bat\s+(.+)$/i,
-    /\bfor\s+(.+)$/i
+    /\bat\s+(.+)$/i
   ];
 
   for (const pattern of patterns) {
@@ -301,7 +225,7 @@ function extractLocation(message) {
       continue;
     }
 
-    let location =
+    const location =
       match[1]
         .trim()
         .replace(/[?.!,]+$/, "")
@@ -357,15 +281,11 @@ function extractPlaceQuery(message) {
     return "shop";
   }
 
-  if (
-    text.includes("hospital")
-  ) {
+  if (text.includes("hospital")) {
     return "hospital";
   }
 
-  if (
-    text.includes("hotel")
-  ) {
+  if (text.includes("hotel")) {
     return "hotel";
   }
 
@@ -378,21 +298,40 @@ function extractPlaceQuery(message) {
 
   if (
     text.includes("petrol") ||
-    text.includes("fuel") ||
-    text.includes("gas station")
+    text.includes("fuel")
   ) {
     return "fuel";
   }
 
-  if (
-    text.includes("police")
-  ) {
+  if (text.includes("cinema")) {
+    return "cinema";
+  }
+
+  if (text.includes("library")) {
+    return "library";
+  }
+
+  if (text.includes("bank")) {
+    return "bank";
+  }
+
+  if (text.includes("atm")) {
+    return "atm";
+  }
+
+  if (text.includes("dentist")) {
+    return "dentist";
+  }
+
+  if (text.includes("doctor")) {
+    return "doctor";
+  }
+
+  if (text.includes("police")) {
     return "police";
   }
 
-  if (
-    text.includes("fire station")
-  ) {
+  if (text.includes("fire station")) {
     return "fire station";
   }
 
@@ -403,43 +342,15 @@ function extractPlaceQuery(message) {
     return "gym";
   }
 
-  if (
-    text.includes("park")
-  ) {
+  if (text.includes("park")) {
     return "park";
-  }
-
-  if (
-    text.includes("cinema")
-  ) {
-    return "cinema";
-  }
-
-  if (
-    text.includes("library")
-  ) {
-    return "library";
-  }
-
-  if (
-    text.includes("bank")
-  ) {
-    return "bank";
-  }
-
-  if (
-    text.includes("atm") ||
-    text.includes("cashpoint") ||
-    text.includes("cash machine")
-  ) {
-    return "atm";
   }
 
   return "places";
 }
 
 /* =========================================================
-   PLACES
+   PLACES LOOKUP
 ========================================================= */
 
 async function getPlacesData(
@@ -447,15 +358,11 @@ async function getPlacesData(
   userLocation = null
 ) {
   if (!searchPlaces) {
-    console.error(
-      "Places function is not available."
-    );
-
     return {
       success: false,
       places: [],
       error:
-        "The Places module could not be loaded by the server."
+        "Places module could not be loaded."
     };
   }
 
@@ -466,12 +373,6 @@ async function getPlacesData(
     isNearMeRequest(message);
 
   try {
-    /*
-      ================================================
-      NEAR ME
-      ================================================
-    */
-
     if (nearMe) {
       if (!userLocation) {
         return {
@@ -501,91 +402,44 @@ async function getPlacesData(
       }
 
       console.log(
-        "Places search:",
+        "NOVA PLACES SEARCH",
         query,
         latitude,
         longitude
       );
 
-      const result =
-        await searchPlaces({
-          query,
-          latitude,
-          longitude,
-          radius: 5000,
-          limit: 8
-        });
-
-      console.log(
-        "Places result:",
-        JSON.stringify(result)
-      );
-
-      return result;
+      return await searchPlaces({
+        query,
+        latitude,
+        longitude,
+        radius: 5000,
+        limit: 8
+      });
     }
-
-    /*
-      ================================================
-      NAMED LOCATION
-      ================================================
-    */
 
     const location =
       extractLocation(message);
 
     if (location) {
-      console.log(
-        "Named places search:",
+      return await searchPlaces({
         query,
-        location
-      );
-
-      const result =
-        await searchPlaces({
-          query,
-          location,
-          radius: 5000,
-          limit: 8
-        });
-
-      console.log(
-        "Places result:",
-        JSON.stringify(result)
-      );
-
-      return result;
+        location,
+        radius: 5000,
+        limit: 8
+      });
     }
 
     return {
       success: false,
       places: [],
       error:
-        "I need a location for this places search."
+        "I need a location for this search."
     };
   } catch (error) {
     console.error(
-      "===================================="
+      "NOVA PLACES ERROR:",
+      error?.stack || error
     );
-
-    console.error(
-      "PLACES SEARCH FAILED"
-    );
-
-    console.error(
-      error?.stack ||
-      error?.message ||
-      error
-    );
-
-    console.error(
-      "===================================="
-    );
-
-    /*
-      IMPORTANT:
-      Return the REAL error so we can see
-      exactly what is failing.
-    */
 
     return {
       success: false,
@@ -605,7 +459,7 @@ async function getPlacesData(
 
 async function getRealtimeData(
   message,
-  userLocation = null
+  userLocation
 ) {
   const results = {};
 
@@ -623,30 +477,8 @@ async function getRealtimeData(
             weather;
         }
       } catch (error) {
-        console.warn(
-          "Weather lookup failed:",
-          error?.message || error
-        );
-      }
-    }
-  }
-
-  if (isTimeRequest(message)) {
-    const location =
-      extractLocation(message);
-
-    if (location) {
-      try {
-        const time =
-          await getTimeForLocation(location);
-
-        if (time) {
-          results.time =
-            time;
-        }
-      } catch (error) {
-        console.warn(
-          "Time lookup failed:",
+        console.error(
+          "Weather error:",
           error?.message || error
         );
       }
@@ -665,7 +497,7 @@ async function getRealtimeData(
 }
 
 /* =========================================================
-   REALTIME CONTEXT
+   LIVE CONTEXT
 ========================================================= */
 
 function buildRealtimeContext(data) {
@@ -683,17 +515,6 @@ function buildRealtimeContext(data) {
       "LIVE WEATHER DATA:\n" +
       JSON.stringify(
         data.weather,
-        null,
-        2
-      )
-    );
-  }
-
-  if (data.time) {
-    sections.push(
-      "LOCATION DATA:\n" +
-      JSON.stringify(
-        data.time,
         null,
         2
       )
@@ -731,37 +552,29 @@ function buildRealtimeContext(data) {
 const SYSTEM_PROMPT = `
 You are Nova AI.
 
-You are a helpful, intelligent, friendly general-purpose AI assistant.
+You are a helpful general-purpose AI assistant.
 
-Your goals:
-- Give accurate and useful answers.
-- Explain things clearly.
-- Help with coding and websites.
-- Help troubleshoot errors.
-- Help with planning and ideas.
-- Use live information when it is supplied.
-- Never pretend you accessed information that you did not receive.
+Give clear, useful and accurate answers.
 
-For places:
-- Use LIVE PLACES DATA when provided.
-- Mention useful nearby results.
-- Do not invent businesses.
-- Do not invent addresses.
-- Do not invent ratings.
-- Do not invent prices.
-- Do not invent opening hours.
-- Do not invent distances.
-- If the places data contains an error, explain that the live places lookup failed.
+When LIVE PLACES DATA is supplied:
+- Use it.
+- Mention the businesses supplied.
+- Never invent businesses.
+- Never invent addresses.
+- Never invent ratings.
+- Never invent prices.
+- Never invent opening hours.
+- Never invent distances.
 
-For weather:
-- Use the supplied live weather data.
-- Never invent weather information.
+If live places data contains an error:
+- Clearly tell the user the lookup failed.
+- Do not make up restaurant recommendations.
 
-Formatting:
-- Keep responses readable.
-- Use simple lists when useful.
-- Do not use excessive markdown.
-- Do not wrap the entire response in quotation marks.
+When LIVE WEATHER DATA is supplied:
+- Use it.
+- Do not invent weather information.
+
+Keep responses readable and natural.
 
 You are Nova AI, not ChatGPT.
 `;
@@ -829,22 +642,14 @@ async function askOpenRouter(
       }
     );
 
-  let data = null;
-
-  try {
-    data =
-      await response.json();
-  } catch {
-    throw new Error(
-      "OpenRouter returned an invalid response."
-    );
-  }
+  const data =
+    await response.json();
 
   if (!response.ok) {
     throw new Error(
       data?.error?.message ||
       data?.error ||
-      `OpenRouter request failed with status ${response.status}`
+      `OpenRouter failed with status ${response.status}`
     );
   }
 
@@ -869,10 +674,6 @@ async function askOpenRouter(
 
 module.exports =
   async function handler(req, res) {
-
-    /*
-      CORS
-    */
 
     res.setHeader(
       "Access-Control-Allow-Origin",
@@ -922,10 +723,6 @@ module.exports =
           });
       }
 
-      /*
-        HISTORY
-      */
-
       const history =
         Array.isArray(body.history)
           ? body.history
@@ -955,10 +752,6 @@ module.exports =
               )
           }));
 
-      /*
-        LOCATION
-      */
-
       let userLocation = null;
 
       if (
@@ -985,15 +778,7 @@ module.exports =
               body.location.longitude
             )
         };
-
-        console.log(
-          "Browser location received."
-        );
       }
-
-      /*
-        MESSAGES
-      */
 
       const messages = [
         ...cleanedHistory,
@@ -1002,10 +787,6 @@ module.exports =
           content: message
         }
       ];
-
-      /*
-        REALTIME
-      */
 
       const realtimeResults =
         await getRealtimeData(
@@ -1017,10 +798,6 @@ module.exports =
         buildRealtimeContext(
           realtimeResults
         );
-
-      /*
-        OPENROUTER
-      */
 
       const reply =
         await askOpenRouter(
@@ -1036,9 +813,8 @@ module.exports =
 
     } catch (error) {
       console.error(
-        "Nova chat API error:",
-        error?.stack ||
-        error
+        "NOVA CHAT ERROR:",
+        error?.stack || error
       );
 
       return res
